@@ -1,0 +1,2060 @@
+
+- NASM Map file ---------------------------------------------------------------
+
+Source file:  _m.asm
+Output file:  /dev/null
+
+-- Symbols --------------------------------------------------------------------
+
+---- No Section ---------------------------------------------------------------
+
+Value     Name
+00008018  STATE
+00008019  LASTCC
+00008020  BUF
+000080D0  ORIG
+000080DA  LASTV
+000080DC  NE
+000080E0  SS2
+00008000  MODE
+00008001  ERRC
+00008003  FLAG
+000080F0  AEL
+000080F2  AEH
+000080F4  REF
+000080F6  ADL
+000080F8  ADH
+000080FA  CNTV
+000080E8  GSAVE
+00008010  RST
+00008012  LEN
+00008014  PREADY
+00008015  AFL
+000080FC  APB
+000080FE  ASV
+00008100  LBUF
+00008140  LSV
+00008142  LIDX
+00008150  PBSV
+00008152  PNEG2
+00008154  E00SV
+00008156  PBFIX
+00008158  LK
+00008170  ESNAP
+0000815A  LSTEP
+000081A0  LRATE
+000081A1  LDEPTH
+000081A2  LSHAPE
+000081A3  LDEST
+000081A4  LMODE
+000081A5  LYOUNG
+000081A6  LTM2
+000081A8  LPH2
+000081AA  LOUT
+000081AC  LRND
+000081AE  LCNT
+000081B0  LCLKT
+000081B2  LCLKL
+000081B4  LB74
+000081B6  LPREV
+000081B8  LSHV
+000081B9  LDONE
+000081BA  LWARB
+000081C0  RVP
+000081C2  G6
+000081E0  NARM
+000081E2  NPK
+000081E4  NG
+000081E6  NCNT
+000081EA  NBANK
+000081EC  CHN
+000081ED  CHARM
+000081EE  DARM
+000081EF  CHCNT
+000081F0  CHBANK
+000081F2  CHPLAY
+000081F4  DFCSV
+000081F6  CHL
+000081FA  CHSRC
+000081FE  CHI
+00008200  CHV
+00008240  CHSB
+00008241  CHDB
+00008242  ZCM
+00008243  TSENS
+00008244  NBND
+00008246  TFAST
+00008248  TSLOW
+0000824A  THOLD
+0000824C  TGAP
+0000824E  TCNT
+00008280  SBND
+00008250  CHWHY
+00008252  CHOWN
+00008254  LRAW
+00008256  CBITS
+00008257  CARM
+00008258  CMASK
+0000825A  CHALF
+0000C325  NFV
+000083F6  CHOKV
+000083F7  SLSEL
+000083F8  CPARM
+00008004  VPICK
+00008005  EXITR
+00008006  L7F
+00008007  KEEPA
+00008008  CHTO
+00008009  CHBASE
+0000801D  STMV
+0000801E  STRS
+0000800F  STRSH
+0000800B  CHMOD
+000083F9  STSEL
+000083FA  STN
+000083FB  STT
+000083FC  STG
+000083FD  STX
+000083FE  STZ
+000083FF  STSU
+00008310  FXMODE
+00008311  FXREZ
+00008312  FXDF
+00008313  FXIN
+00008314  FXOUT
+00008315  FXMIX
+00008316  FXARM
+00008317  FXM
+00008318  FXW
+0000831A  FXFREQ
+0000831C  FXOS
+0000831E  FXMASK
+00008320  FXPOS
+00008322  FXHELD
+00008324  FXPREV
+00008326  FXLAST
+00008328  FXN
+0000832C  FXT
+00008330  FXTL
+00008332  FXPC
+00008334  FXD
+00008336  FXGIN
+00008338  FXGOUT
+0000833A  FXA
+0000833C  FXSG
+0000833E  FXF
+00008340  FXW2
+00008342  FXLP
+00008344  LVON
+00008345  LVDIRTY
+00008346  LVV
+00008348  LVPOS
+0000834C  LVLEN
+00008350  LVSRC
+00008354  LVLP
+00008356  LVRS
+0000835A  LVRE
+0000835E  LVN
+0000D2F0  LVBUF
+00008360  FXRF
+00008361  FXRSH
+00008362  FXRII
+00008364  FXRIF
+00008366  FXRPI
+00008368  FXRPF
+0000BE00  RTAB
+00008370  LVCP
+00008374  CHG0
+00008378  CHSBV
+00008379  LVDV
+0000837A  LVDS
+0000837B  LVSEGI
+0000837C  LVCLN
+00008380  LVCS
+00008384  LVCD
+00008388  LVCL
+0000838C  LVSO
+00008390  LVSD
+00008394  LVSL
+00008398  LVWAS
+00008399  LVPM
+0000839A  LVEV
+0000839C  LVCNT
+0000839D  LVCSG
+0000839E  LVPHS
+000083A0  LVCPOS
+000083A4  LVPHO
+000083A8  LVSV
+000083AE  KSP
+000083B0  KSFB
+0000C3E0  KSIN
+000083B2  KSI
+000083B4  LVNN
+000083B6  LVKS
+000083B8  FXTP
+000083BA  TPAD
+000083BC  TPOW
+000083BE  TGS
+000083C0  LVTMP
+0000D400  KSB
+0000BE00  THT
+000083C2  BKON
+000083C3  CCCH
+000083C4  CURV
+000083C6  CURCH
+000083C7  ACTIVE
+000083C8  ADDV
+000083C9  BKARM
+000083CA  DEASV
+000083CB  MRK
+000083CC  BKBANK
+000083CE  RV
+000083DE  RC
+000083E6  RA
+000083EE  BKTMP
+000083F0  LVVOI
+000083F2  LVG0
+0000C400  CTX
+00000198  CTXSZ
+0000D0C0  LFOTMP
+0000C210  MISC
+0000C210  LFDLY
+0000C218  LFFAD
+0000C220  LFYNG
+0000C228  LFENV
+0000C238  LFTM3
+0000C248  LREC
+0000C249  PRAW
+0000C24A  MXQ
+0000C24B  MXSD
+0000C24C  MXTM
+0000C24E  MXST
+0000C250  PSEL
+0000C260  EFSAVE
+0000C280  CVEL
+0000C290  CNOTE
+0000C2A0  CAT
+0000C2B0  CMW
+0000C2C0  CRND
+0000C2D0  CBEND
+0000C2E0  CM2
+0000C2F0  CM3
+0000C300  CM4
+0000C3E4  IQP
+0000C3E6  IQS
+0000C3E8  IQD
+0000C3EA  IQC
+0000C310  RSTAT
+0000C311  RDCNT
+0000C312  RD1
+0000C314  RNDS
+0000C316  MXR
+0000C317  MXCH
+0000C318  MXBLK
+0000C31A  MXNU
+0000C31C  MXOLD
+0000C31E  MXI
+0000C320  MXD0
+0000C326  RAWCH
+0000C324  MXLW
+0000C322  MXLF
+0000C323  MXSAV
+0000C328  MXLU
+0000C330  MXUSE
+0000C340  LFRAW
+0000C350  LWSNAP
+0000C358  LWL
+0000C35C  LWS
+0000D100  MTX
+0000D100  MXS
+0000D150  MXA
+0000D1A0  MXD
+0000D1F0  MXB
+0000D230  MXL
+0000D270  MXF
+0000D2B0  MSUM
+0000D2DA  CAPON
+0000D2E0  WSEL
+0000D2E1  WARM
+0000D2E4  WPH
+0000D2E8  WST
+0000D2EC  SWSP
+0000D2EE  SWBX
+0000D2D6  WTV
+0000D2D8  WNEW
+0000D0DC  PATN
+0000D0DD  PATR
+0000D0DE  PATS
+0000D0DF  PSTEP
+0000D0E0  PV
+0000D0E1  PRTG
+0000D0E2  PACC
+0000D0E4  PLAST
+0000D0E6  PCNT
+0000D0E8  LCDP
+0000D0EA  LCDE
+0000D0EB  GAPF
+0000D0EC  LCDT
+0000D0EE  CBK
+0000D0F0  CGIN
+0000D0F2  CGOUT
+0000D0F4  TGSN
+0000D0F6  GAPT
+0000D0F8  GAPM
+0000D0FA  CKEY
+0000D0FD  CVAL
+0000D0FF  RSHC
+0000D0FE  GAPC
+0000D2D0  CBKEY
+0000D2D3  SVMOFF
+0000D2D4  PGTM
+00001200  PGINT
+0000D400  CSH
+00001800  LCDINT
+00006590  GAPA
+0000D3F0  FMBUF
+0000C360  SVF
+0000C362  SVD
+0000C364  SVIN
+0000C366  SVT
+0000C368  SVLL
+0000C36A  SVBL
+0000C36C  SVLH
+0000C36E  SVBH
+0000C370  SVS
+0000C390  SVSTR
+0000C392  SVDRY
+0000C3DA  SVTMP
+0000D400  SVSCR
+0000DBF0  SVA
+0000DBF4  SVE
+0000DBF8  SVWF
+0000DBFA  SVN
+0000DBFC  SVLS
+0000D800  SVMAP
+000003D0  SVMAPN
+0000DBE0  SVSNAP
+0000DBEC  SVSKD
+0000DBED  SVPH
+0000DBEE  SVNW
+0000DBD0  SPLS
+0000DBD4  SPLE
+0000DBD8  SPLON
+0000DBDA  SPLL
+0000C394  PGT
+0000C395  PGM
+0000C396  PK
+0000C398  PBDEP
+0000C399  PBON
+0000C39A  PG
+0000C3BA  PHELD
+0000C3CA  PHN
+0000C3EC  RCK
+0000C3EE  RCDC
+0000C3F0  DCN
+0000C3F2  MGM
+0000C3F4  DCTMP
+0000C3F6  PTYPE
+0000C3F8  PW
+0000C3FA  ED
+0000C3FC  EG
+0000D400  DBUF
+0000D600  TBUF
+0000D7F0  PPOS
+0000D7F4  PB
+0000D7F8  PO
+0000D7FA  PWW
+0000D7FC  PQ
+0000D400  CAPBASE
+0000DBC4  CRLM
+0000DBC6  CHM
+0000DBC7  CCH
+0000DBC8  CVM
+0000DBC9  CRQ
+0000DBCA  CNN
+0000DBCB  CNS
+0000DBCC  CPRN
+0000DBCE  CNK
+0000DBD2  CNV
+0000DBD8  CSGI
+0000DBD6  CSGL
+0000DBD9  CFAD
+0000DBDA  CTW
+0000DBE6  CAW
+0000DBDE  CPRT
+0000DBDF  CPGN
+0000DBE0  CST
+0000DBE1  CLEN
+0000DBE3  CTR
+0000DBE4  CSYN
+0000DBE5  CFST
+0000DBEA  CLAST
+0000DBEC  CEL
+0000DBF0  CHLD
+0000DBF4  CPCV
+0000DBF6  CGS
+0000DBFE  CAPSIG
+0000801A  STNX
+0000801B  STOR
+0000801C  STSK
+0000D7A0  STK
+0000D7A2  STA
+0000D7A6  STL
+0000D7AA  STW
+0000D7AE  STTV
+0000D7B0  STSD
+0000D7B2  STB
+0000D7B4  STO
+
+
+---- Section .text ------------------------------------------------------------
+
+Real              Virtual           Name
+            6004              6004  L6004
+            600E              600E  ENTRY
+            603D              603D  SAVSP
+            603F              603F  SAVBP
+            6041              6041  SAVDS
+            6043              6043  SAVES
+            6045              6045  MAIN0
+            604B              604B  MAIN0.ld
+            606E              606E  MAIN0.ld2
+            6077              6077  MAIN0.ld4
+            6093              6093  MAIN0.bad
+            60A1              60A1  MAIN0.w
+            60B3              60B3  L6398a
+            60B7              60B7  L6398a.l
+            60BC              60BC  PRT
+            60CC              60CC  S_LE
+            60D5              60D5  MAIN
+            61D9              61D9  MAIN.emp
+            61E9              61E9  MAIN.nt
+            61F9              61F9  MAIN.lp
+            622D              622D  MAIN.n3
+            6237              6237  MAIN.np
+            624F              624F  MAIN.mr
+            6253              6253  MAIN.sk
+            6259              6259  MAIN.idle
+            6267              6267  MAIN.fp
+            626E              626E  MAIN.slow
+            627E              627E  keep
+            62B4              62B4  done
+            62DD              62DD  tail
+            62E8              62E8  tail.r
+            62F4              62F4  tail2
+            6315              6315  tail2.nf
+            632C              632C  COPY
+            6339              6339  COPY.go
+            6341              6341  INIT
+            634A              634A  INIT.i
+            635F              635F  WRITE
+            637D              637D  WRITE.i
+            638F              638F  WRITE.wr
+            6397              6397  WRITE.ret
+            6398              6398  WRITE.kc
+            63A2              63A2  WRITE.kcv
+            63AF              63AF  WRITE.k1
+            63BA              63BA  WRITE.k2
+            63BE              63BE  WRITE.cl
+            63D2              63D2  WRITE.h1
+            63DE              63DE  WRITE.h2
+            63E4              63E4  WRITE.h3
+            63F2              63F2  WRITE.l1
+            63FB              63FB  WRITE.l2
+            6401              6401  WRITE.l3
+            6406              6406  WRITE.ded
+            640E              640E  WRITE.d0
+            643F              643F  WRITE.mw
+            6445              6445  WRITE.sr
+            644D              644D  WRITE.rawd
+            6458              6458  WRITE.se
+            6471              6471  WRITE.en
+            6495              6495  WRITE.xf
+            64A8              64A8  WRITE.env
+            64B9              64B9  WRITE.g0
+            64CE              64CE  WRITE.e1
+            64D4              64D4  WRITE.e2
+            64DA              64DA  WRITE.st
+            64DD              64DD  SLIDEALL
+            64E2              64E2  SLIDEALL.sl
+            6506              6506  SLIDEALL.s0
+            650A              650A  SLIDEALL.sp
+            652B              652B  SLIDEALL.r
+            652C              652C  LOOPCC
+            6534              6534  LOOPCC.n126
+            654C              654C  LOOPCC.org
+            6552              6552  LOOPCC.tim
+            6563              6563  LOOPCC.one
+            6577              6577  ..@PARK0
+            658E              658E  LOOPCC.pt
+            6596              6596  LOOPCC.pt2
+            65A2              65A2  LOOPCC.st
+            65C3              65C3  LOOPCC.le
+            65D5              65D5  LOOPCC.wr
+            6605              6605  LOOPCC.e16
+            661A              661A  LOOPCC.fix
+            662E              662E  LOOPCC.ok
+            6631              6631  SLD
+            6652              6652  SLD.ok
+            665F              665F  PSETUP
+            6672              6672  PSETUP.g
+            668B              668B  PSETUP.ret
+            66C3              66C3  PSETUP.li
+            66CC              66CC  AFTER
+            66DC              66DC  AFTER.r
+            66DD              66DD  PBGET
+            66F7              66F7  PBGET.calc
+            670F              670F  VDIRECT
+            6721              6721  ASSIGN
+            674E              674E  ASSIGN.s
+            6752              6752  ASSIGN.r
+            6753              6753  UNASSIGN
+            676A              676A  UNASSIGN.r
+            676B              676B  RABORT
+            6779              6779  RABORT.r
+            677A              677A  UPOLL
+            6784              6784  UPOLL.ne
+            6798              6798  UPOLL.r
+            6799              6799  ENDCHK
+            67CE              67CE  ENDCHK.r
+            67CF              67CF  STOP
+            67E3              67E3  ABORT
+            67EF              67EF  WDEL
+            6809              6809  WDEL.del
+            681C              681C  WDEL.r
+            681D              681D  RWRITE
+            682F              682F  RWRITE.c3
+            6837              6837  RWRITE.lc
+            6850              6850  RWRITE.c4
+            6867              6867  RWRITE.c5
+            6872              6872  RWRITE.c6
+            688E              688E  RWRITE.vmr
+            68A3              68A3  RWRITE.a0
+            68B8              68B8  RWRITE.a0d
+            68BB              68BB  RWRITE.a1
+            68CA              68CA  RWRITE.sh
+            68D6              68D6  RWRITE.a2
+            690A              690A  RWRITE.f45
+            6912              6912  RWRITE.ret
+            6913              6913  RWRITE.used
+            6919              6919  RWRITE.mem
+            691F              691F  RWRITE.c7
+            6942              6942  RWRITE.c8
+            695F              695F  RWRITE.c8m
+            6962              6962  RWRITE.c8a
+            696D              696D  RWRITE.c9
+            697A              697A  RWRITE.c9b
+            698E              698E  RWRITE.keep
+            69A2              69A2  SHOWR
+            6A09              6A09  SHOWR.g
+            6A26              6A26  RATT
+            6A36              6A36  S_G0
+            6A40              6A40  S_L6
+            6A51              6A51  WRITEL
+            6A54              6A54  WRITEL0
+            6A7B              6A7B  WRITEL0.g
+            6AB0              6AB0  WRITEL0.sl
+            6AB3              6AB3  WRITEL0.sx
+            6AB8              6AB8  WRITEL0.mine
+            6ACB              6ACB  WRITEL0.s1
+            6AD3              6AD3  WRITEL0.s2
+            6AD6              6AD6  WRITEL0.s3
+            6AF0              6AF0  WRITEL0.lp
+            6AF7              6AF7  WRITEL0.n
+            6B02              6B02  LENV
+            6B04              6B04  LENV.e
+            6B2A              6B2A  LENV.dr
+            6B2F              6B2F  LENV.dl
+            6B34              6B34  LENV.fr
+            6B39              6B39  LENV.fl
+            6B3C              6B3C  LENV.lev
+            6B4B              6B4B  LENV.l1
+            6B52              6B52  LENV.l2
+            6B57              6B57  LENV.rate
+            6B70              6B70  LENV.r1
+            6B78              6B78  LENV.r2
+            6B7D              6B7D  LENV.nx
+            6B84              6B84  LSUS
+            6BA9              6BA9  LSUS.u
+            6BAF              6BAF  LSUS.f
+            6BD5              6BD5  LSUS.v
+            6BDB              6BDB  LSUS.r
+            6BDC              6BDC  ENDW
+            6BF9              6BF9  ENDW.g
+            6C21              6C21  ENDW.st
+            6C2D              6C2D  ENDW.p
+            6C2F              6C2F  ENDW.n
+            6C36              6C36  ENDW.r
+            6C37              6C37  GAREAD
+            6C48              6C48  GAREAD.w
+            6C53              6C53  GAREAD.rd
+            6C5F              6C5F  GAREAD.x
+            6C63              6C63  LLOOP
+            6D0B              6D0B  LLOOP.x
+            6D10              6D10  LLOOP.r
+            6D11              6D11  GA1
+            6D18              6D18  GA1.t
+            6D2F              6D2F  GA1.go
+            6D46              6D46  GA2
+            6D4A              6D4A  GA2.t
+            6D60              6D60  GA2.go
+            6D72              6D72  INV
+            6D7E              6D7E  INV.r
+            6D7F              6D7F  RTB
+            6DA5              6DA5  RTB.r
+            6DA6              6DA6  RTB.fa
+            6DB7              6DB7  LFOCC
+            6DC8              6DC8  LFOCC.c90
+            6DD1              6DD1  LFOCC.c91
+            6DE0              6DE0  LFOCC.c92
+            6DFA              6DFA  LFOCC.r
+            6DFB              6DFB  LFOCC.c93
+            6E05              6E05  SCL
+            6E0A              6E0A  NOWE
+            6E1B              6E1B  LFOOFF
+            6E3A              6E3A  LFOOFF.nb
+            6E4A              6E4A  LFOOFF.n
+            6E53              6E53  LFO2
+            6E6A              6E6A  LFO2.go
+            6EA6              6EA6  LFO2.f1
+            6EAC              6EAC  LFO2.nof
+            6EAE              6EAE  LFO2.f2
+            6EC5              6EC5  LFO2.free
+            6EF1              6EF1  LFO2.fb
+            6EF9              6EF9  LFO2.fa
+            6F0C              6F0C  LFO2.y
+            6F1E              6F1E  LFO2.yn
+            6F3F              6F3F  LFO2.yo
+            6F43              6F43  LFO2.shape
+            6F50              6F50  LFO2.nw
+            6F7F              6F7F  LFO2.wn
+            6F81              6F81  LFO2.s0
+            6F8B              6F8B  LFO2.t1
+            6F91              6F91  LFO2.s1
+            6FA6              6FA6  LFO2.q1
+            6FB6              6FB6  LFO2.s2
+            6FBF              6FBF  LFO2.s3
+            6FCA              6FCA  LFO2.s4
+            6FD9              6FD9  LFO2.s5
+            6FF4              6FF4  LFO2.h
+            6FF9              6FF9  LFO2.s6
+            7002              7002  LFO2.o1
+            700D              700D  LFO2.o2
+            700F              700F  LFO2.out
+            7015              7015  LFO2.o3
+            702C              702C  LFO2.ap
+            7046              7046  LFO2.d2
+            7056              7056  LFO2.d7c
+            7081              7081  LFO2.pgb
+            7082              7082  LFO2.d3
+            709F              709F  LFO2.du
+            70A9              70A9  LFO2.d6
+            70B8              70B8  LFO2.d7
+            70B9              70B9  SINT
+            70DA              70DA  RVPATCH
+            70F9              70F9  RVPATCH.k
+            7108              7108  RVPATCH.me
+            711B              711B  RVPATCH.new
+            7129              7129  RVPATCH.ina
+            7131              7131  RVPATCH.nx
+            713B              713B  RVPATCH.r
+            713C              713C  RVONE
+            719A              719A  RVONE.nsw
+            71AE              71AE  RVONE.m
+            71B3              71B3  RVONE.x
+            71B6              71B6  NMSG
+            71BE              71BE  NMSG.m
+            71CC              71CC  NSETUP
+            720D              720D  NSETUP.bad
+            720F              720F  NNEXT
+            7227              7227  NNEXT.c
+            7239              7239  ISSLICE
+            7248              7248  ISSLICE.l
+            7253              7253  ISSLICE.no
+            7255              7255  ISSLICE.y
+            7258              7258  CHPROP
+            726D              726D  CHPROP.l
+            7293              7293  CHPROP.r
+            7294              7294  CHLOOP
+            729C              729C  CHLOOP.l
+            72AF              72AF  CHLOOP.k
+            72CA              72CA  CHLOOP.one
+            72D5              72D5  CHLOOP.p
+            72E9              72E9  CHLOOP.nx
+            72F1              72F1  CHPT
+            730E              730E  CHPT.p
+            7323              7323  CHPT.nm
+            7331              7331  CHPT.nd
+            7345              7345  CHPT.full
+            7348              7348  CHPT.hf
+            737E              737E  CHMIN
+            739D              739D  CHMIN.fix
+            73BF              73BF  CHMIN.cl
+            73C8              73C8  CHMIN.st
+            73D6              73D6  CHMIN.ok
+            73D7              73D7  CHFINDO
+            73E0              73E0  CHOPCC
+            73EE              73EE  CHOPCC.c97
+            740A              740A  CHOPCC.c99
+            7427              7427  CHOPCC.c100
+            7435              7435  CHOPCC.c98
+            744D              744D  CHOPCC.p1
+            745A              745A  CHOPCC.mk
+            746E              746E  CHOPCC.rr
+            746F              746F  CHOK
+            7481              7481  CHOK.ok
+            7486              7486  CHOK.no
+            7488              7488  ADDREF
+            7492              7492  ADDREF.g
+            74CD              74CD  CHON
+            74F1              74F1  CHON.r
+            74F2              74F2  CHOP
+            7506              7506  CHOP.dl
+            7525              7525  CHOP.d2
+            7529              7529  CHOP.dd
+            7539              7539  CHOP.bnd
+            753F              753F  CHOP.bok
+            7544              7544  CHOP.sl
+            7556              7556  CHOP.sld
+            7559              7559  CHOP.s0
+            7562              7562  CHOP.fv
+            756C              756C  CHOP.fn
+            7578              7578  CHOP.got
+            75B1              75B1  CHOP.al
+            75DA              75DA  CHOP.lp
+            75F0              75F0  CHOP.lt
+            7690              7690  CHOP.err
+            76A3              76A3  CHOP.done
+            76A9              76A9  CHOP.dz
+            76F1              76F1  CHOP.w0
+            76FE              76FE  CHOP.w1
+            7707              7707  CHOP.w2
+            773A              773A  CHOP.short
+            7740              7740  CHOP.r
+            7741              7741  DEC2
+            774B              774B  WCOPY
+            776F              776F  WCOPY.w
+            7790              7790  WCOPY.s
+            7799              7799  WCOPY.d
+            77AB              77AB  RDW
+            77CD              77CD  ZCAT
+            77EE              77EE  ZCAT.y
+            77F0              77F0  ZCAT.x
+            77F4              77F4  ZCNEAR
+            77F8              77F8  ZCNEAR.l
+            781E              781E  ZCNEAR.f
+            7824              7824  ZCBACK
+            7828              7828  ZCBACK.l
+            7835              7835  ZCBACK.r
+            7837              7837  SNAPV
+            7876              7876  SNAPV.lp
+            78A3              78A3  SNAPV.ud
+            78B0              78B0  SNAPV.ok
+            78B4              78B4  SNAPV.one
+            78D4              78D4  SNAPV.r
+            78D5              78D5  RNG
+            78F6              78F6  ENVT
+            78FA              78FA  RT
+            78FD              78FD  IGN
+            790A              790A  INITT
+            792A              792A  S_TITLE
+            792F              792F  S_P
+            793F              793F  S_USD
+            794D              794D  S_ST
+            7977              7977  S_C
+            7981              7981  S_E
+            7991              7991  S_CN
+            79A0              79A0  S_CW
+            79AC              79AC  S_CO
+            79BC              79BC  S_MCU
+            79C0              79C0  S_CK
+            79C4              79C4  S_CKM
+            79C8              79C8  S_CKH
+            79CC              79CC  S_CKV
+            79D0              79D0  S_CB
+            79E0              79E0  S_CV
+            79F0              79F0  S_CM
+            7A00              7A00  S_CS
+            7A10              7A10  S_ZM
+            7A40              7A40  L61DB
+            7A5D              7A5D  L61F0
+            7A5E              7A5E  L62D5
+            7A6E              7A6E  L6331
+            7A8E              7A8E  L634D
+            7A90              7A90  L6372
+            7A9F              7A9F  L6372.k
+            7AC4              7AC4  L638E
+            7AC9              7AC9  L638F
+            7ACC              7ACC  L6392
+            7AD2              7AD2  L6398
+            7AD7              7AD7  L639D
+            7ADD              7ADD  FX5INIT
+            7B03              7B03  PSYN
+            7B0B              7B0B  PTAB
+            7B43              7B43  FMNAME
+            7B54              7B54  FMNAME.f
+            7B58              7B58  FMNAME.s
+            7B5F              7B5F  FMNAME.c
+            7B69              7B69  FMNAME.k
+            7B71              7B71  FMNAME.p
+            7B73              7B73  FMNAME.q
+            7B7C              7B7C  FMNAME.e
+            7B87              7B87  FMNAME.r
+            7B88              7B88  S_FMN
+            7C1F              7C1F  ECHOF
+            7C43              7C43  ECHOF.c
+            7C58              7C58  ECHOF.s
+            7C5E              7C5E  CHNM
+            7C82              7C82  S_COFF
+            79F6              79F6  S_CMEM
+            7C8E              7C8E  MXFAIR
+            7C96              7C96  MXFAIR.w
+            7C9B              7C9B  NFAP
+            7CC2              7CC2  NFAP.r
+            7CC3              7CC3  NFT
+            7CC7              7CC7  MOVB
+            7CCF              7CCF  OVCALL
+            7CE2              7CE2  OVCALL.ld
+            7D11              7D11  OVCALL.no
+            7D1E              7D1E  OVCALL.go
+            7D24              7D24  MKBNDO
+            7D2C              7D2C  SHARED
+            7D35              7D35  SHARED.l
+            7D50              7D50  SHARED.n
+            7D58              7D58  SHARED.y
+            7D5C              7D5C  PTOOL
+            7D7C              7D7C  PTOOL.cl
+            7D83              7D83  PTOOL.c2
+            7D84              7D84  PTOOL.cm
+            7D89              7D89  PTOOL.s
+            7D97              7D97  PTOOL.k0
+            7DA0              7DA0  PTOOL.r
+            7DA1              7DA1  STRP
+            7DAC              7DAC  STRP.s9
+            7DBF              7DBF  STRP.s
+            7DC8              7DC8  STRP.v
+            7DD1              7DD1  STRP.r
+            7DD2              7DD2  OUTB
+            7DE7              7DE7  OUTB.r
+            7DE8              7DE8  OUTM
+            7DF9              7DF9  OUTM.m
+            7E02              7E02  OUTM.m2
+            7E05              7E05  WVSH
+            7E16              7E16  WVSH.r
+            7E17              7E17  PSW
+            7E46              7E46  PSW.y
+            7E69              7E69  PSW.n
+            7E6D              7E6D  L61S
+            7E8A              7E8A  L61S.p
+            7E8B              7E8B  L61S.r
+            7E8C              7E8C  CHPMV
+            7E99              7E99  CHPMV.sp
+            7EAB              7EAB  CHBSELO
+            7EB4              7EB4  ADDCB
+            7EBD              7EBD  CHCHAN
+            7ECC              7ECC  CHCHAN.r
+            7ECD              7ECD  CHNMD
+            7EDB              7EDB  CHNMD.r
+            7EDC              7EDC  NORMO
+            7EE5              7EE5  L7CHK
+            7F06              7F06  L7CHK.p
+            7F07              7F07  L7CHK.r
+            7F08              7F08  STAT2
+            7F33              7F33  STAT2.v
+            7F38              7F38  VLINE
+            7F5C              7F5C  VLINE.e
+            7F5F              7F5F  VLINE.nm
+            7F65              7F65  VLINE.c
+            7F6F              7F6F  VLINE.b
+            7F71              7F71  VLINE.k
+            7F82              7F82  NOTE3
+            7F9F              7F9F  NOTE3.m
+            7FAD              7FAD  NOTE3.r
+            7FAE              7FAE  NOTET
+            7FC6              7FC6  S_L2
+            7FD7              7FD7  S_OVD
+            7FE8              7FE8  S_OUT
+            8400              8400  FXINIT
+            8444              8444  FXCC
+            845D              845D  FXCC.r0
+            847D              847D  FXCC.k95
+            8494              8494  FXCC.rg
+            84CD              84CD  FXCC.c95
+            84DA              84DA  FXCC.sm
+            84DD              84DD  FXCC.hi96
+            84E5              84E5  FXCC.n119
+            84ED              84ED  FXCC.set
+            84F9              84F9  FXCC.s0
+            850C              850C  FXCC.m1
+            8520              8520  FXCC.m2
+            8531              8531  FXCC.m3
+            8540              8540  FXCC.m3t
+            855F              855F  FXCC.m4
+            8571              8571  FXCC.tl
+            8586              8586  FXCC.m4m
+            85A4              85A4  FXCC.m5
+            85B0              85B0  FXCC.go
+            85BA              85BA  FXCC.hi
+            85D1              85D1  FXCC.r
+            85D2              85D2  DEC3
+            85E2              85E2  FXRUN
+            85F8              85F8  FXRUN.r2
+            8642              8642  FXRUN.nt
+            867E              867E  FXRUN.fast
+            8684              8684  FXRUN.lp
+            8699              8699  FXRUN.sl
+            86A9              86A9  FXRUN.dn
+            86B6              86B6  FXRUN.t5
+            86D0              86D0  FXRUN.sv
+            86D5              86D5  FXRUN.sx
+            8706              8706  FXRUN.nm
+            8712              8712  FXRUN.nd
+            871E              871E  FXRUN.z
+            8722              8722  FXRUN.big
+            8725              8725  FXRUN.ps
+            8736              8736  FXPAR
+            8764              8764  FXPAR.h0
+            8785              8785  FXPAR.m
+            87C8              87C8  FXPAR.kp
+            87F0              87F0  FXPAR.kx
+            87F3              87F3  FXPAR.ki
+            8819              8819  FXPAR.w
+            881D              881D  LPW
+            8839              8839  LPM
+            8855              8855  RINGPAR
+            88CE              88CE  RINGPAR.cy
+            88E0              88E0  RINGPAR.tab
+            88FB              88FB  RINGPAR.bt
+            890B              890B  RINGPAR.t
+            8921              8921  RINGPAR.s
+            892B              892B  RINGPAR.tr
+            892C              892C  LVCC
+            893A              893A  LVCC.o2
+            894F              894F  LVCC.on
+            895F              895F  LVCC.md
+            8976              8976  LVCC.nw
+            89BF              89BF  LVCC.fv
+            89C9              89C9  LVCC.fn
+            89D5              89D5  LVCC.got
+            89F4              89F4  LVCC.al
+            8A2A              8A2A  LVCC.r
+            8A2B              8A2B  LVOFF
+            8A35              8A35  LVOFF.go
+            8A67              8A67  LVOFF.sl
+            8A75              8A75  LVOFF.s1
+            8AB3              8AB3  LVOFF.del
+            8AD9              8AD9  LVOFF.m
+            8ADF              8ADF  LVOFF.r
+            8AE2              8AE2  LVCOPY
+            8AE2              8AE2  LVCOPY.l
+            8AFF              8AFF  LVCOPY.c
+            8B34              8B34  LVCOPY.r
+            8B37              8B37  LVSOK
+            8B59              8B59  LVSOK.no
+            8B5B              8B5B  LVSLM
+            8B64              8B64  LVSLM.no
+            8B66              8B66  LVSLICE
+            8BB3              8BB3  LVSEG
+            8BC8              8BC8  LVSEG.s
+            8BCD              8BCD  LVSEG.v
+            8BEC              8BEC  LVSEG.s1
+            8C1E              8C1E  LVSEG.e0
+            8C25              8C25  LVSEG.e1
+            8C44              8C44  LVSEG.bad
+            8C46              8C46  LVSETLEN
+            8C66              8C66  LVSETLEN.v
+            8C70              8C70  LVSETLEN.st
+            8C78              8C78  LVFINDPH
+            8C92              8C92  LVFINDPH.g
+            8CA9              8CA9  LVFINDPH.sm
+            8CAB              8CAB  LVFINDPH.f
+            8CC1              8CC1  LVFINDPH.fs
+            8CC5              8CC5  LVFINDPH.hit
+            8CE9              8CE9  LVFINDPH.ok
+            8D01              8D01  LVFINDPH.x
+            8D03              8D03  LVFINDPH.n
+            8D12              8D12  LVRUN
+            8D1C              8D1C  LVRUN.a
+            8D2D              8D2D  LVRUN.ok
+            8D34              8D34  LVRUN.n1
+            8D3B              8D3B  LVRUN.n4
+            8D54              8D54  LVRUN.p1
+            8D5C              8D5C  LVRUN.nd
+            8D95              8D95  LVRUN.jp
+            8DAA              8DAA  LVRUN.kp
+            8DFF              8DFF  LVRUN.sw
+            8E2A              8E2A  LVRUN.cv
+            8E2F              8E2F  LVRUN.cs
+            8E35              8E35  LVRUN.r
+            8E38              8E38  LVCHK
+            8E46              8E46  LVCHK.sg
+            8E63              8E63  LVCHK.big
+            8E66              8E66  LVCHK.nn
+            8E6D              8E6D  LVCHK.nx
+            8E70              8E70  LVCHK.go
+            8E7C              8E7C  LVCHK.go2
+            8EA1              8EA1  LVCHK.ks1
+            8EA8              8EA8  LVCHK.ks2
+            8EAD              8EAD  LVCHK.ks0
+            8EE0              8EE0  LVCHK.np
+            8EF5              8EF5  LVCHK.nt7
+            8F03              8F03  LVCHK.nt10
+            8F11              8F11  LVCHK.n12
+            8F1F              8F1F  LVCHK.n13
+            8F4F              8F4F  LVCHK.dd
+            8F5D              8F5D  LVCHK.dv
+            8F62              8F62  LVCHK.wr
+            8F80              8F80  LVCHK.adv
+            8F94              8F94  LVCHK.next
+            8FB0              8FB0  LVCHK.s2
+            8FB3              8FB3  LVCHK.r
+            8FB6              8FB6  LVKSCH
+            8FD4              8FD4  LVKSCH.h1
+            9017              9017  LVKSCH.one
+            9027              9027  LVKSCH.cm
+            9034              9034  LVKSCH.l
+            9063              9063  LVKSCH.ok
+            908D              908D  LVKSCH.st
+            9099              9099  LVCPY
+            90B5              90B5  LVCPY.c
+            90EA              90EA  LVCPY.done
+            90FA              90FA  LVCPY.r
+            90FD              90FD  LVSET
+            9116              9116  LVRD
+            9119              9119  LVRDX
+            911E              911E  LVRDX.l
+            9133              9133  LVRDX.e
+            9135              9135  LVRDX.p
+            9149              9149  LVRDX.d
+            9151              9151  LVRDX.r
+            9152              9152  LVWR
+            915B              915B  LVWR.l
+            916E              916E  LVWR.r
+            916F              916F  SINR
+            9181              9181  SINR.a
+            9190              9190  SINR.p
+            9192              9192  LVRUNN
+            919D              919D  LVRUNN.a
+            91A3              91A3  LVRUNN.b
+            91A6              91A6  LVBK
+            91B8              91B8  DECN
+            91B8              91B8  DECN.l
+            91D3              91D3  FXTICK
+            91EA              91EA  THNEED
+            91FB              91FB  THNEED.y
+            91FC              91FC  ISTUBE
+            9204              9204  THENT
+            9223              9223  THENT.fm
+            9231              9231  THENT.th
+            9250              9250  THENT.ip
+            926F              926F  THENT.sv
+            9277              9277  THENT.st
+            927A              927A  FXONE
+            9284              9284  FXONE.nsv
+            92B7              92B7  FXONE.ch
+            92C2              92C2  FXONE.a
+            92CA              92CA  FXONE.b
+            92DA              92DA  FXONE.c
+            930C              930C  FXONE.d
+            9315              9315  FXONE.x
+            9318              9318  FXLG
+            9318              9318  FXLG.l
+            932B              932B  FXLT
+            932B              932B  FXLT.l
+            9363              9363  FXLTM
+            9363              9363  FXLTM.l
+            93B6              93B6  FXLC
+            93B6              93B6  FXLC.l
+            93C2              93C2  FXLC.m
+            93CF              93CF  FXLCM
+            93CF              93CF  FXLCM.l
+            93DB              93DB  FXLCM.m
+            9403              9403  FXLR
+            940B              940B  FXLR.l
+            9438              9438  FXLRM
+            9440              9440  FXLRM.l
+            948A              948A  TUINIT
+            94BE              94BE  TUENT
+            94CB              94CB  TUENT.k
+            94DB              94DB  TUENT.pd
+            94E9              94E9  TUENT.a1
+            94FC              94FC  TUENT.ng
+            94FE              94FE  TUENT.sh
+            9508              9508  TUENT.a2
+            9524              9524  TUENT.a3
+            952A              952A  TUENT.pw
+            9545              9545  TUENT.an
+            9547              9547  TUENT.a4
+            9562              9562  TUENT.hi
+            9567              9567  TUENT.lo
+            9571              9571  TUENT.lo2
+            9574              9574  TUENT.sv
+            9576              9576  SQRTQ
+            957C              957C  SQRTQ.n
+            9588              9588  SQRTQ.t
+            95B3              95B3  SQRTQ.r
+            95B4              95B4  TLOOK
+            95DB              95DB  TUPREP
+            960F              960F  TUPREP.z
+            9612              9612  TUPREP.lk
+            961B              961B  FXLU
+            961B              961B  FXLU.l
+            963E              963E  FXLU.dp
+            964D              964D  FXLU.sg
+            9657              9657  FXLU.a
+            967E              967E  FXLU.c1
+            9687              9687  FXLU.c2
+            96C2              96C2  FXLU.st
+            96CF              96CF  FXLU.x
+            96D0              96D0  FXSMP
+            9727              9727  FXSMP.ko
+            973C              973C  FXSMP.nk
+            974C              974C  FXSMP.cm
+            9762              9762  FXSMP.ch
+            976B              976B  FXSMP.np
+            977C              977C  FXSMP.pk
+            977F              977F  FXSMP.mix
+            979F              979F  THS
+            97A7              97A7  THS.p
+            97CD              97CD  THS.r
+            97CE              97CE  PKS
+            97EC              97EC  PKS.ab
+            9807              9807  PKS.z
+            9809              9809  PKS.h
+            981C              981C  PKS.nh
+            984B              984B  PKS.pv
+            984E              984E  PKS.st
+            9857              9857  MU
+            985F              985F  MU.nz
+            9863              9863  MU.p
+            9870              9870  MU.n
+            987C              987C  MU.nd
+            9886              9886  MU.i0
+            990D              990D  MU.sh
+            9915              9915  MU.s
+            9925              9925  MU.full
+            9928              9928  MU.sg
+            9932              9932  MU.r
+            9933              9933  FXOST
+            993B              993B  FXFTT
+            9943              9943  S_FR
+            994B              994B  S_FD
+            9956              9956  S_FI
+            9962              9962  S_FO
+            996E              996E  S_FX
+            9977              9977  S_FW
+            9984              9984  S_L1
+            998F              998F  S_L0
+            999B              999B  S_LP
+            99AB              99AB  S_KN
+            99B7              99B7  S_KF
+            99C4              99C4  S_TP
+            99D2              99D2  S_TA
+            99E0              99E0  S_LC
+            99F0              99F0  S_LR
+            99FE              99FE  S_LI
+            9A0E              9A0E  S_RF
+            9A1C              9A1C  S_RS0
+            9A26              9A26  S_RS1
+            9A32              9A32  S_LM
+            9A42              9A42  S_LV
+            9A51              9A51  S_FT
+            9A60              9A60  STAB
+            9C62              9C62  LOGT
+            9E64              9E64  DEXT
+            A066              A066  SINQ
+            A0E8              A0E8  FREQT
+            A1E8              A1E8  KSPT
+            A2E8              A2E8  SQN2
+            A3AA              A3AA  MINIT
+            A3CB              A3CB  MINIT.z
+            A3EF              A3EF  CTXP
+            A3FE              A3FE  CTXSAVE
+            A41D              A41D  CTXLOAD
+            A43E              A43E  RSWITCH
+            A455              A455  RSWITCH.cv
+            A46C              A46C  MROUTE
+            A479              A479  MROUTE.m15
+            A481              A481  MROUTE.m16
+            A489              A489  MROUTE.m0
+            A492              A492  MROUTE.bk
+            A49C              A49C  MROUTE.f
+            A4AE              A4AE  MROUTE.fr
+            A4C4              A4C4  MROUTE.new
+            A4EB              A4EB  MROUTE.got
+            A4ED              A4ED  MROUTE.set
+            A50E              A50E  MROUTE.ok
+            A511              A511  MROUTE.none
+            A51F              A51F  MROUTE.msg
+            A525              A525  BKFIND
+            A538              A538  BKFIND.l
+            A549              A549  BKFIND.y
+            A559              A559  BKFIND.no
+            A55B              A55B  BKPLAY
+            A58C              A58C  BKBACK
+            A596              A596  BKBACK.b
+            A59C              A59C  BKSEL
+            A5C1              A5C1  BKSEL.vm
+            A5C6              A5C6  BKSEL.b
+            A5FD              A5FD  BKSEL.p
+            A602              A602  BKVOI
+            A605              A605  PBFIND
+            A614              A614  PBFIND.find
+            A61A              A61A  PBFIND.f
+            A632              A632  PBFIND.n
+            A63E              A63E  PBFIND.e
+            A64B              A64B  PBFIND.mk
+            A64B              A64B  PBFIND.name
+            A659              A659  PBFIND.c
+            A661              A661  PBFIND.y
+            A667              A667  BKADD
+            A676              A676  BKADD.hi
+            A67F              A67F  BKADD.go
+            A694              A694  BKADD.pb
+            A69B              A69B  BKADD.s
+            A6A8              A6A8  BKADD.ns
+            A6AB              A6AB  BKADD.fs
+            A6C5              A6C5  BKADD.ve
+            A6D3              A6D3  BKADD.ap
+            A6D5              A6D5  BKADD.put
+            A716              A716  BKADD.clr
+            A720              A720  BKADD.sh
+            A72B              A72B  BKADD.t
+            A748              A748  BKADD.cm
+            A75B              A75B  BKKEY
+            A775              A775  BKKEY.set
+            A781              A781  BKKEY.k1
+            A78B              A78B  BKKEY.k2
+            A78F              A78F  BKKEY.cl
+            A79C              A79C  BKKEY.h1
+            A7A5              A7A5  BKKEY.h0
+            A7AC              A7AC  BKKEY.h2
+            A7B2              A7B2  BKKEY.h3
+            A7BE              A7BE  BKKEY.l1
+            A7C7              A7C7  BKKEY.l2
+            A7CD              A7CD  BKKEY.l3
+            A7D0              A7D0  BKKEY.r
+            A7D1              A7D1  LFOALL
+            A7DB              A7DB  LFOALL.l
+            A805              A805  LFOALL.ot
+            A81D              A81D  LFOALL.run
+            A87F              A87F  LFOALL.n
+            A891              A891  MRESTORE
+            A89F              A89F  MRESTORE.l
+            A8DF              A8DF  MRESTORE.do
+            A8FA              A8FA  MRESTORE.c
+            A90B              A90B  MRESTORE.k
+            A916              A916  MRESTORE.g
+            A922              A922  MRESTORE.nx
+            A923              A923  MRESTORE.n
+            A945              A945  MRESTORE.r
+            A946              A946  S_BE
+            A953              A953  S_NARM
+            A95D              A95D  S_NEVF
+            A96C              A96C  S_CVX
+            A978              A978  S_CC
+            A985              A985  S_NV
+            A993              A993  S_TM
+            A9A3              A9A3  S_NBX
+            A9B0              A9B0  S_VE
+            A9BC              A9BC  S_RS
+            A9CC              A9CC  S_PB
+            A9D8              A9D8  LVRUNW
+            A9F0              A9F0  LVRUNW.r
+            A9F1              A9F1  S_EMP
+            A9FD              A9FD  S_BL
+            AA0E              AA0E  S_MOS
+            AA17              AA17  S_MOG
+            AA20              AA20  DISPATCH
+            AA38              AA38  DISPATCH.cf
+            AA4D              AA4D  DISPATCH.n10
+            AA5A              AA5A  DISPATCH.n11
+            AA64              AA64  DISPATCH.n126
+            AA79              AA79  DISPATCH.n112
+            AA8E              AA8E  DISPATCH.n101
+            AA9B              AA9B  DISPATCH.n98
+            AAA8              AAA8  DISPATCH.n94
+            AAB5              AAB5  DISPATCH.wr
+            AAC1              AAC1  DISPATCH.rc
+            AAC9              AAC9  DISPATCH.x
+            AACB              AACB  FOFF
+            AAD3              AAD3  SLOWCC
+            AADB              AADB  MXBDEF
+            AAE3              AAE3  MXINIT
+            AB32              AB32  MXINIT.c
+            AB3E              AB3E  MXCLR
+            AB6B              AB6B  MXCLR.s
+            AB84              AB84  MXCLR.b
+            ABA1              ABA1  RAND
+            ABB4              ABB4  PARSE
+            ABC5              ABC5  PARSE.nr
+            ABD4              ABD4  PARSE.st
+            ABDE              ABDE  PARSE.dat
+            ABFD              ABFD  PARSE.chk
+            AC0B              AC0B  PARSE.nat
+            AC21              AC21  PARSE.d2
+            AC36              AC36  PARSE.npa
+            AC54              AC54  PARSE.non
+            AC64              AC64  PARSE.npb
+            AC71              AC71  PARSE.nof
+            AC77              AC77  PARSE.isb
+            AC88              AC88  PARSE.c2
+            AC94              AC94  PARSE.c3
+            ACA0              ACA0  PARSE.c4
+            ACAC              ACAC  PARSE.c5
+            ACB7              ACB7  PARSE.c9
+            ACC5              ACC5  PARSE.cc
+            ACD0              ACD0  PARSE.n111
+            ACDA              ACDA  PARSE.pn
+            ACE3              ACE3  PARSE.n123
+            ACF7              ACF7  PARSE.r
+            ACF8              ACF8  MXCAP
+            AD09              AD09  MXCAP.f
+            AD16              AD16  MXCAP.r
+            AD17              AD17  MXCAP.h
+            AD2E              AD2E  PARAM
+            AD56              AD56  PARAM.r
+            AD57              AD57  PARAM.p1
+            AD6E              AD6E  PARAM.pf
+            AD73              AD73  PARAM.p3
+            AD91              AD91  PARAM.pw
+            ADB7              ADB7  PARAM.p5
+            ADBF              ADBF  PARAM.p10
+            AE21              AE21  PARAM.s1
+            AE23              AE23  PARAM.ix
+            AE2B              AE2B  PARAM.rt
+            AE33              AE33  PARAM.rn
+            AE40              AE40  PARAM.lv
+            AE42              AE42  PARAM.wr
+            AE5B              AE5B  PARAM.p66
+            AE65              AE65  PARAM.pq
+            AE68              AE68  PARAM.p90
+            AEA3              AEA3  PARAM.am
+            AEA8              AEA8  PARAM.ds
+            AEF0              AEF0  PARAM.bs
+            AEF5              AEF5  PARAM.clr
+            AF05              AF05  LFENVUP
+            AF26              AF26  LFENVUP.s
+            AF3E              AF3E  LFENVUP.y
+            AF50              AF50  LFENVUP.yn
+            AF6A              AF6A  LFENVUP.yo
+            AF6E              AF6E  LFENVUP.r
+            AF6F              AF6F  LFGAIN
+            AF9A              AF9A  LFGAIN.fd
+            AFC0              AFC0  LFGAIN.full
+            AFC1              AFC1  LFGAIN.x
+            AFC5              AFC5  LFRSAVE
+            AFD4              AFD4  LFXADD
+            AFF5              AFF5  CLAMP
+            AFFE              AFFE  CLAMP.a
+            B006              B006  CLAMP.b
+            B007              B007  MXLV
+            B01D              B01D  MXLV.o
+            B028              B028  MXLV.c
+            B030              B030  MXLV.k
+            B032              B032  MXSRC
+            B043              B043  MXSRC.s2
+            B04C              B04C  MXSRC.s3
+            B055              B055  MXSRC.s4
+            B064              B064  MXSRC.s5
+            B078              B078  MXSRC.s6
+            B082              B082  MXSRC.s7
+            B092              B092  MXSRC.s8
+            B09C              B09C  MXSRC.s9
+            B0A5              B0A5  MXSRC.s10
+            B0AE              B0AE  MXSRC.s11
+            B0B7              B0B7  MXSRC.s12
+            B0BA              B0BA  MXLFP
+            B0D1              B0D1  MXLFP.l3
+            B0E6              B0E6  MXLFP.l4
+            B0F4              B0F4  MXLFP.l5
+            B109              B109  MXLFP.x
+            B10C              B10C  MATRIX
+            B11B              B11B  MATRIX.go
+            B131              B131  MATRIX.rl
+            B145              B145  MXREC
+            B156              B156  MXREC.on
+            B190              B190  MXREC.sl
+            B1B0              B1B0  MXREC.lf
+            B1B5              B1B5  MXREC.nl
+            B1E3              B1E3  MXREC.sn
+            B211              B211  MXREC.fd
+            B25D              B25D  MXREC.nb
+            B26D              B26D  MXREC.sg
+            B27E              B27E  MXREC.fn
+            B28C              B28C  MXREC.sd
+            B2BE              B2BE  MXREC.p0
+            B2C6              B2C6  MXREC.p1
+            B30B              B30B  MXREC.snx
+            B31A              B31A  MXAPPLY
+            B33A              B33A  MXAPPLY.nr
+            B348              B348  MXOFF
+            B34D              B34D  MXOFF.l
+            B397              B397  MXOFF.s
+            B3D8              B3D8  MXOFF.sn
+            B3E3              B3E3  MXOFF.n
+            B3EE              B3EE  EFREST
+            B3FF              B3FF  LOOPWIN
+            B4C9              B4C9  LOOPWIN.cl
+            B4CF              B4CF  LOOPWIN.fr
+            B4DB              B4DB  LOOPWIN.sh
+            B4E5              B4E5  LOOPWIN.s1
+            B4EF              B4EF  LOOPWIN.dv
+            B4FC              B4FC  LOOPWIN.d1
+            B4FE              B4FE  LOOPWIN.d2
+            B52D              B52D  LOOPWIN.set
+            B563              B563  LOOPWIN.x
+            B565              B565  ENVFIX
+            B571              B571  ENVFIX.a
+            B57E              B57E  ECPREP2
+            B588              B588  ECPREP2.m
+            B5AD              B5AD  ECPREP2.tp
+            B5CF              B5CF  ECPREP2.l
+            B5DF              B5DF  ECTAP
+            B5FB              B5FB  ECTAP.z
+            B60E              B60E  ECTAP.rd
+            B611              B611  NPAD
+            B626              B626  PMSG
+            B639              B639  LMSG
+            B657              B657  NMSGD
+            B669              B669  LCDCHK
+            B683              B683  LCDCHK.e
+            B69D              B69D  LCDCHK.t
+            B6A3              B6A3  LCDCHK.r
+            B6A4              B6A4  PATSRC
+            B6B5              B6B5  PATSRC.r
+            B6B6              B6B6  PATSRC.z
+            B6B9              B6B9  PATPAR
+            B6C5              B6C5  PATPAR.p9
+            B6CE              B6CE  PATPAR.p87
+            B6D9              B6D9  PATPAR.r
+            B6DA              B6DA  ZCOK
+            B6EE              B6EE  ZCOK.a
+            B701              B701  ZCOK.z
+            B705              B705  ZCOK.n
+            B709              B709  SVMCHK2
+            B713              B713  SVMCHK2.n
+            B720              B720  SVMCHK2.s
+            B727              B727  SVMCHK2.r
+            B728              B728  GAPENT
+            B749              B749  GAPENT.cl
+            B74C              B74C  GAPENT.cr
+            B751              B751  GAPENT.z
+            B755              B755  GAPENT.mx
+            B76B              B76B  CAPGO
+            B778              B778  CAPGO.vm
+            B783              B783  CAPGO.ok
+            B799              B799  CAPGO.e
+            B7D1              B7D1  CAPGO.bad
+            B7DC              B7DC  CAPGO.r
+            B7DD              B7DD  CMIDI
+            B7E4              B7E4  CSYC
+            B7EC              B7EC  CAPINIT
+            B7FE              B7FE  SIG
+
+---- Section lv ---------------------------------------------------------------
+
+Real              Virtual           Name
+            B800              B800  S_WV
+            B811              B811  S_WR
+            B822              B822  L6004X
+            B86C              B86C  L6004X.p
+            B872              B872  WVSEL
+            B87D              B87D  WVSEL.off
+            B883              B883  WVCC
+            B88D              B88D  WVCC.h
+            B8A6              B8A6  WVCC.r
+            B8A7              B8A7  WVLOAD
+            B8CD              B8CD  WVLOAD.rs
+            B90B              B90B  WVLOAD.hv
+            B931              B931  WVLOAD.no
+            B937              B937  WVLOAD.ok
+            B941              B941  WVLOAD.ch
+            B951              B951  WVLOAD.g
+            B955              B955  WVLOAD.w
+            B993              B993  WVLOAD.done
+            BA00              BA00  WVLOAD.od
+            BA0D              BA0D  WVLOAD.ms
+            BA1E              BA1E  WVF
+            BA2B              BA2B  WVT
+            BA39              BA39  WVT.saw
+            BA3D              BA3D  WVT.p12
+            BA42              BA42  WVT.p25
+            BA47              BA47  WVT.sq
+            BA4A              BA4A  WVT.pl
+            BA51              BA51  WVT.r
+            BA52              BA52  WVT.tri
+            BA59              BA59  WVT.t1
+            BA5F              BA5F  WVT.sin
+            BA61              BA61  WVT.dsin
+            BA76              BA76  SIN
+            BAA0              BAA0  NEWVOICE
+            BAB0              BAB0  NEWVOICE.done
+            BAB2              BAB2  NEWVOICE.high
+            BAD4              BAD4  NEWVOICE.scan0
+            BAD9              BAD9  NEWVOICE.scan
+            BAEF              BAEF  NEWVOICE.found
+            BB1D              BB1D  NEWVOICE.busy
+            BB23              BB23  S_MRV
+            BB2B              BB2B  S_MSE
+            BB30              BB30  PATIQ
+            BB36              BB36  PATTICK
+            BB4B              BB4B  PATTICK.g0
+            BB6A              BB6A  PATTICK.c
+            BB79              BB79  PATTICK.free
+            BB96              BB96  PATTICK.nr
+            BBB9              BBB9  PATTICK.a
+            BBBC              BBBC  PATTICK.st
+            BBC5              BBC5  PATTICK.sp
+            BBD3              BBD3  PATTICK.lvl
+            BBE9              BBE9  PATTICK.up
+            BBF0              BBF0  PATTICK.msk
+            BC10              BC10  PATTICK.sm
+            BC2B              BC2B  PATTICK.n
+            BC30              BC30  PATTICK.p
+            BC36              BC36  PATTICK.q
+            BC3A              BC3A  PATTICK.r
+            BC3B              BC3B  LVRUNX
+            BC4E              BC4E  LVRUNX.on
+            BC58              BC58  LVRUNX.w
+            BC5B              BC5B  FXMOFP
+            BC6E              BC6E  FXMOFP.r
+            BC6F              BC6F  CKNOW
+            BC82              BC82  CINIT
+            BC98              BC98  CINIT.ng
+            BCB7              BCB7  CINIT.r
+            BCB8              BCB8  CENT
+            BCC2              BCC2  CENT.n7
+            BCCC              BCCC  CENT.t2
+            BCCF              BCCF  CBLD
+            BCCF              BCCF  CBLD.l
+            BCE4              BCE4  CBLD.r
+            BCE5              BCE5  THBUILD
+            BD14              BD14  CURVEQ
+            BD37              BD37  CURVEQ.ch
+            BD4E              BD4E  CURVEQ.r
+            BD4F              BD4F  CBSTEP
+            BD5F              BD5F  CBSTEP.go
+            BD71              BD71  CBSTEP.b
+            BDB7              BDB7  CBSTEP.r
+            BDB8              BDB8  CAPTICK
+            BDC2              BDC2  CAPTICK.n
+            BDC5              BDC5  CAPMX
+            BDCF              BDCF  CAPMX.n
+            BDD2              BDD2  CAPRE
+            BDEF              BDEF  CZERO
+
+---- Section xt ---------------------------------------------------------------
+
+Real              Virtual           Name
+            C000              DC00  SVK8
+            C00F              DC0F  SVK8.tp
+            C022              DC22  SVK8.tm
+            C030              DC30  SVK8.l
+            C057              DC57  ..@21.pos
+            C05A              DC5A  ..@21.ok
+            C067              DC67  ..@22.pos
+            C06A              DC6A  ..@22.ok
+            C08B              DC8B  ..@23.pos
+            C094              DC94  ..@23.ok
+            C0A1              DCA1  ..@24.pos
+            C0A4              DCA4  ..@24.ok
+            C0C5              DCC5  ..@25.pos
+            C0CE              DCCE  ..@25.ok
+            C0CE              DCCE  SVK8.ty
+            C0DD              DCDD  ..@26.pos
+            C0E0              DCE0  ..@26.ok
+            C0E0              DCE0  SVK8.mx
+            C104              DD04  SVK8.st
+            C110              DD10  SVK8.x
+            C119              DD19  SVPAR
+            C17E              DD7E  SVPAR.t
+            C189              DD89  SVCLR
+            C198              DD98  SVRANGE
+            C198              DD98  SVRANGE.c
+            C1B9              DDB9  SVRANGE.big
+            C1BC              DDBC  SVRANGE.n
+            C1FF              DDFF  SVRANGE.nw
+            C20D              DE0D  SVRANGE.x
+            C210              DE10  SVLOOP
+            C274              DE74  SVLOOP.no
+            C276              DE76  SVRONE
+            C2D3              DED3  SVRONE.st
+            C305              DF05  SVRONE.plain
+            C32E              DF2E  SVPRE
+            C372              DF72  SVPRE.ru
+            C389              DF89  SVPRE.rf
+            C3C0              DFC0  SVPRE.r
+            C3C1              DFC1  SVPOST
+            C405              E005  SVRESET
+            C410              E010  SVLV
+            C41E              E01E  SVINIT
+            C424              E024  SVMAPCC
+            C434              E034  SVMAPCC.a
+            C43B              E03B  SVMAPCC.r
+            C43C              E03C  SVUNMAP
+            C457              E057  SVUNMAP.a
+            C45E              E05E  SVUNMAP.r
+            C45F              E05F  SVUNMAP.no
+            C462              E062  SVMAPCHK
+            C49B              E09B  SVMAPCHK.clr
+            C4D9              E0D9  SVBIX
+            C4FF              E0FF  SVBIX.v
+            C515              E115  SVBIX.r
+            C51A              E11A  SVSKIP
+            C543              E143  SVSKIP.no
+            C545              E145  SVNOWR
+            C553              E153  SVNOWR.w
+            C555              E155  SVMARK
+            C56F              E16F  SVMARK.r
+            C570              E170  SVSWN
+            C5AC              E1AC  SVSWN.nz
+            C5CD              E1CD  SVSWN.bf
+            C5D2              E1D2  SVSWN.in
+            C5D7              E1D7  SVSWN.e
+            C5F0              E1F0  SVSWN.p
+            C5F2              E1F2  SVSWN.r
+            C5F3              E1F3  SVSWADV
+            C640              E240  SVSWADV.p2
+            C64C              E24C  SVSWADV.r
+            C64D              E24D  SPLOOP
+            C69E              E29E  SPLOOP.cp
+            C6A5              E2A5  SPLOOP.c
+            C6BD              E2BD  SPLOOP.l
+            C6CA              E2CA  SPLOOP.r
+            C6CB              E2CB  SVFT
+            C7CB              E3CB  ENVDIR
+            C7E3              E3E3  ENVDIR.g
+            C7EA              E3EA  ENVDIR.l
+            C7F9              E3F9  ENVDIR.u
+            C801              E401  IQSCAN
+            C819              E419  IQSCAN.q
+            C834              E434  IQSCAN.r
+            C835              E435  IQB
+            C843              E443  IQB.s
+            C84C              E44C  IQB.x
+            C84D              E44D  IQB.d
+            C868              E468  IQB.c
+            C885              E485  IQB.t
+            C8AF              E4AF  IQB.nb
+            C8BD              E4BD  IQB.nc
+            C8C7              E4C7  IQB.qof
+            C8CA              E4CA  IQB.ncb
+            C8D4              E4D4  IQB.n1
+            C8EF              E4EF  IQB.at
+            C8F4              E4F4  PINIT
+            C8FC              E4FC  PINIT.c
+            C909              E509  PSETT
+            C929              E529  PSETT.s
+            C92D              E52D  PPARAM
+            C935              E535  PPARAM.n8
+            C93D              E53D  PPARAM.n7
+            C944              E544  PPARAM.m
+            C957              E557  PPARAM.s
+            C976              E576  PPARAM.r
+            C977              E577  PPARAM.off
+            C979              E579  PRESTORE
+            C98D              E58D  PRESTORE.l
+            C9AE              E5AE  PRESTORE.r
+            C9AF              E5AF  PNON
+            C9CB              E5CB  PNON.ng
+            C9D7              E5D7  PNON.go
+            CA04              E604  PNON.hi
+            CA09              E609  PNON.neg
+            CA13              E613  PNON.lo
+            CA16              E616  PNON.st
+            CA1E              E61E  PNON.h
+            CA2E              E62E  PNON.r
+            CA2F              E62F  GLDEC
+            CA39              E639  GLDEC.l
+            CA55              E655  GLDEC.d
+            CA5F              E65F  GLDEC.k
+            CA63              E663  GLDEC.n
+            CA68              E668  GLDEC.r
+            CA69              E669  PNOFF
+            CA74              E674  PNOFF.r
+            CA75              E675  PTICK
+            CA7D              E67D  PTICK.on
+            CA7D              E67D  PTICK.z
+            CAA3              E6A3  PTICK.nm
+            CAD6              E6D6  FXMOF
+            CAEC              E6EC  FXMT
+            CAFB              E6FB  CRB
+            CB0C              E70C  FXBITS
+            CB1F              E71F  CRPAR
+            CB45              E745  CRPAR.h
+            CB48              E748  CRPAR.r
+            CB49              E749  NXPAR
+            CBA2              E7A2  MIXW
+            CBC7              E7C7  MIXW.r
+            CBC8              E7C8  FXLX
+            CBC8              E7C8  FXLX.l
+            CBDC              E7DC  FXLX.p
+            CBE5              E7E5  FXLX.m
+            CBF1              E7F1  FXLD
+            CBF1              E7F1  FXLD.l
+            CC01              E801  FXLD.h
+            CC18              E818  FXLD.n
+            CC24              E824  FXLB
+            CC24              E824  FXLB.l
+            CC3A              E83A  DCPREP
+            CC72              E872  DCPREP.r
+            CC75              E875  RETN
+            CC76              E876  VIARM
+            CC77              E877  S_PN
+            CC88              E888  S_VI
+            CC99              E899  PANIC
+            CCBD              E8BD  PANIC.k
+            CCFE              E8FE  PNCH
+            CCFF              E8FF  VINIT
+            CD0A              E90A  VINIT.hi
+            CD2E              E92E  VINIT.r
+            CD2F              E92F  S_RD
+            CD40              E940  NXPAR2
+            CD5D              E95D  NXPAR2.g1
+            CD8D              E98D  FXREN2
+            CD99              E999  FXREN2.cp
+            CDB9              E9B9  FXREN2.sw
+            CDDD              E9DD  FXREN2.x
+            CDDE              E9DE  RDCLEAN
+            CDF3              E9F3  RDCLEAN.r
+            CDF6              E9F6  ECPREP
+            CE00              EA00  POPREP
+            CE02              EA02  POPREP.run
+            CE0B              EA0B  POPREP.go
+            CE22              EA22  POPREP.l
+            CE37              EA37  POPREP.rv
+            CE55              EA55  POPREP.c
+            CE64              EA64  PSRC
+            CEA9              EAA9  PSRC.wf
+            CEAB              EAAB  PSRC.ws
+            CED0              EAD0  PSRC.ns
+            CEDA              EADA  PSRC.r1
+            CEF4              EAF4  PSRC.sc
+            CF23              EB23  PSRC.no
+            CF27              EB27  PSRC.ok
+            CF37              EB37  PSRC.id
+            CF49              EB49  FXLE
+            CF4C              EB4C  FXLE.l
+            CF71              EB71  FXLE.m
+            CF80              EB80  FXLQ
+            CF83              EB83  FXLQ.l
+            CF9A              EB9A  RTB2
+            CFB2              EBB2  RTB2.a
+            CFBC              EBBC  RTB2.x
+            CFBF              EBBF  PNON2
+            CFCB              EBCB  PNON2.x
+            CFCE              EBCE  LRMASK
+            CFDF              EBDF  LRMASK.m
+            CFE4              EBE4  LRMASK.r
+            CFE5              EBE5  S_CAPD
+            CFF6              EBF6  CSYT
+
+---- Section ov ---------------------------------------------------------------
+
+Real              Virtual           Name
+            D000              D400  CAPSTART
+            D024              D424  CAPSTART.z
+            D043              D443  CAPSTART.c
+            D058              D458  CAPFLT
+            D06A              D46A  CAPFLT.m
+            D075              D475  CAPFLT.mn
+            D087              D487  CAPFLT.cc
+            D08C              D48C  CAPFLT.ig
+            D09D              D49D  CAPFLT.i97
+            D0AA              D4AA  CAPFLT.i99
+            D0B5              D4B5  CAPFLT.s2
+            D0BA              D4BA  CAPFLT.i98
+            D0C7              D4C7  CAPFLT.i9x
+            D0D1              D4D1  CAPFLT.fd
+            D0DC              D4DC  CAPFLT.i86
+            D0FA              D4FA  CAPFLT.y
+            D0FC              D4FC  CAPFLT.n
+            D0FE              D4FE  CMAP
+            D106              D506  CAPCC
+            D114              D514  CCTB
+            D126              D526  CCTB.c2
+            D12E              D52E  CCTB.c3
+            D139              D539  CCTB.c4
+            D140              D540  CCTB.c5
+            D14D              D54D  CCTB.c6
+            D15C              D55C  CCTB.c7
+            D168              D568  CCTB.sh
+            D16B              D56B  CCTB.c8
+            D170              D570  CCTB.c9
+            D179              D579  CCTB.r9
+            D17A              D57A  CCTB.rw
+            D17D              D57D  CAPEND
+            D189              D589  CAPEND.np
+            D190              D590  CAPEND.m
+            D19F              D59F  CAPRUN
+            D1E2              D5E2  CAPRUN.fr
+            D1E3              D5E3  CAPRUN.rc
+            D1E6              D5E6  CAPRUN.rl
+            D204              D604  CAPRUN.pl
+            D22E              D62E  CAPRUN.h
+            D248              D648  CAPRUN.end
+            D261              D661  CAPRUN.e0
+            D264              D664  CAPRUN.s3
+            D26A              D66A  CAPRUN.r
+            D26B              D66B  CELLT
+            D278              D678  CSTART
+            D2B8              D6B8  CSTART.set
+            D2BB              D6BB  CSTART.r
+            D2BC              D6BC  CSTART.go
+            D2F0              D6F0  CSTART.fit
+            D2F5              D6F5  CSTART.new
+            D2F8              D6F8  CSTART.a1
+            D334              D734  CSTART.ok
+            D348              D748  CSTART.rs
+            D365              D765  CSTART.f45
+            D38D              D78D  CREC
+            D3B7              D7B7  CREC.rr
+            D3B8              D7B8  CREC.done
+            D3DC              D7DC  CREC.un
+            D3DF              D7DF  CREC.lp
+            D42D              D82D  CREC.r
+            D42E              D82E  CHORD
+            D443              D843  CHORD.n
+            D460              D860  CHORD.k1
+            D467              D867  CHORD.k0
+            D485              D885  CHORD.vf
+            D48B              D88B  CHORD.vr
+            D495              D895  CHORD.r1
+            D4A2              D8A2  CHORD.vs
+            D4A4              D8A4  CHORD.vw
+            D4AB              D8AB  CHORD.x
+            D4B1              D8B1  CHOLD
+            D4C1              D8C1  CHOLD.a
+            D4D2              D8D2  CHOLD.p
+            D4EE              D8EE  CHOLD.dn
+            D4F8              D8F8  CHOLD.up
+            D500              D900  CHOLD.ps
+            D504              D904  CHOLD.sh
+            D508              D908  CHOLD.s1
+            D510              D910  CHOLD.st
+            D530              D930  CHOLD.r
+            D535              D935  CTRIM
+            D54B              D94B  CGSR
+            D557              D957  CPY4
+            D562              D962  CSTM
+            D573              D973  CAPPLY
+            D582              D982  CAPPLY.g
+            D59C              D99C  CAPPLY.r
+            D59D              D99D  CSTOP
+            D5B2              D9B2  CFIN
+            D5D2              D9D2  CSNAP
+            D5E8              D9E8  CALLOFF
+            D5EE              D9EE  CALL1
+            D609              DA09  CALL1.r
+            D60A              DA0A  CPNOTE
+            D613              DA13  CPNOTE.v
+            D623              DA23  CMS
+            D631              DA31  CWORDS
+            D63F              DA3F  CWORDS.s
+            D645              DA45  CWORDS.r
+            D646              DA46  CTZ
+            D667              DA67  CSHOW
+            D692              DA92  CSHOW.p
+            D6AD              DAAD  CMSG
+            D6B0              DAB0  CSHOW2
+            D6F8              DAF8  CSMS
+            D706              DB06  CFDU
+            D714              DB14  CSHOWF
+            D721              DB21  CMST
+            D741              DB41  CHMC
+            D751              DB51  CSGT
+            D761              DB61  CHT
+            D785              DB85  S_CAP
+            D794              DB94  S_CP2
+            D7A4              DBA4  CVN
+            D7B0              DBB0  CFDT
+            D7B8              DBB8  S_CF
+
+---- Section ov2 --------------------------------------------------------------
+
+Real              Virtual           Name
+            D800              D400  OV2SIG
+            D802              D402  MKBND
+            D854              D454  MKBND.ok
+            D864              D464  MKBND.eq
+            D869              D469  MKBND.e1
+            D8A6              D4A6  MKBND.e3
+            D8A9              D4A9  MKBND.e2
+            D8C0              D4C0  MKBND.end
+            D8DC              D4DC  MKBND.bad
+            D8DE              D4DE  TRANS
+            D8F5              D4F5  TRANS.g1
+            D8FD              D4FD  TRANS.g2
+            D91A              D51A  TRANS.lp
+            D928              D528  TRANS.a
+            D960              D560  TRANS.t
+            D9C0              D5C0  TRANS.zr
+            D9C4              D5C4  TRANS.zk
+            D9C7              D5C7  TRANS.zs
+            D9F3              D5F3  TRANS.nx
+            D9FB              D5FB  TRANS.dn
+            DA01              D601  SLTOOL
+            DA2D              D62D  SLTOOL.k1
+            DA46              D646  SLTOOL.nm
+            DA55              D655  SLTOOL.k
+            DA6C              D66C  SLTOOL.hi
+            DA70              D670  SLTOOL.mv
+            DA7E              D67E  SLTOOL.set
+            DA9D              D69D  SLTOOL.show
+            DACE              D6CE  SLTOOL.r
+            DACF              D6CF  SLTOOL.sb
+            DAE4              D6E4  SLTOOL.sb1
+            DAEB              D6EB  VFULL
+            DAF3              D6F3  VFULL.c
+            DB17              D717  VFULL.r
+            DB2A              D72A  VFULL.f
+            DB44              D744  VFC
+            DB62              D762  VFC.e
+            DB62              D762  VFR
+            DB77              D777  VFR.e
+            DB77              D777  S_VF
+            DB88              D788  S_SL
+            DB99              D799  S_SO
+            DBAA              D7AA  S_NM
+
+---- Section ov3 --------------------------------------------------------------
+
+Real              Virtual           Name
+            DC02              D402  S_DU
+            DC12              D412  S_SHR
+            DC22              D422  DELUN
+            DC2C              D42C  DELUN.d1
+            DC4C              D44C  DELUN.d2
+            DC64              D464  DELUN.r
+            DC65              D465  COPYV
+            DC6F              D46F  COPYV.h
+            DC95              D495  COPYV.go
+            DCC4              D4C4  COPYV.r
+            DCC5              D4C5  STRET2
+            DCE4              D4E4  STOFF
+            DD1A              D51A  STOFF.n
+            DD35              D535  S_STO
+            DD45              D545  PERSL
+            DD54              D554  PERSL.sh
+            DD6B              D56B  PERSL.m
+            DD71              D571  PERSL.r
+            DD72              D572  CAPIN
+            DD79              D579  CAPIN.r
+            DD7A              D57A  CHINTO
+            DD88              D588  CHINTO.s
+            DD8F              D58F  S_PSO
+            DD9F              D59F  S_CI0
+            DDB0              D5B0  S_CI1
+            DDC1              D5C1  S_PSS
+
+---- Section ov4 --------------------------------------------------------------
+
+Real              Virtual           Name
+            E002              D402  VTOOL
+            E023              D423  VTOOL.ka
+            E031              D431  VTOOL.k0
+            E036              D436  VTOOL.ex
+            E03E              D43E  VTOOL.e
+            E043              D443  VTOOL.pick
+            E04B              D44B  VTOOL.c
+            E052              D452  VTOOL.c1
+            E065              D465  VTOOL.f
+            E071              D471  VTOOL.n
+            E07B              D47B  VTOOL.r
+            E07C              D47C  VTOOL.got
+            E085              D485  VTOOL.sel
+            E0A2              D4A2  VTOOL.ok
+            E0F6              D4F6  NORMCC
+            E100              D500  NORMCC.hi
+            E12E              D52E  NORMCC.ok
+            E144              D544  NORMCC.p1
+            E152              D552  NORMCC.a1
+            E158              D558  NORMCC.a2
+            E16B              D56B  NORMCC.g
+            E17A              D57A  NORMCC.dv
+            E17C              D57C  NORMCC.gg
+            E18A              D58A  NORMCC.p2s
+            E190              D590  NORMCC.p2
+            E1A5              D5A5  NORMCC.b1
+            E1AD              D5AD  NORMCC.b2
+            E1F0              D5F0  NORMCC.r
+            E1F1              D5F1  CHFIND
+            E1F7              D5F7  CHFIND.f
+            E207              D607  CHFIND.n
+            E20E              D60E  CHFIND.got
+            E21D              D61D  CHFIND.c
+            E23F              D63F  CHFIND.cn
+            E247              D647  CHFIND.cs
+            E284              D684  CHFIND.r
+            E285              D685  FREEZE
+            E2A4              D6A4  FREEZE.z
+            E2B3              D6B3  FREEZE.z2
+            E2C4              D6C4  FREEZE.m
+            E2CA              D6CA  FREEZE.r
+            E2CB              D6CB  CHBSEL
+            E2DA              D6DA  CHBSEL.new
+            E2EA              D6EA  CHBSEL.fb
+            E2FD              D6FD  CHBSEL.own
+            E31E              D71E  CHBSEL.nm
+            E328              D728  CHBSEL.to
+            E335              D735  CHBSEL.t1
+            E340              D740  S_FRZ
+            E351              D751  S_NB
+            E361              D761  S_NS
+            E371              D771  S_NF
+            E381              D781  S_NG
+
+---- Section ov5 --------------------------------------------------------------
+
+Real              Virtual           Name
+            E402              D402  STRETCH
+            E415              D415  STRETCH.lo
+            E431              D431  STRETCH.st
+            E435              D435  STRETCH.chk
+            E43C              D43C  STRETCH.r0
+            E43D              D43D  STRETCH.hi
+            E44A              D44A  STRETCH.o2
+            E453              D453  STRETCH.onoff
+            E460              D460  STRETCH.on
+            E465              D465  BUILD
+            E48F              D48F  BUILD.rs
+            E4A0              D4A0  BUILD.rs1
+            E4D2              D4D2  BUILD.sh
+            E4D8              D4D8  BUILD.r
+            E4D9              D4D9  BUILD.ok
+            E4F8              D4F8  BUILD.g7
+            E50A              D50A  BUILD.gok
+            E51E              D51E  BUILD.t14
+            E535              D535  BUILD.d6
+            E54A              D54A  BUILD.oi
+            E568              D568  BUILD.otb
+            E578              D578  BUILD.ot1
+            E583              D583  BUILD.orv
+            E585              D585  BUILD.or1
+            E595              D595  BUILD.osh
+            E59F              D59F  BUILD.os1
+            E5CE              D5CE  BUILD.ofw
+            E5D0              D5D0  BUILD.lp
+            E5EF              D5EF  BUILD.sm
+            E5F9              D5F9  BUILD.s0
+            E617              D617  BUILD.tr
+            E643              D643  BUILD.l1
+            E64B              D64B  BUILD.l2
+            E650              D650  BUILD.park
+            E669              D669  BUILD.wr
+            E69C              D69C  BUILD.su
+            E6C6              D6C6  BUILD.lp0
+            E6D0              D6D0  BUILD.lpd
+            E711              D711  BUILD.gs
+            E719              D719  BUILD.gr
+            E726              D726  BUILD.g9
+            E742              D742  BUILD.snap
+            E74C              D74C  BUILD.ns
+            E74D              D74D  STOWN5
+            E766              D766  STOWN5.no
+            E76D              D76D  STOWN5.r
+            E76E              D76E  STRSB5
+            E784              D784  S_STR
+            E795              D795  S_STS
+

@@ -1,0 +1,2487 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>FZED User Manual</title><style>
+*{box-sizing:border-box}body{margin:0;background:#f7f9f8;color:#202b2a;font:16px/1.7 system-ui,sans-serif;letter-spacing:0}header{background:#202426;color:#e9f4f2;padding:24px max(20px,calc((100% - 1000px)/2))}header b{font-size:28px}header a{color:#76e5d2;margin-left:20px}main{max-width:1040px;padding:32px 20px 80px;margin:auto}h1{font-size:38px}h2{font-size:25px;margin-top:48px;border-bottom:1px solid #b5c9c6;padding-bottom:8px}h3{font-size:19px;margin-top:30px}h1,h2,h3{line-height:1.3}a{color:#136958}nav{border-bottom:1px solid #b5c9c6;padding-bottom:22px}nav ul{columns:2;padding-left:22px;gap:30px}nav li{break-inside:avoid;font-size:14px;margin-bottom:6px}table{width:100%;border-collapse:collapse;font-size:14px;margin:22px 0;table-layout:fixed}th,td{text-align:left;vertical-align:top;padding:11px 13px;border-bottom:1px solid #c7d6d2;overflow-wrap:anywhere}th{background:#dbe9e5}tr:nth-child(even){background:#edf3f0}th:first-child,td:first-child{width:30%}code{font-size:13px;overflow-wrap:anywhere;background:#e5eeea;padding:2px 4px}li{margin:8px 0}p{margin:18px 0}@media(max-width:600px){nav ul{columns:1}h1{font-size:30px}h2{font-size:23px}th,td{padding:8px}table{font-size:13px}}@media print{body{background:white;font-size:11pt}header,nav{display:none}main{padding:0}h2{break-after:avoid}tr{break-inside:avoid}a{color:inherit}}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#e5eeea;padding:16px;font-size:12px;line-height:1.6}pre code{padding:0;background:transparent}
+</style></head><body><header><b>FZED</b><a href="FZED.html">FZED browser editor</a></header><main><nav aria-label="Contents"><ul><li><a href="#section-1">User Manual</a></li><li><a href="#section-2">1. What FZED Is</a></li><li><a href="#section-3">2. Getting Started</a></li><li><a href="#section-4">3. Reading The Browser</a></li><li><a href="#section-5">4. Menu Order</a></li><li><a href="#section-6">5. Filter / Keys</a></li><li><a href="#section-7">6. ADSR</a></li><li><a href="#section-8">7. Envelope Stages</a></li><li><a href="#section-9">8. LFO 1</a></li><li><a href="#section-10">9. LFO 2</a></li><li><a href="#section-11">10. Key / Velocity</a></li><li><a href="#section-12">11. Controllers</a></li><li><a href="#section-13">12. Mod Matrix: Source, Destination, Amount</a></li><li><a href="#section-14">13. Play / Loop</a></li><li><a href="#section-15">14. Stretch</a></li><li><a href="#section-16">15. Record</a></li><li><a href="#section-17">16. Capture</a></li><li><a href="#section-18">17. Chop / Pattern</a></li><li><a href="#section-19">18. Slices</a></li><li><a href="#section-20">19. FX</a></li><li><a href="#section-21">20. Bank Builder</a></li><li><a href="#section-22">21. User Presets And Saving</a></li><li><a href="#section-23">22. Three Practical Starting Points</a></li><li><a href="#section-24">23. Troubleshooting And Limits</a></li><li><a href="#section-25">Appendix A: MIDI CC Reference</a></li><li><a href="#section-26">Software And Data</a></li><li><a href="#section-27">Credits And Licence</a></li></ul></nav><h1>FZED</h1>
+<h2 id="section-1">User Manual</h2>
+<p>FZED optional software for Casio FZ hardware, operated through the FZED browser editor.</p>
+<h2 id="section-2">1. What FZED Is</h2>
+<p>FZED is optional software that runs on the Casio FZ and turns it into a more immediate, MIDI-controlled sampling instrument. The FZED browser editor sends parameter changes to FZED over MIDI. The FZ supplies the sample memory, sound generators, filters, envelopes, converters and audio outputs.</p>
+<p>The FZED optional software combines voice editing with performance tools: MIDI-controlled envelopes and loop windows, two LFO systems, a modulation matrix, sample-processing effects, slicing, rhythmic patterns, and an alternating record/play capture engine. It is not a replacement operating system, a plug-in hosted by the browser, or a new audio engine running on the computer. The FZED browser editor controls the hardware; it does not produce the FZ's audio.</p>
+<p>A stored voice is a sound definition. An active generator is one of the FZ's eight simultaneous playback resources. Editing a voice, changing a running generator and processing sample memory are different operations: they need not become audible at the same moment. Some changes affect held notes; others depend on a new note, a new capture, the voice's configuration or a render.</p>
+<p>This manual describes the FZED optional software and the FZED browser editor, not a claim that every combination has been proved on hardware. The browser editor's controls and MIDI output have automated tests; visual browser checks and hardware testing remain necessary. Use a known-working voice and verify each new sound path on the FZ.</p>
+<h2 id="section-3">2. Getting Started</h2>
+<ol>
+<li>Back up your samples and voices. Processing, recording, deleting unused data, slicing and loading preset waves can change memory.</li>
+<li>Load a working sample/voice and verify it from the FZ keyboard in the normal operating system.</li>
+<li>Load and execute the FZED optional software on the FZ. Entering optional software cuts existing audio; do not rely on holding a note while entering it.</li>
+<li>Choose the startup option on the FZ: retain the loaded voice's settings, or initialise them. Retain is the usual choice for an already prepared sound. When there is no usable voice, the program follows its no-voice/init path.</li>
+<li>Open the FZED browser editor and select the MIDI output connected to the FZ and the correct MIDI channel.</li>
+<li>Enable browser output explicitly, then test one control, such as cutoff, while playing a note. The browser starts locked and never sends a patch automatically.</li>
+</ol>
+<h3>Connecting The Browser Editor</h3>
+<p>Use a MIDI interface whose output reaches the FZ's MIDI input. If you want to play from an external MIDI keyboard through the browser editor, select that keyboard as the input and enable Notes / bend thru. Alternatively, audition with the browser editor's keyboard or the FZ keyboard.</p>
+<p>Use a browser with Web MIDI support, such as Chrome or Edge. Grant MIDI access when requested. If opening the HTML file does not provide MIDI access, open the editor through localhost. Avoid sending the same notes through two parallel MIDI routes.</p>
+<h3>Follow Controls From MIDI</h3>
+<p><strong>Follow</strong> has three choices. <strong>Off</strong> keeps the existing MIDI Learn behavior. <strong>Display only</strong> follows incoming controls without sending those changes back to the FZ; use this when your controller already reaches the FZ directly. <strong>Follow and forward</strong> updates the editor and passes each incoming CC to the FZ once; use this when the controller reaches the computer but is not otherwise connected to the FZ. Output must be enabled for forwarding, and input and output must be separate MIDI ports.</p>
+<p><strong>Input values</strong> says what your controller sends. <strong>Plain 0-127</strong> (the default) suits any controller: each knob's full travel is spread across a control's settings, and in <strong>Follow and forward</strong> the editor sends the converted FZED message, including the CC10/CC11 pair an indexed parameter such as LFO 2 Destination 2 needs. Choose <strong>FZED messages (as sent)</strong> when the input already sends exactly what FZED receives, as listed in Appendix A: FZED's own values (for example 0-5 for the LFO 1 waveform) and CC10/CC11 parameter pairs. That fits a sequencer or DAW replaying what it recorded from the editor's output, or a controller set up with those numbers; the editor follows the messages and passes them on unchanged. With FZED messages, MIDI Learn ignores CC10/CC11 because Follow already tracks those controls; with Plain 0-127 they are ordinary CCs you can learn.</p>
+<p><strong>IN</strong> can be one MIDI input or <strong>All inputs</strong>, so several controllers can be used together. Learned controls remember the input and channel they were learned from. All inputs leaves out the input of the interface chosen as OUT, so the FZ's own messages are not fed back to it.</p>
+<p>Follow listens on the selected MIDI channel and identifies controls across every page, including CC10/CC11 parameter pairs, envelope steps and matrix values. A CC10 message selects an FZ parameter ID; its following CC11 supplies that parameter's value, and later CC11 messages keep editing it until another CC10 arrives, as on the FZ. Follow keeps that pair's context separate by MIDI input and channel. Context-sensitive CCs follow the editor's current FX selection or Capture On/Off setting. <strong>Follow pages</strong> is on by default and switches to the relevant page, at most about once every 300 ms; turn it off to keep the current page visible while values continue updating in the background. Where FZED offers the same setting in two places, both update the one control in the editor.</p>
+<h2 id="section-4">3. Reading The Browser</h2>
+<p>The large value is a named or formatted value. The small numeric field is the raw <strong>0-127</strong> MIDI input value. These are not always identical: stage selectors become indexes 0-7 on MIDI, and key controls become note numbers.</p>
+<p>Controls with distinct steps (lists, notes, semitones, stretch hold times) are stepped pots: drag up or down, use the mouse wheel or the arrow keys, one step at a time. Two-choice settings are switches. <strong>FZ SCREEN</strong> (beside the page title) shows what the FZ's own screen should show for every change: made in FZED with the mouse or keys (output enabled or not), or received from the controller (FOLLOW must not be Off): the lines are the FZ's own. Line 3 is FZED's message line (CHOP 08 SLICES, FX TAPEHACK, MIX 050%, the capture settings line C0010 x4 +00 F and so on). Line 4 is FZED's echo of the last message, C=ccc vvv for a controller or P=ppp vvv for a parameter; FZED leaves it out after the FX value, capture and chord messages. Lines 5-6 are the record settings and state. Lines starting with <strong>&gt;</strong> (&gt; PLAY SLICES, &gt; PLAY VOICE) are the editor's own note of what CC98 asked for; the FZ shows only the echo for those. The screen is worked out from the messages, not read back from the FZ, so anything that depends on the FZ's contents is not shown: the voice name, whether a bank is empty, slice notes and results, stretch timing and the outcome of Render, Normalise or Delete Unused. Each page groups its controls by function (FILTER, KEYS, AMP, LOOP and so on). Related settings line up in columns, such as the amp settings above the filter ones. For stepped settings the editor sends the middle of each step, so a choice never lands on a border.</p>
+<p>A dash means <strong>no local value is known</strong>. It does not mean zero or the FZ's default. There is no FZ voice-parameter readback. The editor remembers local values, not the actual current contents of the FZ.</p>
+<table>
+<thead>
+<tr>
+<th>Browser control</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Connect MIDI / IN / OUT / CH</td>
+<td>Grant MIDI access and select the source (one input or All inputs), destination and output channel</td>
+</tr>
+<tr>
+<td>Output locked/enabled</td>
+<td>Allow or stop outgoing parameter edits and audition notes</td>
+</tr>
+<tr>
+<td>Follow</td>
+<td>Off, display incoming controls without echo, or follow and forward incoming CCs once</td>
+</tr>
+<tr>
+<td>Follow pages</td>
+<td>Switch to the page of a followed control; values still update when this is off</td>
+</tr>
+<tr>
+<td>Input values</td>
+<td>Plain 0-127 values scaled for each control, or FZED messages (FZED values and CC10/CC11 pairs) passed through</td>
+</tr>
+<tr>
+<td>Radio icon on a parameter</td>
+<td>Learn an incoming CC for that control on the current view</td>
+</tr>
+<tr>
+<td>MIDI actions</td>
+<td>Separately confirm whether learned command CCs are allowed to run</td>
+</tr>
+<tr>
+<td>Unlearn</td>
+<td>Remove learned assignments from the current view</td>
+</tr>
+<tr>
+<td>Send view</td>
+<td>Confirm and send only stored, non-action values on the visible view</td>
+</tr>
+<tr>
+<td>Save/Open settings</td>
+<td>Export/import editor JSON; importing locks output and runs no actions</td>
+</tr>
+<tr>
+<td>Notes / bend thru</td>
+<td>Forward notes, bend, aftertouch and selected performance CCs to the selected output channel</td>
+</tr>
+<tr>
+<td>Clock thru</td>
+<td>Independently forward MIDI clock and transport messages</td>
+</tr>
+<tr>
+<td>Keyboard / octave / velocity</td>
+<td>Audition notes without automatic note triggering on startup</td>
+</tr>
+<tr>
+<td>Panic</td>
+<td>Release owned notes, turn sustain off, and send CC120 and CC123</td>
+</tr>
+</tbody>
+</table>
+<p>MIDI Learn listens only on the chosen input. Parameter assignments operate on the visible page/view. Capture's recording and chord controls are all on the same page; assigning an incoming CC to a different capture control replaces its previous assignment on that page. Learning consumes its first assignment message without sending a parameter. A single learned CC can control an indexed FZ parameter: in <strong>Follow and forward</strong>, FZED sends the mapped CC10 parameter ID and CC11 value pair, and does not also forward the source CC. In <strong>Display only</strong>, the editor follows without sending anything.</p>
+<p>Explicit command buttons also have their own MIDI Learn control next to each command choice. Learned commands are disabled by default. Turn on <strong>MIDI actions</strong> and confirm to allow learned command CCs; a rising value of 64 or higher triggers the chosen command once, and another trigger requires the CC to return below 64 first. This opt-in can start recording or change sample data, so keep Output locked until ready and turn MIDI actions off when finished. On-screen command buttons continue to ask for confirmation each time.</p>
+<p>Changing a port or channel locks output and releases notes and sustain at their original destination. ESC in the browser releases its notes and cancels Learn. It does not operate the FZ's physical ESC key. Avoid MIDI feedback and simultaneous indexed CC10/11 edits from two controllers on the same channel.</p>
+<h2 id="section-5">4. Menu Order</h2>
+<table>
+<thead>
+<tr>
+<th>Page</th>
+<th>Name</th>
+<th>Browser subviews</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Filter / Keys</td>
+<td>One view</td>
+</tr>
+<tr>
+<td>2</td>
+<td>ADSR</td>
+<td>One view</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Envelope Stages</td>
+<td>Stages 1-8</td>
+</tr>
+<tr>
+<td>4</td>
+<td>LFO 1</td>
+<td>One view</td>
+</tr>
+<tr>
+<td>5</td>
+<td>LFO 2</td>
+<td>One view</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Key / Velocity</td>
+<td>One view</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Controllers</td>
+<td>Mod wheel / Foot / Aftertouch</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Mod Matrix</td>
+<td>Source / Destination / Amount</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Play / Loop</td>
+<td>One view</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Stretch</td>
+<td>One view</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Record</td>
+<td>One view</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Capture</td>
+<td>One page: recording, hold, chord and transition controls</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Chop / Pattern</td>
+<td>One view</td>
+</tr>
+<tr>
+<td>14</td>
+<td>Slices</td>
+<td>One view</td>
+</tr>
+<tr>
+<td>15</td>
+<td>FX</td>
+<td>Effect-dependent controls</td>
+</tr>
+<tr>
+<td>16</td>
+<td>Bank Builder</td>
+<td>One view, with the build sequence</td>
+</tr>
+<tr>
+<td>17</td>
+<td>User Presets</td>
+<td>Preset list</td>
+</tr>
+</tbody>
+</table>
+<p>Page navigation changes the controls you see, <strong>not the FZ's recording/capture state</strong>. In particular, selecting Capture does not start recording, and selecting Record does not leave capture.</p>
+<h2 id="section-6">5. Filter / Keys</h2>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DCF Cutoff</td>
+<td>Sets the voice filter's cutoff. Use high values for an open starting point</td>
+</tr>
+<tr>
+<td>DCQ Resonance</td>
+<td>Sets the filter resonance/Q; high settings can make the sound much louder or more concentrated</td>
+</tr>
+<tr>
+<td>Tape Speed (CC71)</td>
+<td>Changes how fast the FZ reads the sample already stored in memory: 36K, 18K, 9K or 4.5K words per second. It changes the voice playback-rate setting only; the sample data is untouched.</td>
+</tr>
+<tr>
+<td>Original Key</td>
+<td>Sets the sample's reference/root key (named notes, C2 = 36)</td>
+</tr>
+<tr>
+<td>Highest / Lowest Key</td>
+<td>Set the playable range. The firmware keeps it within three octaves of the original key; the browser cannot read back any clamping</td>
+</tr>
+</tbody>
+</table>
+<p>Choosing a voice to edit, bank selection and bank adds are on <strong>Bank Builder</strong> (section 20). Play Mode is on Play / Loop.</p>
+<p><strong>Tape Speed (CC71)</strong> is playback speed, not recording quality. Each step down halves playback speed, so the sample plays one octave lower, lasts twice as long and sounds duller. Each step up doubles speed, raising it one octave and halving its duration. The four CC71 bands are 0-31 = 36K, 32-63 = 18K, 64-95 = 9K and 96-127 = 4.5K words per second. Changing Tape Speed does not rewrite or resample the stored audio.</p>
+<h2 id="section-7">6. ADSR</h2>
+<p>There is one simplified envelope for amplitude (DCA) and one for the filter (DCF).</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Attack</td>
+<td>Time/rate control for reaching the initial peak after note-on</td>
+</tr>
+<tr>
+<td>Decay</td>
+<td>Time/rate control for moving from peak to sustain</td>
+</tr>
+<tr>
+<td>Sustain Level</td>
+<td>Level maintained while a note is held, subject to the voice's envelope state</td>
+</tr>
+<tr>
+<td>Release</td>
+<td>Time/rate control for moving towards the final level after note-off</td>
+</tr>
+<tr>
+<td>Velocity &gt; Amp Level</td>
+<td>Signed sensitivity of amplitude level to note velocity</td>
+</tr>
+<tr>
+<td>Velocity &gt; Filter Level</td>
+<td>Signed sensitivity of filter-envelope level to note velocity</td>
+</tr>
+</tbody>
+</table>
+<p>Lower time controls are faster and higher controls slower. Sustain is a level, not a duration. These controls arrange the underlying eight-stage envelope into a simpler shape; they are not an independent envelope layered over the stage editor. FZED's ADSR handling establishes sustain at stage 2 and end at stage 3.</p>
+<p>The browser graph is a local schematic, not measured envelope timing or audio. Changing an envelope's sustain/end stages after setting ADSR can change how note release behaves. Do not send an ADSR view and a contradictory raw-stage view expecting both to coexist independently.</p>
+<h2 id="section-8">7. Envelope Stages</h2>
+<p>Choose stage 1-8, then edit its DCA rate/level and DCF rate/level. The other controls choose the sustain and end stages for each envelope.</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Amp Rate / Filter Rate</td>
+<td>How quickly the envelope travels during this stage; FZED presents a time-oriented control, preserving the stored direction bit</td>
+</tr>
+<tr>
+<td>Amp Level / Filter Level</td>
+<td>Target level for that stage</td>
+</tr>
+<tr>
+<td>Amp / Filter Sustain Step</td>
+<td>Stage used as the held-note sustain point</td>
+</tr>
+<tr>
+<td>Amp / Filter End Step</td>
+<td>Stage at which that envelope ends</td>
+</tr>
+</tbody>
+</table>
+<p>Displayed stages 1-8 are transmitted as indexes 0-7. A stage rate sent through FZED is not a raw memory byte: the firmware preserves direction, reverses the control's rate encoding and prevents the zero-movement endpoint in this path. Do not infer that an arbitrary byte value zero in an old voice is a safe release.</p>
+<p>For a dependable amplitude release, arrange a final target of zero and a reachable end stage after the sustain stage. Conflicting stage order, levels or direction can create sustained/looping behaviour even when MIDI note-offs arrive correctly. Changing a stage may require a fresh note to assess it reliably.</p>
+<h2 id="section-9">8. LFO 1</h2>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rate</td>
+<td>Speed of the FZ's first LFO</td>
+</tr>
+<tr>
+<td>Waveform</td>
+<td>Sine, saw up, saw down, triangle, square or random</td>
+</tr>
+<tr>
+<td>Pitch Depth</td>
+<td>Amount applied to oscillator pitch</td>
+</tr>
+<tr>
+<td>Amp Depth</td>
+<td>Amount applied to amplitude</td>
+</tr>
+<tr>
+<td>Filter Depth</td>
+<td>Amount applied to DCF</td>
+</tr>
+<tr>
+<td>Resonance Depth</td>
+<td>Amount applied to resonance</td>
+</tr>
+<tr>
+<td>Delay</td>
+<td>Wait after note-on before the LFO envelope develops</td>
+</tr>
+<tr>
+<td>Attack</td>
+<td>LFO depth build-up control</td>
+</tr>
+</tbody>
+</table>
+<p>Controller assignments can add wheel, foot or aftertouch influence to these destinations. They are separate from setting a fixed LFO depth. Voices can carry different modulation behaviour: test with a known-working voice rather than assuming every imported sample has the same setup.</p>
+<h2 id="section-10">9. LFO 2</h2>
+<p>LFO 2 is FZED's additional modulation source. It can drive one direct destination and an additional matrix-based destination. Its <strong>Warble</strong> shape attempts to emulate tape warble.</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rate / Division</td>
+<td>Free-running rate, or a MIDI-clock division when Mode is set to MIDI Clock</td>
+</tr>
+<tr>
+<td>Depth</td>
+<td>Amount applied to the primary destination</td>
+</tr>
+<tr>
+<td>Shape</td>
+<td>Triangle, sine, saw up, saw down, square, random sample-and-hold, one-shot ramp or warble</td>
+</tr>
+<tr>
+<td>Destination</td>
+<td>Off, cutoff, pitch, LFO1 pitch depth, LFO1 amp depth, LFO1 filter depth, tremolo, or bend/Cue scrub</td>
+</tr>
+<tr>
+<td>Mode</td>
+<td>Free, note retrigger, or MIDI clock</td>
+</tr>
+<tr>
+<td>Delay</td>
+<td>Time after note-on before modulation starts</td>
+</tr>
+<tr>
+<td>Fade-in</td>
+<td>Time for the modulation to grow</td>
+</tr>
+<tr>
+<td>Destination 2</td>
+<td>An additional destination implemented using matrix route 10</td>
+</tr>
+<tr>
+<td>Depth 2</td>
+<td>Signed amount for route 10</td>
+</tr>
+</tbody>
+</table>
+<p>When Mode is set to Free or Note Retrigger, Rate / Division sets the free-running speed. In MIDI Clock mode, it selects 4 bars, 2 bars, 1 bar, half, quarter, eighth or sixteenth. MIDI clock must actually reach the FZ. Enabling a clock label does not generate clock in the browser.</p>
+<p><strong>Destination 2 reserves matrix route 10:</strong> it sets that route's source to LFO 2 and changes its destination. Editing route 10 directly changes the same routing. It is not an eleventh matrix slot. The browser shares the local state between these controls.</p>
+<h2 id="section-11">10. Key / Velocity</h2>
+<p>These controls change how a sound responds across the keyboard and to playing strength.</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Velocity &gt; Resonance</td>
+<td>Velocity influence on resonance</td>
+</tr>
+<tr>
+<td>Amp Key Follow</td>
+<td>Amplitude-envelope level change with key position</td>
+</tr>
+<tr>
+<td>Amp Rate Scale</td>
+<td>Amplitude-envelope speed change with key position</td>
+</tr>
+<tr>
+<td>Filter Key Follow</td>
+<td>Filter-envelope level change with key position</td>
+</tr>
+<tr>
+<td>Filter Rate Scale</td>
+<td>Filter-envelope speed change with key position</td>
+</tr>
+<tr>
+<td>Velocity &gt; Amp Level / Rate</td>
+<td>Velocity influence on amplitude-envelope level/speed</td>
+</tr>
+<tr>
+<td>Velocity &gt; Filter Level / Rate</td>
+<td>Velocity influence on filter-envelope level/speed</td>
+</tr>
+</tbody>
+</table>
+<p>The signed controls use raw 64 as neutral; below and above it request opposite directions. The FZED browser editor displays the FZ scaling, twice the offset from 64, rather than an unsigned 0-127 percentage. The raw-0 edge displays -128; that edge remains a known range caveat rather than a newly calibrated musical unit. Large sensitivities can make particular keys or velocities nearly silent. Use moderate values when checking for missed notes.</p>
+<h2 id="section-12">11. Controllers</h2>
+<p>Select Mod Wheel, Foot or Aftertouch. Each view provides the same seven destinations:</p>
+<table>
+<thead>
+<tr>
+<th>Assignment</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LFO Pitch / Amp / Filter / Resonance</td>
+<td>Controller influence on LFO1 depth to that destination</td>
+</tr>
+<tr>
+<td>Amp Offset</td>
+<td>Controller influence on amplitude offset</td>
+</tr>
+<tr>
+<td>Filter Offset</td>
+<td>Controller influence on filter offset</td>
+</tr>
+<tr>
+<td>Resonance Offset</td>
+<td>Controller influence on resonance offset</td>
+</tr>
+</tbody>
+</table>
+<p>Mod wheel is CC1, foot is CC4, and aftertouch is MIDI pressure. Breath CC2 is also a modulation-matrix source. Do not confuse a controller-to-LFO assignment with changing the LFO's base depth.</p>
+<p>The remaining controls are:</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Glide Time</td>
+<td>Speed/time of FZED's mono pitch transition</td>
+</tr>
+<tr>
+<td>Glide Mode</td>
+<td>Off, legato (overlapping notes), or always</td>
+</tr>
+<tr>
+<td>Voice INIT</td>
+<td>Deliberately initialise the current voice's settings; this is not the User bank's INIT preset</td>
+</tr>
+</tbody>
+</table>
+<p>Glide uses the FZ bend path. FZED temporarily expands the bend range for it and scales the player's bend contribution. It is not independent polyphonic portamento. Voice INIT can replace useful voice settings; save first and use its confirmation.</p>
+<h2 id="section-13">12. Mod Matrix: Source, Destination, Amount</h2>
+<p>There are ten routes. In the FZED browser editor, select Source, then Destination, then Amount. Each view presents the same ten numbered routes: the control for route 1 always edits route 1, through route 10.</p>
+<h3>Sources</h3>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Off</td>
+<td>Disable the route</td>
+</tr>
+<tr>
+<td>Velocity</td>
+<td>Note-on velocity</td>
+</tr>
+<tr>
+<td>Aftertouch</td>
+<td>MIDI pressure</td>
+</tr>
+<tr>
+<td>Mod Wheel</td>
+<td>CC1</td>
+</tr>
+<tr>
+<td>LFO 2</td>
+<td>Bipolar LFO2 signal</td>
+</tr>
+<tr>
+<td>LFO 2 Unipolar</td>
+<td>One-sided LFO2 signal</td>
+</tr>
+<tr>
+<td>Random</td>
+<td>Random modulation</td>
+</tr>
+<tr>
+<td>Key</td>
+<td>Played note/key position</td>
+</tr>
+<tr>
+<td>Pitch Bend</td>
+<td>Player's bend input</td>
+</tr>
+<tr>
+<td>Breath / CC3 / Foot</td>
+<td>CC2, CC3, CC4 respectively</td>
+</tr>
+<tr>
+<td>Pattern</td>
+<td>Rhythmic pattern signal</td>
+</tr>
+<tr>
+<td>Pattern +</td>
+<td>Pattern-derived positive/ramping signal</td>
+</tr>
+<tr>
+<td>Remaining Off bands</td>
+<td>Reserved/off, not extra active sources</td>
+</tr>
+</tbody>
+</table>
+<h3>Destinations</h3>
+<table>
+<thead>
+<tr>
+<th>Destination</th>
+<th>What changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Off</td>
+<td>No destination</td>
+</tr>
+<tr>
+<td>Cutoff / Resonance / Level / Pitch</td>
+<td>Filter, Q, amplitude or pitch</td>
+</tr>
+<tr>
+<td>LFO1 &gt; Pitch / Amp / Filter</td>
+<td>LFO1 depth to the named target</td>
+</tr>
+<tr>
+<td>Sample Start</td>
+<td>Sample start-position modulation</td>
+</tr>
+<tr>
+<td>Loop Window</td>
+<td>Position of the loop window</td>
+</tr>
+<tr>
+<td>Loop Start / Capture Length</td>
+<td>Loop start normally; capture duration while capture runs</td>
+</tr>
+<tr>
+<td>Loop End / Capture Rate</td>
+<td>Loop end normally; capture rate while capture runs</td>
+</tr>
+<tr>
+<td>LFO2 Rate / Depth</td>
+<td>Modulate the second LFO itself</td>
+</tr>
+<tr>
+<td>FX Mix / Resonance</td>
+<td>Effect mix, or the filter effect's corresponding resonance control</td>
+</tr>
+<tr>
+<td>FX Parameter / Cutoff</td>
+<td>Effect parameter, or filter effect cutoff</td>
+</tr>
+</tbody>
+</table>
+<p>Amount is signed, with raw 64 neutral. The display uses -64 to +63 as controller units, not semitones, milliseconds or a universal percentage. Several routes can influence a target, so begin with one route and small amounts. Avoid self-modulation or overlapping routes until the basic result is understood.</p>
+<p>Capture length and rate are relatively slow destinations. Their updates now take turns: with LFO 2 moving both over one second, the earlier scheduler produced 49 length updates and 3 rate updates; the current scheduler produced 25 and 19. If three or more slow routes move together, a later route can still be kept waiting. Capture widens the voice key range before playing chord notes; the FZ still applies its own generator limits.</p>
+<h2 id="section-14">13. Play / Loop</h2>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sample Start / End</td>
+<td>Requested sample playback bounds, scaled to the voice's available data</td>
+</tr>
+<tr>
+<td>Loop Mode</td>
+<td>One-shot, original voice behaviour, or loop; the FZ shows ONE-SHOT, ORIGINAL or LOOP. One-shot stays one-shot when Sample End, Loop Start / End or the window move afterwards; those positions are remembered for Loop and Original</td>
+</tr>
+<tr>
+<td>Loop Start / End</td>
+<td>Requested loop bounds</td>
+</tr>
+<tr>
+<td>Loop Crossfade</td>
+<td>The FZ sample crossfade setting, useful for changing loop/playback character; not the capture fade or an external audio crossfader</td>
+</tr>
+<tr>
+<td>Window Position</td>
+<td>Move the loop window while retaining its window relationship</td>
+</tr>
+<tr>
+<td>Window Snap</td>
+<td>Free movement, zero-cross snapping, or whole frames</td>
+</tr>
+<tr>
+<td>Play Mode</td>
+<td>Original, Reverse or Cue; the FZ shows ORIGINAL, REVERSE or CUE. Cue enables the bend/Cue sample-position scrub path; it is not an extra sample slot</td>
+</tr>
+<tr>
+<td>Preset Wave</td>
+<td>Select one of the seven original waveforms: Saw, Square, Pulse 25%, Pulse 12%, Triangle, Sine or Double Sine</td>
+</tr>
+<tr>
+<td>Load Selected Wave</td>
+<td>Deliberately replace/generate the selected preset wave</td>
+</tr>
+</tbody>
+</table>
+<p>These position controls are not absolute sample-number entry or a waveform editor with point readback. Firmware may constrain the result, and sample/loop validity matters. Zero-cross snapping can reduce discontinuities but cannot guarantee an inaudible edit in every sample. Capture guards refuse loop-window position/snap changes during capture.</p>
+<p>CC111 selects in bands of eight values: 0-7 Off, then Saw, Square, Pulse 25%, Pulse 12%, Triangle, Sine and Double Sine up to 63. Off (and any value from 64 up) selects nothing, so nothing is loaded; it does not load a silent sample.</p>
+<p>In the FZED browser editor, choose a wave, click Load Selected Wave and confirm replacement. The editor sends CC111 for the wave, then CC9 = 0 to arm the load and CC9 = 127 to load it. FZED refuses the load with Live FX on, in bank mode, with chop slices, while recording, or when the voice is shorter than 1800 words. Wave selection alone never replaces the sample. Back up a valuable sound first.</p>
+<h2 id="section-15">14. Stretch</h2>
+<p>Stretch cuts the voice's play range (start to end) into 2-8 back-to-back segments and gives each one of the FZ's loops. Each loop holds for its loop time, then the note moves on to the next; the last segment is the end loop. Nothing is copied or recorded, so it uses no memory. Loop changes are heard from the next note.</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Segments</td>
+<td>2-8 segments</td>
+</tr>
+<tr>
+<td>Stretch (Time)</td>
+<td>How long each segment holds: 32 steps from 0.02 s to 19.5 s (about 19.8 ms per loop-time step, the same on every key)</td>
+</tr>
+<tr>
+<td>Grain</td>
+<td>The length of each segment's loop, as a share of the segment. Each hold also includes roughly one and a half passes of the grain, which follow the key played</td>
+</tr>
+<tr>
+<td>Crossfade</td>
+<td>The loops' crossfade</td>
+</tr>
+<tr>
+<td>Snap</td>
+<td>Loop points at the nearest zero crossing</td>
+</tr>
+<tr>
+<td>Sustain At</td>
+<td>None, or the segment that holds while the key is down</td>
+</tr>
+<tr>
+<td>Next / Lead-In</td>
+<td>TRACE: after a loop's time, play on through the material to the next loop. SKIP: jump straight to it. A loop earlier in the sample is always a jump. CUT LEAD-IN: start the note at the first loop instead of the sample start</td>
+</tr>
+<tr>
+<td>Order</td>
+<td>Forward, Reverse, There + Back (for example 1 3 5 7 8 6 4 2) or Shuffle 1-8 (each one a fixed order)</td>
+</tr>
+<tr>
+<td>Skew</td>
+<td>Even in the middle. Below: earlier segments hold longer and later ones shorter (speeding up); above: the reverse</td>
+</tr>
+<tr>
+<td>Stretch On/Off</td>
+<td>On builds the loops. Off puts the voice's own loops (and its start, if Cut Lead-In moved it) back</td>
+</tr>
+</tbody>
+</table>
+<p>With Cut Lead-In and Reverse or Shuffle, the voice's start point moves to the first loop. The software keeps your own start point and works the segments out from it; it is put back by Play, Forward or Stretch Off. If you move the start yourself meanwhile, that becomes the new start. Leaving with ENTER while Stretch is on keeps the stretch loops (and the moved start), so a saved voice plays as heard.</p>
+<h2 id="section-16">15. Record</h2>
+<p>Record contains ordinary recording controls. The next page, Capture, contains the alternating record/play engine.</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Record Rate (CC102)</td>
+<td>Selects the rate/quality at which new audio is recorded: 36K, 18K, 9K or 4.5K</td>
+</tr>
+<tr>
+<td>Record Length</td>
+<td>Requested allocation/duration; display depends on recording rate</td>
+</tr>
+<tr>
+<td>Input Gain</td>
+<td>0 dB or -20 dB input gain state</td>
+</tr>
+<tr>
+<td>Auto Trigger Level</td>
+<td>Threshold for armed auto-trigger recording</td>
+</tr>
+<tr>
+<td>Record Arm</td>
+<td>Prepare recording. On a voice that already has a sample, only 120-127 arms (replacing it); lower shows USED: ARM 120+</td>
+</tr>
+<tr>
+<td>Record Start</td>
+<td>Start an armed recording</td>
+</tr>
+<tr>
+<td>Record Auto</td>
+<td>Armed: wait for the input threshold. Not armed: shows NOT ARMED (capture is entered from the Capture page)</td>
+</tr>
+<tr>
+<td>Record Stop</td>
+<td>Stop ordinary recording</td>
+</tr>
+<tr>
+<td>Norm Filter</td>
+<td>Select filter bypass or one of four recording-input cutoff choices with CC110</td>
+</tr>
+<tr>
+<td>Exit FZED</td>
+<td>Leave the optional software: Discard (as ESC: edits are put back), Keep Sound (as ENTER: sound edits kept, loops, start / end and play mode put back), Keep All Of Edit Voice, or Keep All (bank voices too)</td>
+</tr>
+</tbody>
+</table>
+<p>Ordinary length uses <code>(raw + 1) x 0.1 seconds</code>, doubled for each halving of the recording rate. This is different from Capture's fixed 16-duration menu.</p>
+<h3>Norm Filter: Recording-Input Anti-Aliasing</h3>
+<p>The FZ's normal recording setup <strong>bypasses the switchable anti-aliasing filter at 36 kHz</strong> and <strong>applies it at both 18 kHz and 9 kHz</strong>. <strong>18 kHz has been checked explicitly:</strong> its record-start ROM path enables the filter and programs its cutoff; it is not treated like the 36 kHz bypass path. This describes the switchable recording filter, not an assertion that the analogue input has no other bandwidth limits.</p>
+<table>
+<thead>
+<tr>
+<th>Recording rate</th>
+<th>Normal recording-input filter state</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>36 kHz</td>
+<td>Bypassed</td>
+</tr>
+<tr>
+<td>18 kHz</td>
+<td>Enabled</td>
+</tr>
+<tr>
+<td>9 kHz</td>
+<td>Enabled, with a lower cutoff setting than 18 kHz</td>
+</tr>
+<tr>
+<td>4.5 kHz extension</td>
+<td>Enabled; FZED additionally lowers the programmed cutoff. This is an extension, not a stock recording rate</td>
+</tr>
+</tbody>
+</table>
+<p><strong>CC110 selects both the input-filter state and cutoff at every recording rate.</strong> The five value bands are:</p>
+<table>
+<thead>
+<tr>
+<th>CC110 value</th>
+<th>Display</th>
+<th>Filter and cutoff</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0-63</td>
+<td>OFF</td>
+<td>Filter bypassed; rate's cutoff is left as set by recording setup</td>
+</tr>
+<tr>
+<td>64-79</td>
+<td>ON 18K CUT</td>
+<td>Filter on; 18 kHz cutoff (7Ch)</td>
+</tr>
+<tr>
+<td>80-95</td>
+<td>ON 9K CUT</td>
+<td>Filter on; 9 kHz cutoff (6Ch)</td>
+</tr>
+<tr>
+<td>96-111</td>
+<td>ON 4.5K CUT</td>
+<td>Filter on; 4.5 kHz cutoff (5Ch)</td>
+</tr>
+<tr>
+<td>112-127</td>
+<td>ON RATE CUT</td>
+<td>Filter on; cutoff selected by the recording rate</td>
+</tr>
+</tbody>
+</table>
+<p>The named cutoffs can be selected at any recording rate. The 4.5 kHz cutoff is an FZED extension. The categories do not mean that every intermediate cutoff value is available.</p>
+<p>This affects audio <strong>as it is recorded</strong>, not PCM already stored in a sample. It is not sample normalisation, the playable voice's DCF cutoff, or the FX-page software filter.</p>
+<p>For ordinary recording:</p>
+<ol>
+<li>Select the recording rate and length.</li>
+<li>Activate <strong>Record Arm</strong> and confirm that recording is armed.</li>
+<li>After arming, set the desired <strong>Norm Filter</strong> choice with CC110.</li>
+<li>Activate <strong>Record Start</strong>, or <strong>Record Auto</strong> if you want threshold-triggered recording.</li>
+</ol>
+<p>Once CC110 has been set, the optional software reapplies that choice after record setup and each automated capture take. It remains active through ordinary recording and capture until you leave FZED; it is not a persistent override after exit. The browser provides this control on Record only; it is not part of the Capture page. Before the first CC110 message, the FZ's rate-dependent defaults apply. A live change affects audio recorded after the change; it cannot alter PCM already recorded.</p>
+<p>The browser has no hardware readback. Its selected CC110 value records the last value sent by this editor, not an independently confirmed FZ state.</p>
+<p><strong>Record Auto never enters capture.</strong> Without an armed recorder it only shows NOT ARMED. Capture On (on the Capture page) enters capture; it is refused while an ordinary recording is armed or running. Leave capture explicitly before returning to ordinary recording.</p>
+<h2 id="section-17">16. Capture</h2>
+<p>Capture records a short take, stops recording, restores playback/output, plays it as a note or chord, waits, and records again. It is <strong>alternating recording and playback</strong>, not simultaneous input recording with uninterrupted output. Very short takes are subject to service-loop overhead; requested milliseconds are not a guarantee of exact hardware timing.</p>
+<p>The Capture page groups recording settings, playback hold, chord arrangement and transition controls. Use Capture On/Off to enter or leave capture. Opening the page only displays its controls; it does not start recording.</p>
+<h3>Recording And Hold</h3>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rate</td>
+<td>Rate for the next capture</td>
+</tr>
+<tr>
+<td>Length</td>
+<td>Duration of the next take</td>
+</tr>
+<tr>
+<td>Input Gain</td>
+<td>Input gain setting, applied safely for the next capture</td>
+</tr>
+<tr>
+<td>Hold</td>
+<td>How long the captured audio/chord plays before another take</td>
+</tr>
+<tr>
+<td>Transpose</td>
+<td>-24 to +24 semitones, raw centre near zero</td>
+</tr>
+<tr>
+<td>Sync</td>
+<td>Free running, or align captures to incoming MIDI-clock divisions</td>
+</tr>
+<tr>
+<td>Capture On/Off</td>
+<td>Enter with the ordinary recorder idle, or explicitly leave capture</td>
+</tr>
+<tr>
+<td>Recapture</td>
+<td>End the current hold and request the next take, subject to sync</td>
+</tr>
+</tbody>
+</table>
+<p>Lengths: <strong>10, 20, 30, 50, 75, 100, 150, 200, 300, 500, 750 ms, 1, 1.5, 2, 3, 4 seconds</strong>.</p>
+<p>Hold: <strong>1, 2, 4 or 8 passes; 2, 4 or 8 seconds; until recapture</strong>. Sync: free, 1/16, 1/8, 1/4, 1/2, 1 bar, 2 bars or 4 bars.</p>
+<p>Transpose uses CC23 and Sync uses CC33. These safe aliases do not arm/start ordinary recording outside capture. Length, rate and other shared controls still depend on capture state. A rate/gain change during a take is queued for the next capture; changing the length during a take does not retroactively change that take's latched hold calculation.</p>
+<h3>Chord And Transition</h3>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Intervals</td>
+<td>Chord/interval set played from each take</td>
+</tr>
+<tr>
+<td>Velocity</td>
+<td>Same velocity (100), random, falling or rising across chord notes</td>
+</tr>
+<tr>
+<td>Stagger</td>
+<td>Delay between chord-note starts</td>
+</tr>
+<tr>
+<td>Fade</td>
+<td>Wait after note-offs before recording again so the release can play</td>
+</tr>
+<tr>
+<td>Release</td>
+<td>TOGETHER or TOP FIRST note-off order for the current chord</td>
+</tr>
+</tbody>
+</table>
+<p>Intervals: original only; octaves +12/-12; root/fifth/octave; major; minor; major seventh; minor seventh; fifth/octave below; wide spread.</p>
+<p>Stagger: together, <strong>20, 40, 60, 80, 120, 160, 200, 300, 400, 500, 600, 800 ms, 1.2, 1.8 or 2.4 s</strong>. The FZED optional software latches stagger per chord, so changing it during a chord affects the next chord rather than moving already scheduled notes.</p>
+<p>Chord notes always start in ascending pitch order, from the lowest note to the highest, when Stagger is enabled. This also means OCTAVES and 5TH + OCT BELOW now start on the lowest note rather than the root.</p>
+<p>Release (CC41): <strong>TOGETHER</strong> releases every chord note at once. <strong>TOP FIRST</strong> releases the highest note first, then steps down through the chord at the selected Stagger interval. The wait set by Fade begins after the final note-off, allowing each note's amp release to sound.</p>
+<p>Fade: cut, <strong>50, 100, 200, 400, 800 ms, 1.2 or 1.6 s</strong>. It uses safe alias CC34, not the destructive ordinary Chop action. Fade provides release time before recording; it is not simultaneous crossfading of recorded input and playing output.</p>
+<p>Capture widens the voice key range before playing a chord, reducing silent notes caused by a narrow preset range. The FZ's own generator limits still apply. Capture reuses allocations where possible and explicitly stops shorter takes within a larger allocation; timing still has polling overhead. Many normal FX, wave-load and loop operations are refused during capture.</p>
+<p>For PASSES holds, FZED rounds the transpose to the nearest octave when calculating hold duration. This does not change pitch; octave transposes retain the same hold behaviour as before. Other transposes can make a pass hold slightly shorter or longer than an exact whole number of sample loops.</p>
+<p>Leave capture explicitly before returning to ordinary recording or sample-processing operations. A selected page is not a recording-state indicator.</p>
+<h2 id="section-18">17. Chop / Pattern</h2>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Chop Sensitivity</td>
+<td>Detection sensitivity for transient-based slicing</td>
+</tr>
+<tr>
+<td>Chop Mode / Snap</td>
+<td>Even slices, even slices with snapping, or transient detection</td>
+</tr>
+<tr>
+<td>Slice Count</td>
+<td>4, 8, 16 or 32 requested slices</td>
+</tr>
+<tr>
+<td>Create Slices</td>
+<td>Deliberately generate the slice arrangement</td>
+</tr>
+<tr>
+<td>Play Slices</td>
+<td>Switch to the created slice playback arrangement</td>
+</tr>
+<tr>
+<td>Return to Voice</td>
+<td>Leave slice playback and restore ordinary voice playback</td>
+</tr>
+<tr>
+<td>Output (Choke)</td>
+<td>Off: slices overlap. 1-8: every slice on that mono output, so each slice cuts off the last</td>
+</tr>
+<tr>
+<td>Chop Into</td>
+<td>Own Bank: a chop goes into its own CHOP bank. Target Bank: into the bank being built, after its places, on the editor's MIDI channel</td>
+</tr>
+<tr>
+<td>Freeze Chop</td>
+<td>Let the chop go: its slices stay as ordinary bank voices and the next chop starts new</td>
+</tr>
+<tr>
+<td>DCF Cutoff</td>
+<td>The voice filter cutoff (CC74), also here so slices can be shaped while chopping</td>
+</tr>
+<tr>
+<td>Pattern</td>
+<td>Choose a rhythmic gate/pattern source</td>
+</tr>
+<tr>
+<td>Pattern Rate</td>
+<td>Raw 0-63 selects free speed in milliseconds per step; raw 64-127 selects a MIDI-clock division</td>
+</tr>
+<tr>
+<td>Pattern Smooth</td>
+<td>Slew between pattern changes, approximately 1-152 ms in the source mapping</td>
+</tr>
+</tbody>
+</table>
+<p>Patterns: Open/No Gate, Eighths, Sixteenth Pulse, Quarters, 3-3-2, Offbeats, Trance, Gallop, Half Bar, Stutter End, Syncopated, Build, Sparse, Broken, Ramp Up and Ramp Down.</p>
+<p>Pattern is a rhythmic sequence of steps that can trigger or modulate sound; select a pattern, set its rate (free milliseconds per step or a MIDI-clock division), and route it where wanted in the Mod Matrix. Pattern Rate uses raw 0-63 for free speed and raw 64-127 for MIDI-clock divisions: 1/32, 1/16 triplet, 1/16, 1/8 triplet, 1/8, 1/4 triplet, 1/4 or 1/2.</p>
+<p>The pattern signal can feed the modulation matrix; selecting a pattern alone is not a guarantee of an audible amplitude gate without the relevant route. MIDI-clock timing requires clock to reach the FZ.</p>
+<p>The browser confirms destructive actions and rearms slice creation before repeating it. Samples and voices need enough available memory and valid bounds. A normalised sample is not recovered merely by lowering the volume afterwards.</p>
+<h2 id="section-19">18. Slices</h2>
+<p>Slices edits the result of the last chop.</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Slice</td>
+<td>Choose a slice (follows the slice count)</td>
+</tr>
+<tr>
+<td>Slice Move</td>
+<td>Move the slice's original key: named notes C-1 to B3</td>
+</tr>
+<tr>
+<td>Slice Lowest / Highest</td>
+<td>The slice's key range, in semitones below / above its original key (0-36)</td>
+</tr>
+<tr>
+<td>Slice Output</td>
+<td>This slice's output (Off or 1-8)</td>
+</tr>
+<tr>
+<td>Output (Choke)</td>
+<td>Every slice's output, as on Chop / Pattern</td>
+</tr>
+<tr>
+<td>Filter / Env / LFO1</td>
+<td>Shared: filter, envelope and LFO 1 edits go to every slice. Per Slice: to the slice chosen with Slice</td>
+</tr>
+<tr>
+<td>Loop Mode</td>
+<td>The slices' loop mode</td>
+</tr>
+<tr>
+<td>Copy Voice</td>
+<td>Copy the edit voice into the first empty voice, sharing its sample memory; the copy becomes the edit voice</td>
+</tr>
+</tbody>
+</table>
+<p>Slices stay on one MIDI channel. A shared sample is protected: Delete Unused is refused on it, and recording into a copy gives it new memory.</p>
+<h2 id="section-20">19. FX</h2>
+<p>Choose the effect before editing its context-dependent controls. The FZED browser editor changes labels and MIDI bindings with the selected effect. Because there is no device readback, select the effect explicitly if it has been changed outside the editor.</p>
+<p>Common controls are effect selection, resolution/crush, frequency reduction, two effect-specific controls, wet mix, live enable, supplementary ring/filter controls and render. Some controls are unused or render-only for certain algorithms. Live effects are constrained sample-memory processing, not a modern unlimited streaming plug-in rack.</p>
+<p>Delete Unused and Normalise are separate FX-page commands, not parameters of the selected effect. They change sample data. Each command can be used from its on-screen button or learned to a CC; learned command triggers require the separate MIDI actions confirmation described above.</p>
+<h3>Live FX And Sample Rate</h3>
+<p><strong>Live FX may not work reliably on samples above 9 kHz.</strong> Treat 9 kHz and 4.5 kHz as the practical starting points for live processing, not a guarantee that every effect or workload will succeed. At 18 kHz or 36 kHz the processing may not keep up or may have no useful audible result.</p>
+<p><strong>Short samples may still work at higher sampling rates.</strong> Sample length as well as rate matters, so the warning is not an absolute ban above 9 kHz. A short sample working does not prove that a longer file at the same rate will work. Test the actual sample and algorithm before relying on them live.</p>
+<p><strong>Render is more reliable than Live FX, but it is destructive.</strong> It processes the sample rather than depending on the live processing workload keeping up. When Live FX is ineffective or unreliable, use Render on a saved copy and audition the processed result. Rendering does not offer guaranteed undo, so keep an untouched sample or disk backup. More reliable does not mean every algorithm or setting is guaranteed to succeed.</p>
+<table>
+<thead>
+<tr>
+<th>Effect</th>
+<th>Purpose and principal controls</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TapeHack</td>
+<td>Coloured nonlinear sample processing; input drive and output level</td>
+</tr>
+<tr>
+<td>Wavefolder</td>
+<td>Fold the waveform for added harmonics; fold drive and output</td>
+</tr>
+<tr>
+<td>Xover Fuzz</td>
+<td>Crossover dead-zone/fuzz character; threshold and crossover-to-fuzz blend</td>
+</tr>
+<tr>
+<td>Rectifier</td>
+<td>Partial/full half- or full-wave rectification; rectify and DC trim</td>
+</tr>
+<tr>
+<td>Decimator</td>
+<td>Sample-and-hold style coarsening; hold in sample words; second effect control unused</td>
+</tr>
+<tr>
+<td>Linear Crush</td>
+<td>Reduce effective amplitude resolution; bits control; frequency reduction is render-only; two effect controls unused</td>
+</tr>
+<tr>
+<td>Bit Mangle</td>
+<td>XOR masks applied to high and low sample bits; intentionally abrupt/digital results</td>
+</tr>
+<tr>
+<td>Echo / Comb</td>
+<td>Delayed/reflected sample combination; delay in words, signed gain; one echo or three reflections</td>
+</tr>
+<tr>
+<td>Position</td>
+<td>Reorder sample windows; reverse, stutter or scramble, plus window size</td>
+</tr>
+<tr>
+<td>Ring Mod</td>
+<td>Multiply by a modulation waveform; ring frequency and sine/square shape</td>
+</tr>
+<tr>
+<td>Tube2</td>
+<td>Nonlinear saturation character; pad and tube amount</td>
+</tr>
+<tr>
+<td>Karplus-Strong</td>
+<td>Resonant/feedback processing; KS note and feedback</td>
+</tr>
+<tr>
+<td>Filter</td>
+<td>Software effect filter, separate from the FZ DCF; cutoff, resonance, low/band/high-pass type and filter mix</td>
+</tr>
+<tr>
+<td>TapeHack &gt; Pockey2</td>
+<td>Combined processing chain; render-only live setting</td>
+</tr>
+<tr>
+<td>Pockey2</td>
+<td>Resolution/frequency-reduction character; render-only live setting; two effect controls unused</td>
+</tr>
+</tbody>
+</table>
+<h3>Remaining FX Controls</h3>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bits / DeRez / Crush</td>
+<td>Effective bit resolution; the scale depends on algorithm</td>
+</tr>
+<tr>
+<td>DeFreq</td>
+<td>Hold/reduce sample changes; its displayed effective rate depends on the locally known sample-rate setting</td>
+</tr>
+<tr>
+<td>Tape Input / Output</td>
+<td>Drive and output gains for applicable algorithms; extreme drive can clip strongly</td>
+</tr>
+<tr>
+<td>Dry/Wet Mix</td>
+<td>Balance/control for the effect result, with algorithm-specific behaviour</td>
+</tr>
+<tr>
+<td>Live FX</td>
+<td>Enable incremental processing where supported; may not work above 9 kHz, although short samples may work; unavailable for render-only modes</td>
+</tr>
+<tr>
+<td>Ring Frequency / Shape</td>
+<td>Supplementary ring controls; on Ring and KS, the effect-specific controls also use the corresponding CC94/95 bindings</td>
+</tr>
+<tr>
+<td>Render</td>
+<td>More reliable than Live FX, but destructively processes the sample; save an untouched copy first</td>
+</tr>
+</tbody>
+</table>
+<p>Echo delay and window sizes are shown in <strong>sample words</strong>, not universal milliseconds. Their audible timing changes with sample rate and pitch. KS feedback and resonant/comb settings can be loud or persistent. Start with low mix and conservative feedback; protect your monitoring level.</p>
+<p>Changing a live effect or rendering can alter sample memory. There is no promised non-destructive undo or unlimited CPU headroom. The current engine may not respond like a high-rate modern effects unit, particularly while multiple modulation routes are active.</p>
+<h2 id="section-21">20. Bank Builder</h2>
+<p>Bank Builder gathers the controls for building a bank of sounds without leaving the optional software, in the order you use them.</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Voice Pick</td>
+<td>Preview a voice (the FZ shows it); Voice Select makes it the edit voice</td>
+</tr>
+<tr>
+<td>New Voice</td>
+<td>Move editing to the first empty voice, so voices already in a bank are kept</td>
+</tr>
+<tr>
+<td>Copy Voice</td>
+<td>Copy the edit voice into the first empty voice (sharing its sample memory)</td>
+</tr>
+<tr>
+<td>Bank Select</td>
+<td>Voice mode, or play bank 1-8. The bank chosen is also the target for adds</td>
+</tr>
+<tr>
+<td>Bank Add / Clear</td>
+<td>Add This Voice: put the edit voice in the target bank on the editor's MIDI channel, with its own key range. Clear This MIDI Channel: remove that channel's place</td>
+</tr>
+<tr>
+<td>Chop Into / Freeze Chop</td>
+<td>As on Chop / Pattern: chops into the target bank, and letting a chop go</td>
+</tr>
+</tbody>
+</table>
+<h3>Build Sequence</h3>
+<ol>
+<li><strong>Choose the target bank (optional).</strong> Bank Select plays a bank and makes it the target. Return it to Voice Mode before recording or editing. With no bank chosen, adds go to a bank named FZED BANK, created in the first empty bank if needed.</li>
+<li><strong>Set the MIDI channel.</strong> CH in the top bar is the channel the voice is added on. One voice per channel: adding again on that channel replaces its place.</li>
+<li><strong>Make a sound.</strong> New Voice, then record, load a preset wave or chop. Or Copy Voice, or Voice Pick and Voice Select for an existing voice.</li>
+<li><strong>Shape it</strong> on the other pages.</li>
+<li><strong>Add it</strong> with Add This Voice.</li>
+<li><strong>Chops into the bank:</strong> Chop Into Target Bank, chop, then Freeze Chop before the next one.</li>
+<li><strong>Repeat</strong> with another channel and New Voice.</li>
+<li><strong>Play and keep it.</strong> Bank Select plays the bank. Leave with Exit FZED: Keep All keeps every edit, bank voices included.</li>
+</ol>
+<p>Recording, New Voice and capture are refused while a bank is playing. A bank holds 64 places.</p>
+<h2 id="section-22">21. User Presets And Saving</h2>
+<p>The editor keeps a preset bank in the same format as <code>USER_FZ.BIN</code>: 100 slots. It starts with the supplied 26 whole-voice presets (INIT, modulation examples, effects, echo / position and pattern examples) and 21 page presets: seven stretches, five patterns, six effects and three LFO 1 settings. These are <strong>parameter presets</strong>, not samples or complete FZ voice dumps.</p>
+<p><strong>Page presets.</strong> Every editing page has a Presets bar: the presets that hold only that page's settings (a pattern preset may bring its matrix route), with Open, Send and <strong>Save as preset…</strong>. A page preset changes only its own page's settings, so it layers onto the current sound.</p>
+<p><strong>Saving.</strong> Save as preset asks for a name (12 characters, shown in capitals), a slot and what to save: this page only, the pattern only (on Chop / Pattern), or the whole voice (every page). Only settings that have a value in the editor are saved. Commands are never stored: record, render, chop, bank actions and preset wave replacement.</p>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Open</td>
+<td>Apply a preset to the editor's controls; output is locked and nothing is sent</td>
+</tr>
+<tr>
+<td>Send</td>
+<td>Confirm, then replay the settings to the current voice (the matrix is cleared first when the preset asks for it)</td>
+</tr>
+<tr>
+<td>Save as preset…</td>
+<td>Store the editor's settings in a slot</td>
+</tr>
+<tr>
+<td>Rename / Delete</td>
+<td>Change a slot's name, or empty it</td>
+</tr>
+<tr>
+<td>Open USER_FZ.BIN</td>
+<td>Read another compatible bank; output is locked</td>
+</tr>
+<tr>
+<td>Download USER_FZ.BIN</td>
+<td>Save the editor's bank as a file, to keep, move to another browser or share</td>
+</tr>
+<tr>
+<td>Bundled bank / New empty bank</td>
+<td>Go back to the supplied bank, or start from 100 empty slots</td>
+</tr>
+<tr>
+<td>Save Settings</td>
+<td>Save edited values and Learn assignments as JSON (a different format)</td>
+</tr>
+</tbody>
+</table>
+<p>The editor's bank lives in this browser until you download it; changing it does not change a file until then. <strong>Stretch settings</strong> are stored in a part of each slot that older banks do not have; a preset without them simply leaves stretch as it is. BIN replay never sends wave replacement, recording, voice INIT, bank routing, chop, normalise or render. Parameter 120, which clears the current voice's matrix, is kept and sent first.</p>
+<p><strong>User preset INIT</strong> resets FZED additions such as matrix routes, LFO2 and effects; it intentionally does not reset all the sample's envelopes, filter or bounds. <strong>Voice INIT</strong> is a separate explicit voice-initialisation command. <strong>Startup Init/Retain</strong> is another decision on the FZ itself. These three operations are not interchangeable.</p>
+<p>Use the FZ's Enter/ESC workflow to accept and leave the FZED optional software as appropriate, then verify the voice in the normal OS and save it normally. Browser JSON does not preserve sample audio. Additional FZED facilities such as LFO2/matrix/live-engine state are not ordinary FZ voice fields and should not be assumed to survive as part of a stock voice file. Save the FZED browser editor's settings separately.</p>
+<h2 id="section-23">22. Three Practical Starting Points</h2>
+<h3>Playable Looped Instrument</h3>
+<ol>
+<li>Load a voice that sounds reliably, then retain it at startup.</li>
+<li>Establish its root key and a sensible range. Confirm the loop sounds before adding modulation.</li>
+<li>Use ADSR for an immediate attack, audible sustain and finite release.</li>
+<li>Choose one modulation route, for example wheel to cutoff, or use the wheel's LFO-filter assignment.</li>
+<li>Test note-on and note-off from both the FZ keyboard and your external keyboard before adding more routes.</li>
+</ol>
+<h3>Lower-Rate Texture For Resampling</h3>
+<ol>
+<li>Keep a backup of the original sample.</li>
+<li>Explore playback rate, pitch/bend, loop mode and crossfade on a known-working voice.</li>
+<li>Add one effect with a low mix before increasing its drive or feedback.</li>
+<li>Above 9 kHz, do not rely on Live FX without testing the actual sample. Short samples may work; otherwise use the more reliable, destructive Render on a backup copy.</li>
+<li>Record the FZ audio output into your other sampler. The browser does not record that audio.</li>
+</ol>
+<h3>Repeating Capture Texture</h3>
+<ol>
+<li>Stop ordinary recording; begin with a conservative monitor level.</li>
+<li>On Capture choose a moderate length such as 500 ms, free sync and a short fixed hold.</li>
+<li>Enter capture explicitly and verify the record/play cycle before shortening it.</li>
+<li>On that same page add intervals, stagger and a finite fade. Check the voice's key range.</li>
+<li>Leave capture explicitly before trying ordinary chop, preset waves or render.</li>
+</ol>
+<h2 id="section-24">23. Troubleshooting And Limits</h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nothing reacts</td>
+<td>Correct software running, output enabled, port/channel selected, pickup waiting, or command refused in capture</td>
+</tr>
+<tr>
+<td>Browser shows a value but sound differs</td>
+<td>Local value is not readback; voice may have clamped a bound or another controller changed it</td>
+</tr>
+<tr>
+<td>Note missing at certain velocities/keys</td>
+<td>Key range, velocity sensitivity, envelope level, generator use and chord transposition</td>
+</tr>
+<tr>
+<td>Note sustains after release</td>
+<td>Sustain pedal, envelope sustain/end/target settings, feedback effects and note routing; do not assume note-off velocity is the cause</td>
+</tr>
+<tr>
+<td>Browser note sticks after changing ports</td>
+<td>Use Panic; note ownership/release is tracked at the original endpoint, but disconnected hardware cannot receive a release</td>
+</tr>
+<tr>
+<td>One-shot still loops</td>
+<td>Turn Loop Mode once more; the current software keeps one-shot through end and loop moves</td>
+</tr>
+<tr>
+<td>Stretch starts with silence</td>
+<td>The first segments may be the silent start of the sample: trim the start, or use a shorter hold</td>
+</tr>
+<tr>
+<td>Capture timing is longer than requested</td>
+<td>Record polling/service-loop overhead and allocation; short takes are not exact hardware timers</td>
+</tr>
+<tr>
+<td>Capture sync waits</td>
+<td>Incoming clock/transport absent or not forwarded</td>
+</tr>
+<tr>
+<td>FX/wave/loop changes refused</td>
+<td>Many are intentionally blocked during capture</td>
+</tr>
+<tr>
+<td>Live FX ineffective above 9 kHz</td>
+<td>Try a shorter sample or a lower rate; short high-rate samples may work. Render is more reliable, but destructive: use a saved copy</td>
+</tr>
+<tr>
+<td>Need to recover a valuable sample</td>
+<td>Reload a backup; processing and recording do not provide guaranteed undo</td>
+</tr>
+</tbody>
+</table>
+<p>Do not treat successful menu or MIDI tests as proof of an audible hardware result. For a new sound path, use one change at a time, a known-good sounding voice, and a verified clean exit. Keep a known-working FZED optional-software disk and backups of your samples available as a fallback.</p>
+<h2 id="section-25">Appendix A: MIDI CC Reference</h2>
+<p>Every FZED control, page by page in menu order and, within a page, in the order the editor shows it. All messages go on the FZ's MIDI channel. The <strong>Message</strong> column uses three forms:</p>
+<ul>
+<li><strong>CCn</strong>: an ordinary MIDI control change n carrying the value.</li>
+<li><strong>Pn</strong>: FZ parameter n. Send CC10 = n, then CC11 = the value. Further CC11 messages keep editing parameter n until another CC10 arrives.</li>
+<li><strong>FZED k</strong>: FZED's own control k. Send CC10 = 88, CC11 = k, then CC10 = 89, CC11 = the value.</li>
+</ul>
+<p>The <strong>Values</strong> column gives the value FZED receives and what it means. Where a range is shown for each setting, any value in the range selects it; the editor sends the middle of the range. A few CCs mean different things on different pages: CC96, 97 and 99 are Chop controls until capture is on, then chord controls; CC102-110 are Record controls until capture is on, then capture controls; CC113-116 and CC94/95 follow the effect chosen with CC112. Commands (Make Slices, Render, Record Start and similar) act when their value enters the command range and must return to the re-arm range before they act again.</p>
+<h3>A.1 Filter / Keys</h3>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Message</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DCF Cutoff</td>
+<td>CC74</td>
+<td>0-127</td>
+</tr>
+<tr>
+<td>DCQ Resonance</td>
+<td>CC75</td>
+<td>0-127</td>
+</tr>
+<tr>
+<td>Tape Speed</td>
+<td>CC71</td>
+<td>36K 0-31; 18K 32-63; 9K 64-95; 4.5K 96-127</td>
+</tr>
+<tr>
+<td>Original Key</td>
+<td>CC68</td>
+<td>36-96 (C2 to C7)</td>
+</tr>
+<tr>
+<td>Lowest Key</td>
+<td>CC67</td>
+<td>36-96 (C2 to C7)</td>
+</tr>
+<tr>
+<td>Highest Key</td>
+<td>CC66</td>
+<td>36-96 (C2 to C7)</td>
+</tr>
+</tbody>
+</table>
+<h3>A.2 ADSR</h3>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Message</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DCA Attack</td>
+<td>CC78</td>
+<td>0-127</td>
+</tr>
+<tr>
+<td>DCA Decay</td>
+<td>CC79</td>
+<td>0-127</td>
+</tr>
+<tr>
+<td>DCA Sustain Level</td>
+<td>CC80</td>
+<td>0-127</td>
+</tr>
+<tr>
+<td>DCA Release</td>
+<td>CC81</td>
+<td>0-127</td>
+</tr>
+<tr>
+<td>Vel &gt; Amp Level</td>
+<td>P62</td>
+<td>0-127 (-128 to +126)</td>
+</tr>
+<tr>
+<td>DCF Attack</td>
+<td>CC82</td>
+<td>0-127</td>
+</tr>
+<tr>
+<td>DCF Decay</td>
+<td>CC83</td>
+<td>0-127</td>
+</tr>
+<tr>
+<td>DCF Sustain Level</td>
+<td>CC84</td>
+<td>0-127</td>
+</tr>
+<tr>
+<td>DCF Release</td>
+<td>CC85</td>
+<td>0-127</td>
+</tr>
+<tr>
+<td>Vel &gt; Filter Level</td>
+<td>P64</td>
+<td>0-127 (-128 to +126)</td>
+</tr>
+</tbody>
+</table>
+<h3>A.3 Envelope stages</h3>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Message</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Amp Rate Step 1-8</td>
+<td>P14-P21 (step n = P13+n)</td>
+<td>0-127 (RATE 000 to RATE 127)</td>
+</tr>
+<tr>
+<td>Amp Level Step 1-8</td>
+<td>P22-P29 (step n = P21+n)</td>
+<td>0-127 (LEVEL 000 to LEVEL 254)</td>
+</tr>
+<tr>
+<td>Amp Sustain Step</td>
+<td>CC12</td>
+<td>STEP 1 0; STEP 2 1; STEP 3 2; STEP 4 3; STEP 5 4; STEP 6 5; STEP 7 6; STEP 8 7</td>
+</tr>
+<tr>
+<td>Amp End Step</td>
+<td>CC13</td>
+<td>STEP 1 0; STEP 2 1; STEP 3 2; STEP 4 3; STEP 5 4; STEP 6 5; STEP 7 6; STEP 8 7</td>
+</tr>
+<tr>
+<td>Filter Rate Step 1-8</td>
+<td>P32-P39 (step n = P31+n)</td>
+<td>0-127 (RATE 000 to RATE 127)</td>
+</tr>
+<tr>
+<td>Filter Level Step 1-8</td>
+<td>P40-P47 (step n = P39+n)</td>
+<td>0-127 (LEVEL 000 to LEVEL 254)</td>
+</tr>
+<tr>
+<td>Filter Sustain Step</td>
+<td>CC30</td>
+<td>STEP 1 0; STEP 2 1; STEP 3 2; STEP 4 3; STEP 5 4; STEP 6 5; STEP 7 6; STEP 8 7</td>
+</tr>
+<tr>
+<td>Filter End Step</td>
+<td>CC31</td>
+<td>STEP 1 0; STEP 2 1; STEP 3 2; STEP 4 3; STEP 5 4; STEP 6 5; STEP 7 6; STEP 8 7</td>
+</tr>
+</tbody>
+</table>
+<h3>A.4 LFO 1</h3>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Message</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LFO Rate</td>
+<td>CC73</td>
+<td>0-127</td>
+</tr>
+<tr>
+<td>LFO Waveform</td>
+<td>CC50</td>
+<td>SIN 0; SAW UP 1; SAW DWN 2; TRI 3; SQR 4; RND 5</td>
+</tr>
+<tr>
+<td>LFO1 Delay</td>
+<td>P0</td>
+<td>0-127 (0.00 S to 10.75 S)</td>
+</tr>
+<tr>
+<td>LFO Attack</td>
+<td>CC51</td>
+<td>0-127</td>
+</tr>
+<tr>
+<td>LFO Pitch Depth</td>
+<td>CC53</td>
+<td>0-127</td>
+</tr>
+<tr>
+<td>LFO Amp Depth</td>
+<td>CC54</td>
+<td>0-127</td>
+</tr>
+<tr>
+<td>LFO Filter Depth</td>
+<td>CC55</td>
+<td>0-127</td>
+</tr>
+<tr>
+<td>LFO Res Depth</td>
+<td>CC56</td>
+<td>0-127</td>
+</tr>
+</tbody>
+</table>
+<h3>A.5 LFO 2</h3>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Message</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LFO2 Rate Div</td>
+<td>CC89</td>
+<td>0-127 (RATE/DIV 000 to RATE/DIV 127)</td>
+</tr>
+<tr>
+<td>LFO2 Shape</td>
+<td>CC91</td>
+<td>TRIANGLE 0-15; SINE 16-31; SAW UP 32-47; SAW DOWN 48-63; SQUARE 64-79; RANDOM S&amp;H 80-95; ONE-SHOT RAMP 96-111; WARBLE 112-127</td>
+</tr>
+<tr>
+<td>LFO2 Delay</td>
+<td>P1</td>
+<td>0-127 (0.00 S to 9.95 S)</td>
+</tr>
+<tr>
+<td>LFO2 Fade-in</td>
+<td>P2</td>
+<td>0-127 (0.00 S to 9.95 S)</td>
+</tr>
+<tr>
+<td>LFO2 Mode</td>
+<td>CC93</td>
+<td>FREE 0-42; RETRIGGER 43-85; MIDI CLOCK 86-127</td>
+</tr>
+<tr>
+<td>LFO2 Dest</td>
+<td>CC92</td>
+<td>OFF 0-15; FILTER CUTOFF 16-31; PITCH +/-2 ST 32-47; LFO&gt;PITCH 48-63; LFO&gt;AMP 64-79; LFO&gt;FILTER 80-95; TREMOLO 96-111; BEND (CUE SCRUB) 112-127</td>
+</tr>
+<tr>
+<td>LFO2 Depth</td>
+<td>CC90</td>
+<td>0-127</td>
+</tr>
+<tr>
+<td>LFO2 Dest 2</td>
+<td>P99 = 32, then P119</td>
+<td>OFF 0-7; CUTOFF 8-15; RESONANCE 16-23; LEVEL 24-31; PITCH 32-39; LFO1 &gt; PITCH 40-47; LFO1 &gt; AMP 48-55; LFO1 &gt; FILTER 56-63; SAMPLE START 64-71; LOOP WINDOW 72-79; LOOP ST/CAP LEN 80-87; LOOP END/CAP RATE 88-95; LFO2 RATE 96-103; LFO2 DEPTH 104-111; FX MIX/RESO 112-119; FX PARAM/CUT 120-127</td>
+</tr>
+<tr>
+<td>LFO2 Depth 2</td>
+<td>P109</td>
+<td>0-127 (-064 to +063)</td>
+</tr>
+</tbody>
+</table>
+<h3>A.6 Key / Velocity</h3>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Message</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vel &gt; Amp Level</td>
+<td>P62</td>
+<td>0-127 (-128 to +126)</td>
+</tr>
+<tr>
+<td>Vel &gt; Amp Rate</td>
+<td>P63</td>
+<td>0-127 (-128 to +126)</td>
+</tr>
+<tr>
+<td>Vel &gt; Filter Level</td>
+<td>P64</td>
+<td>0-127 (-128 to +126)</td>
+</tr>
+<tr>
+<td>Vel &gt; Filter Rate</td>
+<td>P65</td>
+<td>0-127 (-128 to +126)</td>
+</tr>
+<tr>
+<td>Vel &gt; Res</td>
+<td>P57</td>
+<td>0-127 (VALUE 000 to VALUE 127)</td>
+</tr>
+<tr>
+<td>Amp Key Follow</td>
+<td>P58</td>
+<td>0-127 (-128 to +126)</td>
+</tr>
+<tr>
+<td>Amp Rate Scale</td>
+<td>P59</td>
+<td>0-127 (-128 to +126)</td>
+</tr>
+<tr>
+<td>Filter Key Follow</td>
+<td>P60</td>
+<td>0-127 (-128 to +126)</td>
+</tr>
+<tr>
+<td>Filter Rate Scale</td>
+<td>P61</td>
+<td>0-127 (-128 to +126)</td>
+</tr>
+</tbody>
+</table>
+<h3>A.7 Controllers</h3>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Message</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LFO Pitch</td>
+<td>P66 mod wheel, P73 foot, P80 aftertouch</td>
+<td>0-127 (DEPTH 000 to DEPTH 127)</td>
+</tr>
+<tr>
+<td>LFO Amp</td>
+<td>P67 mod wheel, P74 foot, P81 aftertouch</td>
+<td>0-127 (DEPTH 000 to DEPTH 127)</td>
+</tr>
+<tr>
+<td>LFO Filter</td>
+<td>P68 mod wheel, P75 foot, P82 aftertouch</td>
+<td>0-127 (DEPTH 000 to DEPTH 127)</td>
+</tr>
+<tr>
+<td>LFO Res</td>
+<td>P69 mod wheel, P76 foot, P83 aftertouch</td>
+<td>0-127 (DEPTH 000 to DEPTH 127)</td>
+</tr>
+<tr>
+<td>Glide Time</td>
+<td>P5</td>
+<td>0-127 (VALUE 000 to VALUE 127)</td>
+</tr>
+<tr>
+<td>Voice Init</td>
+<td>P7</td>
+<td>REARM 0-63; INACTIVE 64-119; INIT VOICE 120-127</td>
+</tr>
+<tr>
+<td>Amp Offset</td>
+<td>P70 mod wheel, P77 foot, P84 aftertouch</td>
+<td>0-127 (DEPTH 000 to DEPTH 127)</td>
+</tr>
+<tr>
+<td>Filter Offset</td>
+<td>P71 mod wheel, P78 foot, P85 aftertouch</td>
+<td>0-127 (DEPTH 000 to DEPTH 127)</td>
+</tr>
+<tr>
+<td>Res Offset</td>
+<td>P72 mod wheel, P79 foot, P86 aftertouch</td>
+<td>0-127 (DEPTH 000 to DEPTH 127)</td>
+</tr>
+<tr>
+<td>Glide Mode</td>
+<td>P6</td>
+<td>GLIDE OFF 0-42; LEGATO 43-85; ALWAYS 86-127</td>
+</tr>
+</tbody>
+</table>
+<h3>A.8 Mod matrix</h3>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Message</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Route 1-10 Source</td>
+<td>P90-P99 (route n = P89+n)</td>
+<td>OFF 0-7, 112-127; VELOCITY 8-15; AFTERTOUCH 16-23; MOD WHEEL 24-31; LFO 2 32-39; LFO 2 UNIPOLAR 40-47; RANDOM 48-55; KEY 56-63; PITCH BEND 64-71; CC2 BREATH 72-79; CC3 80-87; CC4 FOOT 88-95; PATTERN 96-103; PATTERN + 104-111</td>
+</tr>
+<tr>
+<td>Route 1-10 Destination</td>
+<td>P110-P119 (route n = P109+n)</td>
+<td>OFF 0-7; CUTOFF 8-15; RESONANCE 16-23; LEVEL 24-31; PITCH 32-39; LFO1 &gt; PITCH 40-47; LFO1 &gt; AMP 48-55; LFO1 &gt; FILTER 56-63; SAMPLE START 64-71; LOOP WINDOW 72-79; LOOP ST/CAP LEN 80-87; LOOP END/CAP RATE 88-95; LFO2 RATE 96-103; LFO2 DEPTH 104-111; FX MIX/RESO 112-119; FX PARAM/CUT 120-127</td>
+</tr>
+<tr>
+<td>Route 1-10 Amount</td>
+<td>P100-P109 (route n = P99+n)</td>
+<td>0-127 (-064 to +063)</td>
+</tr>
+</tbody>
+</table>
+<h3>A.9 Play / Loop</h3>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Message</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sample Start</td>
+<td>CC76</td>
+<td>0-127</td>
+</tr>
+<tr>
+<td>Sample End</td>
+<td>CC77</td>
+<td>0-127</td>
+</tr>
+<tr>
+<td>Play Mode</td>
+<td>CC70</td>
+<td>ORIGINAL 0-31; REVERSE 32-63; CUE 64-127</td>
+</tr>
+<tr>
+<td>Window Position</td>
+<td>P4</td>
+<td>0-127 (POSITION 000 to POSITION 127)</td>
+</tr>
+<tr>
+<td>Window Snap</td>
+<td>P3</td>
+<td>FREE 0-42; ZERO-CROSS 43-85; WHOLE FRAMES 86-127</td>
+</tr>
+<tr>
+<td>Loop Mode</td>
+<td>CC86</td>
+<td>ONE-SHOT 0-42; ORIGINAL 43-84; LOOP 85-127</td>
+</tr>
+<tr>
+<td>Loop Start</td>
+<td>CC87</td>
+<td>0-127</td>
+</tr>
+<tr>
+<td>Loop End</td>
+<td>CC88</td>
+<td>0-127</td>
+</tr>
+<tr>
+<td>Loop Crossfade</td>
+<td>CC72</td>
+<td>0-127</td>
+</tr>
+<tr>
+<td>Preset Wave</td>
+<td>CC111</td>
+<td>OFF 0-7; SAW 8-15; SQUARE 16-23; PULSE 25% 24-31; PULSE 12% 32-39; TRIANGLE 40-47; SINE 48-55; DOUBLE SINE 56-63</td>
+</tr>
+</tbody>
+</table>
+<h3>A.10 Stretch</h3>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Message</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Segments</td>
+<td>FZED 0</td>
+<td>2 SEGMENTS 0-18; 3 SEGMENTS 19-36; 4 SEGMENTS 37-54; 5 SEGMENTS 55-73; 6 SEGMENTS 74-91; 7 SEGMENTS 92-109; 8 SEGMENTS 110-127</td>
+</tr>
+<tr>
+<td>Stretch (time)</td>
+<td>FZED 1</td>
+<td>0-127 (HOLD 0.02 S to HOLD 19.5 S)</td>
+</tr>
+<tr>
+<td>Grain</td>
+<td>FZED 2</td>
+<td>0-127 (GRAIN 000% to GRAIN 100%)</td>
+</tr>
+<tr>
+<td>Crossfade</td>
+<td>FZED 3</td>
+<td>0-127 (XFADE 0000 to XFADE 1000)</td>
+</tr>
+<tr>
+<td>Snap</td>
+<td>FZED 4</td>
+<td>SNAP OFF 0-63; ZERO-CROSS 64-127</td>
+</tr>
+<tr>
+<td>Sustain At</td>
+<td>FZED 5</td>
+<td>NO SUSTAIN 0-42; HOLD SEGMENT 1 43-85; HOLD SEGMENT 2 86-127</td>
+</tr>
+<tr>
+<td>Next / Lead-in</td>
+<td>FZED 16</td>
+<td>TRACE 0-31; TRACE, CUT LEAD-IN 32-63; SKIP 64-95; SKIP, CUT LEAD-IN 96-127</td>
+</tr>
+<tr>
+<td>Order</td>
+<td>FZED 17</td>
+<td>FORWARD 0-31; REVERSE 32-63; THERE + BACK 64-95; SHUFFLE 01 96-99; SHUFFLE 02 100-103; SHUFFLE 03 104-107; SHUFFLE 04 108-111; SHUFFLE 05 112-115; SHUFFLE 06 116-119; SHUFFLE 07 120-123; SHUFFLE 08 124-127</td>
+</tr>
+<tr>
+<td>Skew</td>
+<td>FZED 18</td>
+<td>0-127 (FIRST LONGER 100% to LAST LONGER 98%)</td>
+</tr>
+<tr>
+<td>Stretch ON/OFF</td>
+<td>FZED 9</td>
+<td>OFF (OWN LOOPS) 0-63; STRETCH ON 64-127</td>
+</tr>
+</tbody>
+</table>
+<h3>A.11 Record</h3>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Message</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Record Rate</td>
+<td>CC102</td>
+<td>RATE 36K 0-31; RATE 18K 32-63; RATE 9K 64-95; RATE 4.5K 96-127</td>
+</tr>
+<tr>
+<td>Record Length</td>
+<td>CC103</td>
+<td>0-127 (0.1 S to 12.8 S at 36K; 2x at 18K, 4x at 9K, 8x at 4.5K)</td>
+</tr>
+<tr>
+<td>Input Gain</td>
+<td>CC104</td>
+<td>GAIN 0 DB 0-63; GAIN -20 DB 64-127</td>
+</tr>
+<tr>
+<td>Auto Trig Level</td>
+<td>CC105</td>
+<td>0-127 (LEVEL 000 to LEVEL 254)</td>
+</tr>
+<tr>
+<td>Norm Filter</td>
+<td>CC110</td>
+<td>OFF 0-63; ON 18K CUT 64-79; ON 9K CUT 80-95; ON 4.5K CUT 96-111; ON RATE CUT 112-127</td>
+</tr>
+<tr>
+<td>Record Arm</td>
+<td>CC106</td>
+<td>INACTIVE 0-63; TRIGGER 64-127</td>
+</tr>
+<tr>
+<td>Record Start</td>
+<td>CC107</td>
+<td>INACTIVE 0-63; TRIGGER 64-127</td>
+</tr>
+<tr>
+<td>Record Auto</td>
+<td>CC108</td>
+<td>INACTIVE 0-63; TRIGGER 64-127</td>
+</tr>
+<tr>
+<td>Record Stop</td>
+<td>CC109</td>
+<td>INACTIVE 0-63; TRIGGER 64-127</td>
+</tr>
+<tr>
+<td>Exit FZED</td>
+<td>FZED 14, then FZED 13</td>
+<td>FZED 13 = 0-63 leaves as ESC (edits put back). To leave as ENTER, first set FZED 14 to what is kept (0-42 the sound edits, 43-85 all of the edit voice, 86-127 everything, bank voices too), then FZED 13 = 64-127</td>
+</tr>
+</tbody>
+</table>
+<h3>A.12 Capture</h3>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Message</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Capture ON/OFF</td>
+<td>FZED 7 to enter, CC108 to leave</td>
+<td>FZED 7 = 64-127 enters capture; CC108 = 0-63 leaves it</td>
+</tr>
+<tr>
+<td>Recapture</td>
+<td>CC109</td>
+<td>INACTIVE 0-63; CAPTURE NOW 64-127</td>
+</tr>
+<tr>
+<td>Sync</td>
+<td>CC33</td>
+<td>FREE 0-15; 1/16 CLOCK 16-31; 1/8 CLOCK 32-47; 1/4 CLOCK 48-63; 1/2 CLOCK 64-79; 1 BAR CLOCK 80-95; 2 BARS CLOCK 96-111; 4 BARS CLOCK 112-127</td>
+</tr>
+<tr>
+<td>Capture Rate</td>
+<td>CC102</td>
+<td>RATE 36K 0-31; RATE 18K 32-63; RATE 9K 64-95; RATE 4.5K 96-127</td>
+</tr>
+<tr>
+<td>Capture Length</td>
+<td>CC103</td>
+<td>10 MS 0-7; 20 MS 8-15; 30 MS 16-23; 50 MS 24-31; 75 MS 32-39; 100 MS 40-47; 150 MS 48-55; 200 MS 56-63; 300 MS 64-71; 500 MS 72-79; 750 MS 80-87; 1.0 S 88-95; 1.5 S 96-103; 2.0 S 104-111; 3.0 S 112-119; 4.0 S 120-127</td>
+</tr>
+<tr>
+<td>Input Gain</td>
+<td>CC104</td>
+<td>GAIN 0 DB 0-63; GAIN -20 DB 64-127</td>
+</tr>
+<tr>
+<td>Hold</td>
+<td>CC105</td>
+<td>1 PASS 0-15; 2 PASSES 16-31; 4 PASSES 32-47; 8 PASSES 48-63; 2 SECONDS 64-79; 4 SECONDS 80-95; 8 SECONDS 96-111; UNTIL RECAPTURE 112-127</td>
+</tr>
+<tr>
+<td>Transpose</td>
+<td>CC23</td>
+<td>0-127 (-24 SEMITONES to +24 SEMITONES)</td>
+</tr>
+<tr>
+<td>Amp+flt Release</td>
+<td>CC81 + CC85 (same value)</td>
+<td>0-127</td>
+</tr>
+<tr>
+<td>Intervals</td>
+<td>CC96</td>
+<td>ORIGINAL ONLY 0-14; OCTAVES +12 -12 15-28; ROOT 5TH OCTAVE 29-42; MAJOR 43-56; MINOR 57-71; MAJOR 7TH 72-85; MINOR 7TH 86-99; 5TH OCT BELOW 100-113; WIDE SPREAD 114-127</td>
+</tr>
+<tr>
+<td>Velocity</td>
+<td>CC97</td>
+<td>SAME (100) 0-31; RANDOM 32-63; FALLING 64-95; RISING 96-127</td>
+</tr>
+<tr>
+<td>Stagger</td>
+<td>CC99</td>
+<td>TOGETHER 0-7; 20 MS APART 8-15; 40 MS APART 16-23; 60 MS APART 24-31; 80 MS APART 32-39; 120 MS APART 40-47; 160 MS APART 48-55; 200 MS APART 56-63; 300 MS APART 64-71; 400 MS APART 72-79; 500 MS APART 80-87; 600 MS APART 88-95; 800 MS APART 96-103; 1.2 S APART 104-111; 1.8 S APART 112-119; 2.4 S APART 120-127</td>
+</tr>
+<tr>
+<td>Fade</td>
+<td>CC34</td>
+<td>OFF (CUT) 0-15; 50 MS FADE 16-31; 100 MS FADE 32-47; 200 MS FADE 48-63; 400 MS FADE 64-79; 800 MS FADE 80-95; 1.2 S FADE 96-111; 1.6 S FADE 112-127</td>
+</tr>
+<tr>
+<td>Release</td>
+<td>CC41</td>
+<td>TOGETHER 0-63; TOP FIRST 64-127</td>
+</tr>
+</tbody>
+</table>
+<h3>A.13 Chop / Pattern</h3>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Message</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Chop Sensitivity</td>
+<td>CC96</td>
+<td>0-127 (SENS 000 to SENS 127)</td>
+</tr>
+<tr>
+<td>Chop Mode Snap</td>
+<td>CC97</td>
+<td>EVEN 0-42; EVEN + SNAP 43-85; TRANSIENT 86-127</td>
+</tr>
+<tr>
+<td>Chop Slice Count</td>
+<td>CC99</td>
+<td>SLICES 004 0-31; SLICES 008 32-63; SLICES 016 64-95; SLICES 032 96-127</td>
+</tr>
+<tr>
+<td>Chop Make Play</td>
+<td>CC98</td>
+<td>VOICE 0-63; PLAY SLICES 64-119; MAKE SLICES 120-127</td>
+</tr>
+<tr>
+<td>Output (choke)</td>
+<td>P121</td>
+<td>OFF (OVERLAP) 0-14; OUT 1 (CHOKE) 15-28; OUT 2 (CHOKE) 29-42; OUT 3 (CHOKE) 43-56; OUT 4 (CHOKE) 57-71; OUT 5 (CHOKE) 72-85; OUT 6 (CHOKE) 86-99; OUT 7 (CHOKE) 100-113; OUT 8 (CHOKE) 114-127</td>
+</tr>
+<tr>
+<td>Pattern</td>
+<td>P8</td>
+<td>OPEN (NO GATE) 0-7; 8THS 8-15; 16TH PULSE 16-23; QUARTERS 24-31; 3-3-2 32-39; OFFBEATS 40-47; TRANCE 48-55; GALLOP 56-63; HALF BAR 64-71; STUTTER END 72-79; SYNCOPATED 80-87; BUILD 88-95; SPARSE 96-103; BROKEN 104-111; RAMP UP 112-119; RAMP DOWN 120-127</td>
+</tr>
+<tr>
+<td>Pattern Rate</td>
+<td>P9</td>
+<td>0-127 (FREE 012 MS/STEP to MIDI CLOCK 1/2)</td>
+</tr>
+<tr>
+<td>Pattern Smooth</td>
+<td>P87</td>
+<td>SLEW 001 MS 0-15; SLEW 002 MS 16-31; SLEW 004 MS 32-47; SLEW 010 MS 48-63; SLEW 019 MS 64-79; SLEW 038 MS 80-95; SLEW 076 MS 96-111; SLEW 152 MS 112-127</td>
+</tr>
+<tr>
+<td>Chop Into</td>
+<td>FZED 6</td>
+<td>OWN BANK 0-63; TARGET BANK 64-127</td>
+</tr>
+<tr>
+<td>Freeze Chop</td>
+<td>FZED 15</td>
+<td>64-127 lets go of the current chop; its slices stay in the bank as plain voices</td>
+</tr>
+<tr>
+<td>DCF Cutoff</td>
+<td>CC74</td>
+<td>0-127</td>
+</tr>
+</tbody>
+</table>
+<h3>A.14 Slices</h3>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Message</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Slice</td>
+<td>P122</td>
+<td>SLICE 01 OF 08 0-15; SLICE 02 OF 08 16-31; SLICE 03 OF 08 32-47; SLICE 04 OF 08 48-63; SLICE 05 OF 08 64-79; SLICE 06 OF 08 80-95; SLICE 07 OF 08 96-111; SLICE 08 OF 08 112-127</td>
+</tr>
+<tr>
+<td>Slice Move</td>
+<td>P123</td>
+<td>0-47 (C-1 to B2)</td>
+</tr>
+<tr>
+<td>Slice Lowest</td>
+<td>P124</td>
+<td>0-36 (-00 SEMITONES to -36 SEMITONES)</td>
+</tr>
+<tr>
+<td>Slice Highest</td>
+<td>P125</td>
+<td>0-36 (+00 SEMITONES to +36 SEMITONES)</td>
+</tr>
+<tr>
+<td>Slice Output</td>
+<td>P127</td>
+<td>OFF (OVERLAP) 0-14; OUT 1 (CHOKE) 15-28; OUT 2 (CHOKE) 29-42; OUT 3 (CHOKE) 43-56; OUT 4 (CHOKE) 57-71; OUT 5 (CHOKE) 72-85; OUT 6 (CHOKE) 86-99; OUT 7 (CHOKE) 100-113; OUT 8 (CHOKE) 114-127</td>
+</tr>
+<tr>
+<td>Output (choke)</td>
+<td>P121</td>
+<td>OFF (OVERLAP) 0-14; OUT 1 (CHOKE) 15-28; OUT 2 (CHOKE) 29-42; OUT 3 (CHOKE) 43-56; OUT 4 (CHOKE) 57-71; OUT 5 (CHOKE) 72-85; OUT 6 (CHOKE) 86-99; OUT 7 (CHOKE) 100-113; OUT 8 (CHOKE) 114-127</td>
+</tr>
+<tr>
+<td>Filter/Env/LFO1</td>
+<td>FZED 10</td>
+<td>SHARED 0-63; PER SLICE 64-127</td>
+</tr>
+<tr>
+<td>Loop Mode</td>
+<td>CC86</td>
+<td>ONE-SHOT 0-42; ORIGINAL 43-84; LOOP 85-127</td>
+</tr>
+<tr>
+<td>Copy Voice</td>
+<td>P126</td>
+<td>REARM 0-63; WAIT 64-119; COPY VOICE 120-127</td>
+</tr>
+</tbody>
+</table>
+<h3>A.15 FX</h3>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Message</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FX Type</td>
+<td>CC112</td>
+<td>TAPEHACK 0-8; WAVEFOLDER 9-17; XOVER FUZZ 18-25; RECTIFIER 26-34; DECIMATOR 35-42; LINEAR CRUSH 43-51; BIT MANGLE 52-59; ECHO / COMB 60-68; POSITION 69-76; RING MOD 77-85; TUBE2 86-93; KARPLUS-STRONG 94-102; FILTER 103-110; TAPEHACK &gt; POCKEY2 111-119; POCKEY2 120-127</td>
+</tr>
+<tr>
+<td>Dry/Wet Mix</td>
+<td>CC117</td>
+<td>0-127 (WET 000% to WET 100%)</td>
+</tr>
+<tr>
+<td>Live FX</td>
+<td>CC119</td>
+<td>LIVE OFF 0-63; LIVE ON 64-127</td>
+</tr>
+<tr>
+<td>Render</td>
+<td>CC118</td>
+<td>REARM 0-63; INACTIVE 64-119; RENDER 120-127</td>
+</tr>
+<tr>
+<td>Delete Unused (button)</td>
+<td>CC100</td>
+<td>REARM 0-63; INACTIVE 64-119; DELETE UNUSED 120-127</td>
+</tr>
+<tr>
+<td>Normalise (button)</td>
+<td>CC101</td>
+<td>REARM 0-63; INACTIVE 64-119; NORMALISE 120-127</td>
+</tr>
+</tbody>
+</table>
+<p>Effect parameters, by effect (in FX Type order):</p>
+<table>
+<thead>
+<tr>
+<th>Effect</th>
+<th>Control</th>
+<th>Message</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tapehack</td>
+<td>Tape Input</td>
+<td>CC115</td>
+<td>0-127 (-INF DB to +20.0 DB)</td>
+</tr>
+<tr>
+<td>Tapehack</td>
+<td>Tape Output</td>
+<td>CC116</td>
+<td>0-127 (-INF DB to -0.7 DB)</td>
+</tr>
+<tr>
+<td>Wavefolder</td>
+<td>Fold Drive</td>
+<td>CC115</td>
+<td>0-127 (-INF DB to +20.0 DB)</td>
+</tr>
+<tr>
+<td>Wavefolder</td>
+<td>Fold Output</td>
+<td>CC116</td>
+<td>0-127 (-INF DB to -0.7 DB)</td>
+</tr>
+<tr>
+<td>Xover Fuzz</td>
+<td>Xover Threshold</td>
+<td>CC115</td>
+<td>0-127 (THRESHOLD 000% to THRESHOLD 098%)</td>
+</tr>
+<tr>
+<td>Xover Fuzz</td>
+<td>Xover &gt; Fuzz</td>
+<td>CC116</td>
+<td>0-127 (CROSSOVER to FUZZ)</td>
+</tr>
+<tr>
+<td>Rectifier</td>
+<td>Rectify</td>
+<td>CC115</td>
+<td>OFF 0-3; PART HALF-WAVE 4-59; HALF-WAVE 60-67; PART FULL-WAVE 68-123; FULL-WAVE 124-127</td>
+</tr>
+<tr>
+<td>Rectifier</td>
+<td>DC Trim</td>
+<td>CC116</td>
+<td>0-127 (100% TRIM to 000% TRIM)</td>
+</tr>
+<tr>
+<td>Decimator</td>
+<td>Hold</td>
+<td>CC115</td>
+<td>0-127 (HOLD 001 WORDS to HOLD 064 WORDS)</td>
+</tr>
+<tr>
+<td>Linear Crush</td>
+<td>Bits Derez Crush</td>
+<td>CC113</td>
+<td>2 BITS 0-33; 3 BITS 34-48; 4 BITS 49-58; 5 BITS 59-67; 6 BITS 68-75; 7 BITS 76-83; 8 BITS 84-89; 9 BITS 90-96; 10 BITS 97-101; 11 BITS 102-107; 12 BITS 108-112; 13 BITS 113-117; 14 BITS 118-122; 15 BITS 123-126; 16 BITS 127</td>
+</tr>
+<tr>
+<td>Linear Crush</td>
+<td>Defreq</td>
+<td>CC114</td>
+<td>0-127 (DEFREQ CC 000 to DEFREQ CC 127)</td>
+</tr>
+<tr>
+<td>Bit Mangle</td>
+<td>Mangle High Bits</td>
+<td>CC115</td>
+<td>0-127 (XOR 0000 to XOR FE00)</td>
+</tr>
+<tr>
+<td>Bit Mangle</td>
+<td>Mangle Low Bits</td>
+<td>CC116</td>
+<td>0-127 (XOR 0000 to XOR 01FC)</td>
+</tr>
+<tr>
+<td>Echo / Comb</td>
+<td>Echo Taps</td>
+<td>CC114</td>
+<td>ONE ECHO 0-63; 3 REFLECTIONS 64-127</td>
+</tr>
+<tr>
+<td>Echo / Comb</td>
+<td>Echo Delay</td>
+<td>CC115</td>
+<td>0-127 (DELAY 001 WORDS to DELAY 8002 WORDS)</td>
+</tr>
+<tr>
+<td>Echo / Comb</td>
+<td>Echo Gain</td>
+<td>CC116</td>
+<td>0-127 (-100% to +100%)</td>
+</tr>
+<tr>
+<td>Position</td>
+<td>Position Type</td>
+<td>CC115</td>
+<td>REVERSE 0-42; STUTTER 43-85; SCRAMBLE 86-127</td>
+</tr>
+<tr>
+<td>Position</td>
+<td>Window</td>
+<td>CC116</td>
+<td>0-127 (WINDOW 016 WORDS to WINDOW 3968 WORDS)</td>
+</tr>
+<tr>
+<td>Ring Mod</td>
+<td>Ring Frequency</td>
+<td>CC94</td>
+<td>0-127 (RING CC 000 to RING CC 127)</td>
+</tr>
+<tr>
+<td>Ring Mod</td>
+<td>Ring Shape</td>
+<td>CC95</td>
+<td>SINE 0-63; SQUARE 64-127</td>
+</tr>
+<tr>
+<td>Tube2</td>
+<td>Tube Pad</td>
+<td>CC115</td>
+<td>0-127 (000% to 100%; 127 = no pad)</td>
+</tr>
+<tr>
+<td>Tube2</td>
+<td>Tube Amount</td>
+<td>CC116</td>
+<td>0-127 (000% to 100%)</td>
+</tr>
+<tr>
+<td>Karplus-strong</td>
+<td>KS Note</td>
+<td>CC94</td>
+<td>0-127 (C-1 to G9)</td>
+</tr>
+<tr>
+<td>Karplus-strong</td>
+<td>KS Feedback</td>
+<td>CC95</td>
+<td>0-127 (000% FEEDBACK to 100% FEEDBACK)</td>
+</tr>
+<tr>
+<td>Filter</td>
+<td>Filter Type</td>
+<td>CC94</td>
+<td>LOW-PASS 0-42; BAND-PASS 43-85; HIGH-PASS 86-127</td>
+</tr>
+<tr>
+<td>Filter</td>
+<td>Cutoff</td>
+<td>CC115</td>
+<td>0-127 (CUTOFF 000 to CUTOFF 127)</td>
+</tr>
+<tr>
+<td>Filter</td>
+<td>Resonance</td>
+<td>CC116</td>
+<td>0-127 (RESONANCE 000 to RESONANCE 127)</td>
+</tr>
+<tr>
+<td>Tapehack &gt; Pockey2</td>
+<td>Bits Derez Crush</td>
+<td>CC113</td>
+<td>4 BITS 0-9; 5 BITS 10-19; 6 BITS 20-29; 7 BITS 30-39; 8 BITS 40-49; 9 BITS 50-59; 10 BITS 60-68; 11 BITS 69-78; 12 BITS 79-88; 13 BITS 89-98; 14 BITS 99-108; 15 BITS 109-118; 16 BITS 119-127</td>
+</tr>
+<tr>
+<td>Tapehack &gt; Pockey2</td>
+<td>Defreq</td>
+<td>CC114</td>
+<td>0-127 (DEFREQ CC 000 to DEFREQ CC 127)</td>
+</tr>
+<tr>
+<td>Tapehack &gt; Pockey2</td>
+<td>Tape Input</td>
+<td>CC115</td>
+<td>0-127 (-INF DB to +20.0 DB)</td>
+</tr>
+<tr>
+<td>Tapehack &gt; Pockey2</td>
+<td>Tape Output</td>
+<td>CC116</td>
+<td>0-127 (-INF DB to -0.7 DB)</td>
+</tr>
+<tr>
+<td>Pockey2</td>
+<td>Bits Derez Crush</td>
+<td>CC113</td>
+<td>4 BITS 0-9; 5 BITS 10-19; 6 BITS 20-29; 7 BITS 30-39; 8 BITS 40-49; 9 BITS 50-59; 10 BITS 60-68; 11 BITS 69-78; 12 BITS 79-88; 13 BITS 89-98; 14 BITS 99-108; 15 BITS 109-118; 16 BITS 119-127</td>
+</tr>
+<tr>
+<td>Pockey2</td>
+<td>Defreq</td>
+<td>CC114</td>
+<td>0-127 (DEFREQ CC 000 to DEFREQ CC 127)</td>
+</tr>
+</tbody>
+</table>
+<h3>A.16 Bank builder</h3>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Message</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Voice Pick</td>
+<td>FZED 11</td>
+<td>0-127, spread over the voices that have sound; the picked voice shows on line 2</td>
+</tr>
+<tr>
+<td>Voice Select</td>
+<td>FZED 12</td>
+<td>64-127 selects the picked voice (voice mode only)</td>
+</tr>
+<tr>
+<td>New Voice</td>
+<td>CC16</td>
+<td>REARM 0-63; WAIT 64-119; NEW VOICE 120-127</td>
+</tr>
+<tr>
+<td>Copy Voice</td>
+<td>P126</td>
+<td>REARM 0-63; WAIT 64-119; COPY VOICE 120-127</td>
+</tr>
+<tr>
+<td>Bank Select</td>
+<td>CC14</td>
+<td>VOICE MODE 0-14; PLAY BANK 1 15-28; PLAY BANK 2 29-42; PLAY BANK 3 43-56; PLAY BANK 4 57-71; PLAY BANK 5 72-85; PLAY BANK 6 86-99; PLAY BANK 7 100-113; PLAY BANK 8 114-127</td>
+</tr>
+<tr>
+<td>Bank Add/Clear</td>
+<td>CC15</td>
+<td>ADD THIS VOICE 0-31; REARM 32-95; CLEAR CHANNEL 96-127</td>
+</tr>
+<tr>
+<td>Chop Into</td>
+<td>FZED 6</td>
+<td>OWN BANK 0-63; TARGET BANK 64-127</td>
+</tr>
+<tr>
+<td>Freeze Chop</td>
+<td>FZED 15</td>
+<td>64-127 lets go of the current chop; its slices stay in the bank as plain voices</td>
+</tr>
+</tbody>
+</table>
+<h2 id="section-26">Software And Data</h2>
+<p><strong>FZED optional software</strong> runs on the FZ hardware and performs the sound, editing, modulation and capture operations. <strong>The FZED browser editor</strong> runs on the computer and sends MIDI instructions to it. Both parts are needed for the browser controls to operate the hardware as described.</p>
+<p>The optional-software disk, audio samples, FZ voice files, browser settings JSON and USER_FZ.BIN preset bank are different resources. A browser settings file is not a replacement for a saved sample or voice. Keep separate backups of the sounds and the settings needed to recreate them.</p>
+<h2 id="section-27">Credits And Licence</h2>
+<h3>Airwindows</h3>
+<p>FZED's Airwindows-derived effects processing, including the adapted Pockey2 and Tube2 algorithms, credits <strong>Chris Johnson / Airwindows</strong>. The FZED optional software adapts that processing for the Casio hardware; these are not unmodified desktop plug-ins, and identical output is not guaranteed. The FZED browser editor controls the hardware over MIDI and does not run these audio algorithms itself.</p>
+<p>Airwindows publishes its code under the <strong>MIT License</strong>. The repository licence is copyright (c) 2018 Chris Johnson. The Pockey2 and Tube2 processing files additionally state: <strong>Copyright (c) 2016 airwindows, Airwindows uses the MIT license</strong>. Both attributions are retained here. This is not an official Airwindows release and does not imply endorsement.</p>
+<p>Sources: <a href="https://github.com/airwindows/airwindows/blob/master/LICENSE">Airwindows licence</a>, <a href="https://github.com/airwindows/airwindows/blob/master/plugins/WinVST/Pockey2/Pockey2Proc.cpp">Pockey2 source</a>, <a href="https://github.com/airwindows/airwindows/blob/master/plugins/WinVST/Tube2/Tube2Proc.cpp">Tube2 source</a>.</p>
+<p>The complete upstream repository licence follows. It is also supplied as <code>LICENSE_AIRWINDOWS.txt</code>. Its copyright and permission notice must accompany copies or substantial portions of the Airwindows-derived software. This notice applies to those portions; it does not declare all unrelated FZED code to be MIT-licensed.</p>
+<pre><code class="language-text">MIT License
+
+Copyright (c) 2018 Chris Johnson
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &quot;Software&quot;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+</code></pre></main></body></html>

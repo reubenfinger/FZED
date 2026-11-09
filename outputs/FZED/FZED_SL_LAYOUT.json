@@ -1,0 +1,1308 @@
+{
+ "channel": 16,
+ "templates": [
+  {
+   "name": "FZED 1 SOUND",
+   "rows": [
+    {
+     "row": "Encoders",
+     "controls": [
+      {
+       "name": "ORIG KEY",
+       "does": "ORIGINAL KEY",
+       "message": "CC68",
+       "kind": "knob",
+       "low": 36,
+       "high": 96
+      },
+      {
+       "name": "LOW KEY",
+       "does": "LOWEST KEY",
+       "message": "CC67",
+       "kind": "knob",
+       "low": 36,
+       "high": 96
+      },
+      {
+       "name": "HIGH KEY",
+       "does": "HIGHEST KEY",
+       "message": "CC66",
+       "kind": "knob",
+       "low": 36,
+       "high": 96
+      },
+      {
+       "name": "FX P2",
+       "does": "FX parameter 2 (current effect)",
+       "message": "FZED NRPN 6/1",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "FX P3",
+       "does": "FX parameter 3",
+       "message": "FZED NRPN 6/2",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "FX P4",
+       "does": "FX parameter 4",
+       "message": "FZED NRPN 6/3",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "FX P5",
+       "does": "FX parameter 5",
+       "message": "FZED NRPN 6/4",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "FX MIX",
+       "does": "DRY WET MIX",
+       "message": "CC117",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      }
+     ]
+    },
+    {
+     "row": "Pots",
+     "controls": [
+      {
+       "name": "CUTOFF",
+       "does": "DCF CUTOFF",
+       "message": "CC74",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "RES",
+       "does": "DCQ RESONANCE",
+       "message": "CC75",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "LFO RATE",
+       "does": "LFO RATE",
+       "message": "CC73",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "LFO PTCH",
+       "does": "LFO PITCH DEPTH",
+       "message": "CC53",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "LFO AMP",
+       "does": "LFO AMP DEPTH",
+       "message": "CC54",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "LFO FLT",
+       "does": "LFO FILTER DEPTH",
+       "message": "CC55",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "LFO RES",
+       "does": "LFO RES DEPTH",
+       "message": "CC56",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "LFO ATK",
+       "does": "LFO ATTACK",
+       "message": "CC51",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      }
+     ]
+    },
+    {
+     "row": "Sliders",
+     "controls": [
+      {
+       "name": "DCA ATK",
+       "does": "DCA ATTACK",
+       "message": "CC78",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "DCA DCY",
+       "does": "DCA DECAY",
+       "message": "CC79",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "DCA SUS",
+       "does": "DCA SUSTAIN LVL",
+       "message": "CC80",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "DCA REL",
+       "does": "DCA RELEASE",
+       "message": "CC81",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "DCF ATK",
+       "does": "DCF ATTACK",
+       "message": "CC82",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "DCF DCY",
+       "does": "DCF DECAY",
+       "message": "CC83",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "DCF SUS",
+       "does": "DCF SUSTAIN LVL",
+       "message": "CC84",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "DCF REL",
+       "does": "DCF RELEASE",
+       "message": "CC85",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      }
+     ]
+    },
+    {
+     "row": "Buttons above the encoders",
+     "controls": [
+      {
+       "name": "TAPE SPD",
+       "does": "TAPE SPEED",
+       "message": "CC71",
+       "kind": "step, 4 settings",
+       "low": 15,
+       "high": 111
+      },
+      {
+       "name": "LFO WAVE",
+       "does": "LFO WAVEFORM",
+       "message": "CC50",
+       "kind": "step, 6 settings",
+       "low": 0,
+       "high": 5
+      },
+      {
+       "name": "VOX INIT",
+       "does": "VOICE INIT",
+       "message": "param 7",
+       "kind": "momentary",
+       "low": 127,
+       "high": 0
+      },
+      {
+       "name": "FX TYPE",
+       "does": "POCKEY TAPE MODE",
+       "message": "CC112",
+       "kind": "step, 15 settings",
+       "low": 1,
+       "high": 127
+      },
+      {
+       "name": "FX LIVE",
+       "does": "LIVE FX",
+       "message": "CC119",
+       "kind": "toggle",
+       "low": 96,
+       "high": 32
+      },
+      {
+       "name": "FX DEL",
+       "does": "DELETE UNUSED",
+       "message": "CC100 (via NRPN)",
+       "kind": "momentary",
+       "low": 127,
+       "high": 0
+      },
+      {
+       "name": "FX NORM",
+       "does": "NORMALISE",
+       "message": "CC101 (via NRPN)",
+       "kind": "momentary",
+       "low": 127,
+       "high": 0
+      },
+      {
+       "name": "RENDER",
+       "does": "RENDER",
+       "message": "CC118",
+       "kind": "momentary",
+       "low": 127,
+       "high": 0
+      }
+     ]
+    },
+    {
+     "row": "Buttons below the encoders",
+     "controls": [
+      {
+       "name": "AMP SUS",
+       "does": "AMP SUSTAIN STEP",
+       "message": "CC12",
+       "kind": "step, 8 settings",
+       "low": 0,
+       "high": 7
+      },
+      {
+       "name": "AMP END",
+       "does": "AMP END STEP",
+       "message": "CC13",
+       "kind": "step, 8 settings",
+       "low": 0,
+       "high": 7
+      },
+      {
+       "name": "FLT SUS",
+       "does": "FLT SUSTAIN STEP",
+       "message": "CC30",
+       "kind": "step, 8 settings",
+       "low": 0,
+       "high": 7
+      },
+      {
+       "name": "FLT END",
+       "does": "FLT END STEP",
+       "message": "CC31",
+       "kind": "step, 8 settings",
+       "low": 0,
+       "high": 7
+      },
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "row": "Right upper buttons",
+     "controls": [
+      {
+       "name": "NEW VOX",
+       "does": "NEW VOICE",
+       "message": "CC16",
+       "kind": "momentary",
+       "low": 127,
+       "high": 0
+      },
+      {
+       "name": "VOX SEL",
+       "does": "VOICE SELECT",
+       "message": "PERF control 12",
+       "kind": "normal",
+       "low": 127,
+       "high": 127
+      },
+      {
+       "name": "COPY VOX",
+       "does": "COPY VOICE",
+       "message": "param 126",
+       "kind": "momentary",
+       "low": 127,
+       "high": 0
+      },
+      {
+       "name": "BANK SEL",
+       "does": "BANK SELECT",
+       "message": "CC14",
+       "kind": "step, 9 settings",
+       "low": 8,
+       "high": 120
+      },
+      {
+       "name": "BANK ADD",
+       "does": "BANK ADD (add this voice)",
+       "message": "CC15",
+       "kind": "momentary",
+       "low": 0,
+       "high": 64
+      },
+      {
+       "name": "BANK CLR",
+       "does": "BANK CLEAR (this channel)",
+       "message": "CC15",
+       "kind": "momentary",
+       "low": 127,
+       "high": 64
+      },
+      null,
+      null
+     ]
+    },
+    {
+     "row": "Right lower buttons",
+     "controls": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    }
+   ]
+  },
+  {
+   "name": "FZED 2 MOD",
+   "rows": [
+    {
+     "row": "Encoders",
+     "controls": [
+      {
+       "name": "CT PTCH",
+       "does": "Controller LFO pitch (selected source)",
+       "message": "FZED NRPN 4/0",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "CT AMP",
+       "does": "Controller LFO amp",
+       "message": "FZED NRPN 4/1",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "CT FLT",
+       "does": "Controller LFO filter",
+       "message": "FZED NRPN 4/2",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "CT RES",
+       "does": "Controller LFO res",
+       "message": "FZED NRPN 4/3",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "MX ROUTE",
+       "does": "Matrix route 1-10",
+       "message": "FZED NRPN 2/3",
+       "kind": "knob",
+       "low": 0,
+       "high": 9
+      },
+      {
+       "name": "MX SRC",
+       "does": "Matrix source (selected route)",
+       "message": "FZED NRPN 5/0",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "MX AMT",
+       "does": "Matrix amount",
+       "message": "FZED NRPN 5/1",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "MX DEST",
+       "does": "Matrix destination",
+       "message": "FZED NRPN 5/2",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      }
+     ]
+    },
+    {
+     "row": "Pots",
+     "controls": [
+      {
+       "name": "LFO2 RT",
+       "does": "LFO2 RATE DIV",
+       "message": "CC89",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "LFO2 SHP",
+       "does": "LFO2 SHAPE",
+       "message": "CC91",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "LFO2 DLY",
+       "does": "LFO2 DELAY",
+       "message": "param 1",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "LFO2 FAD",
+       "does": "LFO2 FADE-IN",
+       "message": "param 2",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "LFO2 DPT",
+       "does": "LFO2 DEPTH",
+       "message": "CC90",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "LFO2 DP2",
+       "does": "LFO2 DEPTH 2",
+       "message": "param 109",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "LFO1 DLY",
+       "does": "LFO1 DELAY",
+       "message": "param 0",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "GLIDE",
+       "does": "GLIDE TIME",
+       "message": "param 5",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      }
+     ]
+    },
+    {
+     "row": "Sliders",
+     "controls": [
+      {
+       "name": "AMP KF",
+       "does": "AMP KEY FOLLOW",
+       "message": "param 58",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "AMP RSC",
+       "does": "AMP RATE SCALE",
+       "message": "param 59",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "FLT KF",
+       "does": "FLT KEY FOLLOW",
+       "message": "param 60",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "FLT RSC",
+       "does": "FLT RATE SCALE",
+       "message": "param 61",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "V>AMP LV",
+       "does": "VEL > AMP LEVEL",
+       "message": "param 62",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "V>AMP RT",
+       "does": "VEL > AMP RATE",
+       "message": "param 63",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "V>FLT LV",
+       "does": "VEL > FLT LEVEL",
+       "message": "param 64",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "V>FLT RT",
+       "does": "VEL > FLT RATE",
+       "message": "param 65",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      }
+     ]
+    },
+    {
+     "row": "Buttons above the encoders",
+     "controls": [
+      {
+       "name": "SRC MW",
+       "does": "Controllers: mod wheel",
+       "message": "FZED NRPN 2/2",
+       "kind": "normal",
+       "low": 0,
+       "high": 0
+      },
+      {
+       "name": "SRC FOOT",
+       "does": "Controllers: foot",
+       "message": "FZED NRPN 2/2",
+       "kind": "normal",
+       "low": 1,
+       "high": 1
+      },
+      {
+       "name": "SRC AT",
+       "does": "Controllers: aftertouch",
+       "message": "FZED NRPN 2/2",
+       "kind": "normal",
+       "low": 2,
+       "high": 2
+      },
+      {
+       "name": "GLIDE MD",
+       "does": "GLIDE MODE",
+       "message": "param 6",
+       "kind": "step, 3 settings",
+       "low": 21,
+       "high": 107
+      },
+      {
+       "name": "LFO2 MOD",
+       "does": "LFO2 MODE",
+       "message": "CC93",
+       "kind": "step, 3 settings",
+       "low": 21,
+       "high": 107
+      },
+      {
+       "name": "LFO2 DST",
+       "does": "LFO2 DEST",
+       "message": "CC92",
+       "kind": "step, 8 settings",
+       "low": 7,
+       "high": 119
+      },
+      {
+       "name": "LFO2 DS2",
+       "does": "LFO2 DEST 2",
+       "message": "FZED NRPN 2/6",
+       "kind": "step, 16 settings",
+       "low": 3,
+       "high": 123
+      },
+      {
+       "name": "VEL>RES",
+       "does": "VEL > RES",
+       "message": "param 57",
+       "kind": "step, 8 settings",
+       "low": 0,
+       "high": 127
+      }
+     ]
+    },
+    {
+     "row": "Buttons below the encoders",
+     "controls": [
+      {
+       "name": "CT AOFS",
+       "does": "Controller amp offset (8 steps)",
+       "message": "FZED NRPN 4/4",
+       "kind": "step, 8 settings",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "CT FOFS",
+       "does": "Controller filter offset (8 steps)",
+       "message": "FZED NRPN 4/5",
+       "kind": "step, 8 settings",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "CT ROFS",
+       "does": "Controller res offset (8 steps)",
+       "message": "FZED NRPN 4/6",
+       "kind": "step, 8 settings",
+       "low": 0,
+       "high": 127
+      },
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "row": "Right upper buttons",
+     "controls": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "row": "Right lower buttons",
+     "controls": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    }
+   ]
+  },
+  {
+   "name": "FZED 3 SAMPLE",
+   "rows": [
+    {
+     "row": "Encoders",
+     "controls": [
+      {
+       "name": "PRESETWV",
+       "does": "PRESET WAVE",
+       "message": "CC111",
+       "kind": "knob",
+       "low": 0,
+       "high": 63
+      },
+      {
+       "name": "ST TIME",
+       "does": "STRETCH (TIME)",
+       "message": "PERF control 1",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "ST SKEW",
+       "does": "SKEW",
+       "message": "PERF control 18",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "CAP TRNS",
+       "does": "TRANSPOSE",
+       "message": "CC23",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "SLC MOVE",
+       "does": "SLICE MOVE",
+       "message": "param 123",
+       "kind": "knob",
+       "low": 0,
+       "high": 47
+      },
+      {
+       "name": "SLC LOW",
+       "does": "SLICE LOWEST",
+       "message": "param 124",
+       "kind": "knob",
+       "low": 0,
+       "high": 36
+      },
+      {
+       "name": "SLC HIGH",
+       "does": "SLICE HIGHEST",
+       "message": "param 125",
+       "kind": "knob",
+       "low": 0,
+       "high": 36
+      },
+      {
+       "name": "VOX PICK",
+       "does": "VOICE PICK",
+       "message": "PERF control 11",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      }
+     ]
+    },
+    {
+     "row": "Pots",
+     "controls": [
+      {
+       "name": "REC LEN",
+       "does": "RECORD LENGTH",
+       "message": "CC103",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "TRIG LVL",
+       "does": "AUTO TRIG LEVEL",
+       "message": "CC105",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "NORM FLT",
+       "does": "NORM FILTER",
+       "message": "CC110",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "SLICE",
+       "does": "SLICE (spans the chop's slice count)",
+       "message": "param 122",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "CAP SYNC",
+       "does": "SYNC",
+       "message": "CC33",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "CHOP SNS",
+       "does": "CHOP SENSITIVITY",
+       "message": "CC96",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "PAT RATE",
+       "does": "PATTERN RATE",
+       "message": "param 9",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "ST ORDER",
+       "does": "ORDER",
+       "message": "PERF control 17",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      }
+     ]
+    },
+    {
+     "row": "Sliders",
+     "controls": [
+      {
+       "name": "SMP STRT",
+       "does": "SAMPLE START",
+       "message": "CC76",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "SMP END",
+       "does": "SAMPLE END",
+       "message": "CC77",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "LOOP STR",
+       "does": "LOOP START",
+       "message": "CC87",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "LOOP END",
+       "does": "LOOP END",
+       "message": "CC88",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "LOOP XFD",
+       "does": "LOOP CROSSFADE",
+       "message": "CC72",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "WIN POS",
+       "does": "WINDOW POSITION",
+       "message": "param 4",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "GRAIN",
+       "does": "GRAIN",
+       "message": "PERF control 2",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "ST XFADE",
+       "does": "CROSSFADE",
+       "message": "PERF control 3",
+       "kind": "knob",
+       "low": 0,
+       "high": 127
+      }
+     ]
+    },
+    {
+     "row": "Buttons above the encoders",
+     "controls": [
+      {
+       "name": "PLAY MD",
+       "does": "PLAY MODE",
+       "message": "CC70",
+       "kind": "step, 3 settings",
+       "low": 15,
+       "high": 79
+      },
+      {
+       "name": "LOOP MD",
+       "does": "LOOP MODE",
+       "message": "CC86",
+       "kind": "step, 3 settings",
+       "low": 21,
+       "high": 105
+      },
+      {
+       "name": "WIN SNAP",
+       "does": "WINDOW SNAP",
+       "message": "param 3",
+       "kind": "step, 3 settings",
+       "low": 21,
+       "high": 107
+      },
+      {
+       "name": "LOAD WV",
+       "does": "Load the selected preset wave",
+       "message": "CC9",
+       "kind": "momentary",
+       "low": 0,
+       "high": 127
+      },
+      {
+       "name": "ST ON",
+       "does": "STRETCH ON/OFF",
+       "message": "PERF control 9",
+       "kind": "toggle",
+       "low": 96,
+       "high": 32
+      },
+      {
+       "name": "ST SNAP",
+       "does": "SNAP",
+       "message": "PERF control 4",
+       "kind": "step, 2 settings",
+       "low": 32,
+       "high": 95
+      },
+      {
+       "name": "ST SUS",
+       "does": "STRETCH SUSTAIN AT (none, hold segment 1-8: as many as there are segments)",
+       "message": "PERF control 5",
+       "kind": "step, 9 settings",
+       "low": 8,
+       "high": 120
+      },
+      {
+       "name": "ST NEXT",
+       "does": "NEXT / LEAD-IN",
+       "message": "PERF control 16",
+       "kind": "step, 4 settings",
+       "low": 15,
+       "high": 111
+      }
+     ]
+    },
+    {
+     "row": "Buttons below the encoders",
+     "controls": [
+      {
+       "name": "ST SEGS",
+       "does": "SEGMENTS",
+       "message": "PERF control 0",
+       "kind": "step, 7 settings",
+       "low": 10,
+       "high": 118
+      },
+      {
+       "name": "REC RATE",
+       "does": "RECORD RATE",
+       "message": "CC102",
+       "kind": "step, 4 settings",
+       "low": 15,
+       "high": 111
+      },
+      {
+       "name": "REC GAIN",
+       "does": "INPUT GAIN",
+       "message": "CC104",
+       "kind": "step, 2 settings",
+       "low": 32,
+       "high": 95
+      },
+      {
+       "name": "CAPTURE",
+       "does": "CAPTURE ON / OFF",
+       "message": "FZED NRPN 2/8",
+       "kind": "toggle",
+       "low": 127,
+       "high": 0
+      },
+      {
+       "name": "EXIT ESC",
+       "does": "EXIT PERF: discard",
+       "message": "FZED NRPN 2/4",
+       "kind": "normal",
+       "low": 0,
+       "high": 0
+      },
+      {
+       "name": "EXIT SND",
+       "does": "EXIT PERF: keep sound",
+       "message": "FZED NRPN 2/4",
+       "kind": "normal",
+       "low": 1,
+       "high": 1
+      },
+      {
+       "name": "EXIT VOX",
+       "does": "EXIT PERF: keep all of edit voice",
+       "message": "FZED NRPN 2/4",
+       "kind": "normal",
+       "low": 2,
+       "high": 2
+      },
+      {
+       "name": "EXIT ALL",
+       "does": "EXIT PERF: keep all",
+       "message": "FZED NRPN 2/4",
+       "kind": "normal",
+       "low": 3,
+       "high": 3
+      }
+     ]
+    },
+    {
+     "row": "Right upper buttons",
+     "controls": [
+      {
+       "name": "CHOP MD",
+       "does": "CHOP MODE SNAP",
+       "message": "CC97 (via NRPN)",
+       "kind": "step, 3 settings",
+       "low": 21,
+       "high": 107
+      },
+      {
+       "name": "CHOP CNT",
+       "does": "CHOP SLICE COUNT",
+       "message": "CC99 (via NRPN)",
+       "kind": "step, 4 settings",
+       "low": 15,
+       "high": 111
+      },
+      {
+       "name": "MAKE SLC",
+       "does": "CHOP: create slices",
+       "message": "CC98 (via NRPN)",
+       "kind": "normal",
+       "low": 127,
+       "high": 127
+      },
+      {
+       "name": "PLAY SLC",
+       "does": "CHOP: play slices",
+       "message": "CC98 (via NRPN)",
+       "kind": "normal",
+       "low": 64,
+       "high": 64
+      },
+      {
+       "name": "RET VOX",
+       "does": "CHOP: return to voice",
+       "message": "CC98 (via NRPN)",
+       "kind": "normal",
+       "low": 0,
+       "high": 0
+      },
+      {
+       "name": "CHOKE",
+       "does": "OUTPUT (CHOKE)",
+       "message": "param 121",
+       "kind": "step, 9 settings",
+       "low": 8,
+       "high": 120
+      },
+      {
+       "name": "PATTERN",
+       "does": "PATTERN",
+       "message": "param 8",
+       "kind": "step, 16 settings",
+       "low": 3,
+       "high": 123
+      },
+      {
+       "name": "SMOOTH",
+       "does": "PATTERN SMOOTH",
+       "message": "param 87",
+       "kind": "step, 8 settings",
+       "low": 7,
+       "high": 119
+      }
+     ]
+    },
+    {
+     "row": "Right lower buttons",
+     "controls": [
+      {
+       "name": "CHOPINTO",
+       "does": "CHOP INTO",
+       "message": "PERF control 6",
+       "kind": "step, 2 settings",
+       "low": 32,
+       "high": 95
+      },
+      {
+       "name": "FREEZE",
+       "does": "FREEZE CHOP",
+       "message": "PERF control 15",
+       "kind": "normal",
+       "low": 127,
+       "high": 127
+      },
+      {
+       "name": "CAP REL",
+       "does": "Capture AMP+FLT RELEASE (8 steps)",
+       "message": "FZED NRPN 2/9",
+       "kind": "step, 8 settings",
+       "low": 0,
+       "high": 112
+      },
+      {
+       "name": "SLC OUT",
+       "does": "SLICE OUTPUT",
+       "message": "param 127",
+       "kind": "step, 9 settings",
+       "low": 8,
+       "high": 120
+      },
+      {
+       "name": "SLC FEL",
+       "does": "FILTER/ENV/LFO1",
+       "message": "PERF control 10",
+       "kind": "step, 2 settings",
+       "low": 32,
+       "high": 95
+      },
+      {
+       "name": "CAP HOLD",
+       "does": "HOLD",
+       "message": "CC105",
+       "kind": "step, 8 settings",
+       "low": 7,
+       "high": 119
+      },
+      {
+       "name": "CAP FADE",
+       "does": "FADE",
+       "message": "CC34",
+       "kind": "step, 8 settings",
+       "low": 7,
+       "high": 119
+      },
+      {
+       "name": "CAP RLS",
+       "does": "RELEASE",
+       "message": "CC41",
+       "kind": "step, 2 settings",
+       "low": 32,
+       "high": 95
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "touchpad": [
+  {
+   "name": "CUTOFF",
+   "does": "DCF CUTOFF",
+   "message": "CC74",
+   "kind": "knob",
+   "low": 0,
+   "high": 127
+  },
+  {
+   "name": "RES",
+   "does": "DCQ RESONANCE",
+   "message": "CC75",
+   "kind": "knob",
+   "low": 0,
+   "high": 127
+  },
+  {
+   "name": "LFO2 DPT",
+   "does": "LFO2 DEPTH",
+   "message": "CC90",
+   "kind": "knob",
+   "low": 0,
+   "high": 127
+  },
+  {
+   "name": "FX MIX",
+   "does": "DRY WET MIX",
+   "message": "CC117",
+   "kind": "knob",
+   "low": 0,
+   "high": 127
+  }
+ ],
+ "transport": [
+  {
+   "name": "PAGE <",
+   "does": "Editor page back",
+   "message": "FZED NRPN 2/0",
+   "kind": "normal",
+   "low": 0,
+   "high": 0
+  },
+  {
+   "name": "PAGE >",
+   "does": "Editor page forward",
+   "message": "FZED NRPN 2/0",
+   "kind": "normal",
+   "low": 127,
+   "high": 127
+  },
+  {
+   "name": "REC STOP",
+   "does": "RECORD STOP",
+   "message": "CC109",
+   "kind": "momentary",
+   "low": 127,
+   "high": 0
+  },
+  {
+   "name": "REC STRT",
+   "does": "RECORD START",
+   "message": "CC107",
+   "kind": "momentary",
+   "low": 127,
+   "high": 0
+  },
+  {
+   "name": "REC ARM",
+   "does": "RECORD ARM",
+   "message": "CC106",
+   "kind": "momentary",
+   "low": 127,
+   "high": 0
+  },
+  {
+   "name": "REC AUTO",
+   "does": "RECORD AUTO",
+   "message": "CC108",
+   "kind": "normal",
+   "low": 127,
+   "high": 127
+  }
+ ]
+}

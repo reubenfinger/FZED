@@ -1,0 +1,17 @@
+{
+  "target": "PERF39A",
+  "mappingSource": "Core80",
+  "profileRecords": 379,
+  "generatedRawValueMappings": 48512,
+  "profileSourceSHA256": "f30ab9ef8de04ba371ce4501e8e99286ea6b24766206178602798092f1341960",
+  "editorTestSuite": "Three DOM/MIDI passes; 211 checks per pass; standalone HTML executed three times",
+  "followTestSuite": "Three Follow-mode passes; 27 checks per pass",
+  "browserLayoutVerified": false,
+  "hardwareVerified": false,
+  "notes": [
+    "Tests execute the actual editor in jsdom with mocked MIDI endpoints; they do not substitute for real-browser or FZ hardware testing.",
+    "Follow coverage includes display-only/no-echo, exact single forwarding, parameter pairs, envelope and matrix page selection, FX and Capture context, page-follow off, and MIDI Learn priority.",
+    "Core80's Gills-only MIDI OUT selector is omitted from the FZED browser controls. Norm Filter remains on Record only.",
+    "The audition keyboard displays 48 semitones and shifts across octave starts C0-C5; the highest MIDI note is 119."
+  ]
+}
