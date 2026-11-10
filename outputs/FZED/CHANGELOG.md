@@ -3,7 +3,7 @@
 ## Manual: What Changes Live
 
 - Section 1 now says which kinds of control change sounding notes and which apply from the next note.
-- New Appendix B lists every control by page as live, next note or command, from FZED's code and the hardware tests so far; LFO 1's rate, waveform, attack and three of its depths are marked not yet confirmed.
+- New Appendix B lists every control by page as live, next note or command, from FZED's code and hardware tests (LFO 1 confirmed live on the FZ).
 
 ## Output Lock
 

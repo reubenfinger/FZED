@@ -861,14 +861,14 @@ Effect parameters, by effect (in FX Type order):
 
 ## Appendix B: What Changes Live
 
-**Live** means a note that is already sounding changes as you move the control. **Next note** means the setting is stored straight away, but you hear it from the next note you play; a held note keeps what it started with. Commands act at once when triggered. Settings marked *not yet confirmed* have not been checked on the FZ for held notes; treat them as next note until you've heard otherwise.
+**Live** means a note that is already sounding changes as you move the control. **Next note** means the setting is stored straight away, but you hear it from the next note you play; a held note keeps what it started with. Commands act at once when triggered.
 
 | Page | Live | Next note | Notes |
 | --- | --- | --- | --- |
 | Filter / Keys | DCF Cutoff, DCQ Resonance, Tape Speed | Original Key, Lowest Key, Highest Key | Tape Speed shifts held notes by octaves |
 | ADSR | DCA and DCF Attack, Decay, Sustain Level, Release | Vel > Amp Level, Vel > Flt Level | A rate change is heard while that stage is still running; once a stage has finished there is nothing left to change |
 | Envelope Stages | Amp and Flt Rate and Level for every step, Sustain Step, End Step | | Held notes that haven't been released re-enter their sustain step |
-| LFO 1 | LFO Filter Depth | LFO1 Delay | Rate, Waveform, Attack and the Pitch, Amp and Res depths: *not yet confirmed* |
+| LFO 1 | Rate, Waveform, Attack, Pitch, Amp, Filter and Res Depth | LFO1 Delay | The delay is counted from the start of each note |
 | LFO 2 | Rate / Division, Shape, Mode, Destination, Depth, Destination 2, Depth 2 | Delay, Fade-In | Delay and fade-in start again with each note (or each retrigger) |
 | Key / Velocity | | Every control | Velocity, key follow and rate scaling are worked out when a note starts |
 | Controllers | | | Mod wheel, foot and aftertouch depths and the Amp, Filter and Res offsets take effect the next time that wheel, pedal or aftertouch moves. Glide Time and Glide Mode apply to the next glide |
