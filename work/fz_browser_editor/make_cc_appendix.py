@@ -43,6 +43,8 @@ def clean(t):
     return re.sub(r'\b([A-G]#?) (\d)$', r'\1\2', re.sub(r'\b([A-G]#?) ?-$', r'\1-1', t.replace('NOTE ', '')))
 def vals(d):
     if d['code'] in CMD and (d['code'] != 108 or d['group'] == 'capture'): return CMD[d['code']][1]
+    if d['code'] == 1541:   # FZED splits 0-127 into Segments + 1 equal bands
+        return '0-127 in Segments + 1 equal bands: the lowest is NO SUSTAIN, then HOLD SEGMENT 1 to the last segment (at 8 segments: NO SUSTAIN 0-14, HOLD SEGMENT 1 15-28, 2 29-42 ... 8 114-127)'
     wv = d['wireValues']; lab = [clean(x) for x in d['values']]; order = []
     by = {}
     for r in range(128):

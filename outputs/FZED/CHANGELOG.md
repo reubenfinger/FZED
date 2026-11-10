@@ -1,5 +1,9 @@
 # FZED Menu Revision
 
+## Stretch Sustain At Names
+
+- The Sustain At knob now names its positions the way FZED reads them: NO SUSTAIN, then HOLD SEGMENT 1 up to the last segment, and the choices follow Segments (9 positions at 8 segments). Before, the names came from a fixed three-way list, so at 8 segments the second and third positions said NO SUSTAIN while FZED held segments 1 and 2. The values sent were already right; only the names changed. Manual and Appendix A updated.
+
 ## README For Users
 
 - FZED.zip's README is now for users: what's in the zip, how to put the FZED disk on the FZ (the .hfe on an HxC's SD card, or the .img written to a 3.5" HD floppy) and how to connect the editor. The developer notes moved to DEVELOPER.md, which stays in the repository.

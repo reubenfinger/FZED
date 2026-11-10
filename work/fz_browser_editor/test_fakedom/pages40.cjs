@@ -23,6 +23,11 @@ async function run(pass){const h=await boot();const {$,sent,recv,d,w}=h;const ch
  check('ORDER has 11 steps',h.tile(7).querySelector('.knob').getAttribute('aria-valuemax'),'10');
  h.tile(0).querySelector('.knob').stepTo(0);await wait(30);  // 2 segments
  check('SUSTAIN AT follows the segment count',h.tile(5).querySelector('.knob').getAttribute('aria-valuemax'),'2');
+ { const k=h.tile(5).querySelector('.knob'),names=[];for(let i=0;i<=2;i++){k.stepTo(i);await wait(10);names.push(k.getAttribute('aria-valuetext'));}
+   check('SUSTAIN AT names at 2 segments',names,['NO SUSTAIN','HOLD SEGMENT 1','HOLD SEGMENT 2']); }
+ h.tile(0).querySelector('.knob').stepTo(6);await wait(30);  // 8 segments
+ { const k=h.tile(5).querySelector('.knob'),names=[];for(let i=0;i<=8;i++){k.stepTo(i);await wait(10);names.push(k.getAttribute('aria-valuetext'));}
+   check('SUSTAIN AT names at 8 segments',names,['NO SUSTAIN',...[1,2,3,4,5,6,7,8].map(i=>'HOLD SEGMENT '+i)]); }
  const sw=h.tile(9).querySelector('.switch');check('STRETCH ON/OFF is a two-way switch',sw.children.map(b=>b.textAll),['OFF (OWN LOOPS)','STRETCH ON']);
  sent.length=0;sw.children[1].click();await wait(30);check('switch sends ON',sent.at(-1),[0xb0,11,96]);
  check('switch shows ON',sw.children.map(b=>b.getAttribute('aria-pressed')),['false','true']);

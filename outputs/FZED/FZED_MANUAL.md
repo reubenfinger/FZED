@@ -285,7 +285,7 @@ Stretch cuts the voice's play range (start to end) into 2-8 back-to-back segment
 | Grain | The length of each segment's loop, as a share of the segment. Each hold also includes roughly one and a half passes of the grain, which follow the key played |
 | Crossfade | The loops' crossfade |
 | Snap | Loop points at the nearest zero crossing |
-| Sustain At | None, or the segment that holds while the key is down |
+| Sustain At | The segment that holds while the key is down. The choices follow Segments: the lowest position is NO SUSTAIN, then HOLD SEGMENT 1 up to the last segment (9 positions at 8 segments, 3 at 2) |
 | Next / Lead-In | TRACE: after a loop's time, play on through the material to the next loop. SKIP: jump straight to it. A loop earlier in the sample is always a jump. CUT LEAD-IN: start the note at the first loop instead of the sample start |
 | Order | Forward, Reverse, There + Back (for example 1 3 5 7 8 6 4 2) or Shuffle 1-8 (each one a fixed order) |
 | Skew | Even in the middle. Below: earlier segments hold longer and later ones shorter (speeding up); above: the reverse |
@@ -727,7 +727,7 @@ The **Values** column gives the value FZED receives and what it means. Where a r
 | Grain | FZED 2 | 0-127 (GRAIN 000% to GRAIN 100%) |
 | Crossfade | FZED 3 | 0-127 (XFADE 0000 to XFADE 1000) |
 | Snap | FZED 4 | SNAP OFF 0-63; ZERO-CROSS 64-127 |
-| Sustain At | FZED 5 | NO SUSTAIN 0-42; HOLD SEGMENT 1 43-85; HOLD SEGMENT 2 86-127 |
+| Sustain At | FZED 5 | 0-127 in Segments + 1 equal bands: the lowest is NO SUSTAIN, then HOLD SEGMENT 1 to the last segment (at 8 segments: NO SUSTAIN 0-14, HOLD SEGMENT 1 15-28, 2 29-42 ... 8 114-127) |
 | Next / Lead-in | FZED 16 | TRACE 0-31; TRACE, CUT LEAD-IN 32-63; SKIP 64-95; SKIP, CUT LEAD-IN 96-127 |
 | Order | FZED 17 | FORWARD 0-31; REVERSE 32-63; THERE + BACK 64-95; SHUFFLE 01 96-99; SHUFFLE 02 100-103; SHUFFLE 03 104-107; SHUFFLE 04 108-111; SHUFFLE 05 112-115; SHUFFLE 06 116-119; SHUFFLE 07 120-123; SHUFFLE 08 124-127 |
 | Skew | FZED 18 | 0-127 (FIRST LONGER 100% to LAST LONGER 98%) |
