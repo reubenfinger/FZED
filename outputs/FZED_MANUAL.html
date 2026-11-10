@@ -16,7 +16,7 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#e5eeea;padding:16px;
 <li>Load and execute the FZED optional software on the FZ. Entering optional software cuts existing audio; do not rely on holding a note while entering it.</li>
 <li>Choose the startup option on the FZ: retain the loaded voice's settings, or initialise them. Retain is the usual choice for an already prepared sound. When there is no usable voice, the program follows its no-voice/init path.</li>
 <li>Open the FZED browser editor and select the MIDI output connected to the FZ and the correct MIDI channel.</li>
-<li>Enable browser output explicitly, then test one control, such as cutoff, while playing a note. The browser starts locked and never sends a patch automatically.</li>
+<li>Enable browser output explicitly, then test one control, such as cutoff, while playing a note. The browser starts locked and never sends a patch automatically. While output is locked, moving a control makes the <strong>Output locked</strong> button flash: press it to start sending.</li>
 </ol>
 <h3>Connecting The Browser Editor</h3>
 <p>Use a MIDI interface whose output reaches the FZ's MIDI input. If you want to play from an external MIDI keyboard through the browser editor, select that keyboard as the input and enable Notes / bend thru. Alternatively, audition with the browser editor's keyboard or the FZ keyboard.</p>
@@ -76,7 +76,7 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#e5eeea;padding:16px;
 </tr>
 <tr>
 <td>Save/Open settings</td>
-<td>Export/import editor JSON; importing locks output and runs no actions</td>
+<td>Export/import editor JSON; importing sends nothing and runs no actions</td>
 </tr>
 <tr>
 <td>Notes / bend thru</td>
@@ -98,7 +98,7 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#e5eeea;padding:16px;
 </table>
 <p>MIDI Learn listens only on the chosen input. Parameter assignments operate on the visible page/view. Capture's recording and chord controls are all on the same page; assigning an incoming CC to a different capture control replaces its previous assignment on that page. Learning consumes its first assignment message without sending a parameter. A single learned CC can control an indexed FZ parameter: in <strong>Follow and forward</strong>, FZED sends the mapped CC10 parameter ID and CC11 value pair, and does not also forward the source CC. In <strong>Display only</strong>, the editor follows without sending anything.</p>
 <p>Explicit command buttons also have their own MIDI Learn control next to each command choice. Learned commands are disabled by default. Turn on <strong>MIDI actions</strong> and confirm to allow learned command CCs; a rising value of 64 or higher triggers the chosen command once, and another trigger requires the CC to return below 64 first. This opt-in can start recording or change sample data, so keep Output locked until ready and turn MIDI actions off when finished. On-screen command buttons continue to ask for confirmation each time.</p>
-<p>Changing a port or channel locks output and releases notes and sustain at their original destination. ESC in the browser releases its notes and cancels Learn. It does not operate the FZ's physical ESC key. Avoid MIDI feedback and simultaneous indexed CC10/11 edits from two controllers on the same channel.</p>
+<p>Changing a port or channel, or a MIDI device appearing or disappearing, locks output and releases notes and sustain at their original destination. ESC in the browser releases its notes and cancels Learn. It does not operate the FZ's physical ESC key. Avoid MIDI feedback and simultaneous indexed CC10/11 edits from two controllers on the same channel.</p>
 <h2 id="section-5">4. Menu Order</h2>
 <table>
 <thead>
@@ -1218,7 +1218,7 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#e5eeea;padding:16px;
 <tbody>
 <tr>
 <td>Open</td>
-<td>Apply a preset to the editor's controls; output is locked and nothing is sent</td>
+<td>Apply a preset to the editor's controls only; nothing is sent (use Send to put it on the FZ). Output stays enabled, so the next control you move goes to the FZ on its own</td>
 </tr>
 <tr>
 <td>Send</td>
@@ -1234,7 +1234,7 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#e5eeea;padding:16px;
 </tr>
 <tr>
 <td>Open USER_FZ.BIN</td>
-<td>Read another compatible bank; output is locked</td>
+<td>Read another compatible bank; nothing is sent</td>
 </tr>
 <tr>
 <td>Download USER_FZ.BIN</td>

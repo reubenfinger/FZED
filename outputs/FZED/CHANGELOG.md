@@ -1,5 +1,11 @@
 # FZED Menu Revision
 
+## Output Lock
+
+- Opening a preset (Open), a settings file or a USER_FZ.BIN bank no longer locks output: none of them sends anything, and the next control you move goes to the FZ as usual. Use a preset's Send to put the whole preset on the FZ.
+- Output still locks when the MIDI set-up changes (IN, OUT or channel changed, a device added or removed) or a send fails.
+- Moving a control while output is locked now flashes the Output locked button and says "Output is locked · press Output locked to send" (or asks you to connect MIDI and choose OUT).
+
 ## Loop And Play Mode On The FZ Screen
 
 - FZED now names the loop mode (CC86: ONE-SHOT, ORIGINAL, LOOP) and the play mode (CC70: ORIGINAL, REVERSE, CUE) on line 3, instead of only echoing the value; the editor's FZ SCREEN shows the same.

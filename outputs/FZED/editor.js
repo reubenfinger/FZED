@@ -141,7 +141,7 @@ function drain(){timer=null;if(!armed||!output()){cancelQueue();return;}const jo
  if(queue.length)timer=setTimeout(drain,job?.pace??8);
 }
 function enqueue(packets,label,id=null,pace=8){for(const [cc,v] of packets)fzEcho(cc,v);  // the FZ screen follows every change, output enabled or not
- if(!armed||!output()){status('Output locked · change stored locally');return false;}
+ if(!armed||!output()){lockedNudge();return false;}
  const job={packets:packets.map(([cc,v])=>[0xb0,cc,v]),label,id,pace,port:output(),channel:state.channel};
  if(id!==null){const old=queue.findIndex(x=>x.id===id);if(old>=0)queue[old]=job;else queue.push(job);}else queue.push(job);
  if(queue.length>256){cancelQueue();status('MIDI queue cleared: too many commands');return false;}
@@ -150,6 +150,7 @@ function enqueue(packets,label,id=null,pace=8){for(const [cc,v] of packets)fzEch
 function rememberEndpoint(port,channel){if(port)noteEndpoints.set(port.id+':'+channel,{port,channel});}
 function releaseNotes(){for(const h of held.values())sendNow(h.port,h.channel,[[0x80,h.note,0]]);held.clear();for(const h of noteEndpoints.values())sendNow(h.port,h.channel,[[0xb0,64,0]]);noteEndpoints.clear();document.querySelectorAll('.held').forEach(k=>k.classList.remove('held'));}
 function setArmed(value){if(!value){cancelQueue();releaseNotes();}armed=!!value;$('arm').setAttribute('aria-pressed',String(armed));$('arm').replaceChildren(node('i',{'data-lucide':armed?'unlock':'lock'}),document.createTextNode(armed?'Output enabled':'Output locked'));icons();}
+function lockedNudge(){status(output()?'Output is locked · press Output locked to send':'No MIDI output · press Connect MIDI and choose OUT');const b=$('arm');b.classList.remove('nudge');void b.offsetWidth;b.classList.add('nudge');}  // a control moved while nothing can be sent
 function endpointChange(){setArmed(false);status('Endpoint changed · output locked');}
 function panic(){cancelQueue();releaseNotes();if(sendNow(output(),state.channel,[[0xb0,64,0],[0xb0,120,0],[0xb0,123,0]]))status('Panic sent · sustain off / CC120 / CC123');else status('No MIDI output available');}
 function human(d,raw){
@@ -517,7 +518,7 @@ function descriptorsFor(e,preset){
  return profile.controls.filter(d=>d.sequence.length===2&&d.sequence[0][0]===10&&d.sequence[0][1]===e.index-128);
 }
 function openUserPreset(preset,localOnly=true){
- if(localOnly)setArmed(false);const entries=bankEntries(preset);
+ const entries=bankEntries(preset);   // opening sends nothing, so output stays as it was
  if(entries.some(e=>e.index===248&&e.value>=64)){
   for(let id=90;id<120;id++)state.values['param:'+id]=id<100||id>=110?0:64;
   state.values['param:1']=0;state.values['param:2']=0;
@@ -528,7 +529,7 @@ function openUserPreset(preset,localOnly=true){
   if(e.index===248)continue;
   for(const descriptor of descriptorsFor(e,preset)){const preferred=typeof e.index==='number'?preset.raws[e.index]:e.value;const raw=preferred<=127&&descriptor.wireValues[preferred]===e.value?preferred:descriptor.wireValues.indexOf(e.value);if(raw>=0)state.values[key(descriptor)]=raw;}
  }
- save();render();status(preset.name+(localOnly?' · opened locally · output locked':' · preset queued'));
+ save();render();status(preset.name+(localOnly?' · opened in the editor only · press Send to put it on the FZ':' · preset queued'));
 }
 async function sendUserPreset(preset){
  if(!armed||!output()){status('Enable output before sending a preset');return;}
@@ -608,7 +609,7 @@ function presetBar(){  // on every editing page: this page's presets and Save as
 function renderUserBank(){
  $('diagram').hidden=true;$('controls').replaceChildren();$('extraActions').replaceChildren();
  const file=node('input',{type:'file',accept:'.bin,application/octet-stream',hidden:true,id:'bankFile'});
- file.onchange=async()=>{try{const source=file.files[0];if(!source)return;if(source.size!==BANK_SIZE)throw Error('Invalid bank size');const next=new Uint8Array(await source.arrayBuffer());parseUserBank(next);setArmed(false);setBank(next,'User bank opened locally · output locked');}catch(e){status('Bank refused: '+e.message);}finally{file.value='';}};
+ file.onchange=async()=>{try{const source=file.files[0];if(!source)return;if(source.size!==BANK_SIZE)throw Error('Invalid bank size');const next=new Uint8Array(await source.arrayBuffer());parseUserBank(next);setBank(next,'User bank opened · nothing sent');}catch(e){status('Bank refused: '+e.message);}finally{file.value='';}};
  $('subviews').append(button('Save current voice as preset…','save',()=>savePreset('all')),button('Open USER_FZ.BIN','folder-open',()=>file.click()),button('Download USER_FZ.BIN','download',downloadBank),
   button('Bundled bank','rotate-ccw',async()=>{if(await confirmAction('Load the bundled bank?','Replaces the editor’s bank with the bank that comes with FZED. Download USER_FZ.BIN first to keep the current one.'))setBank(bundledBank(),'Bundled bank loaded');}),
   button('New empty bank','file-plus',async()=>{if(await confirmAction('Start an empty bank?','Replaces the editor’s bank with 100 empty slots. Download the current one first if you want to keep it.'))setBank(emptyBank(),'Empty bank');}),file);
@@ -737,7 +738,7 @@ $('thru').onchange=releaseNotes;
 $('clearLearn').onclick=()=>{learning=null;const visible=current();if(state.group==='fx')visible.push(...profile.controls.filter(d=>d.group==='fx'&&[100,101].includes(d.code)));for(const descriptor of visible){if(isAction(descriptor))for(const [raw]of actionOptions(descriptor))delete state.mappings[mapKey(descriptor,raw)];else delete state.mappings[mapKey(descriptor)];}save();render();};
 $('sendPage').onclick=async()=>{const list=current().filter(d=>!isAction(d)&&d.code!==111&&state.values[key(d)]!==undefined);if(!armed||!output()){status('Enable output first');return;}if(!list.length){status('No stored values on this view');return;}if(await confirmAction('Send '+list.length+' values?', 'Only this view is sent. No recording, render, initialise or replacement commands are included.'))for(const d of list)enqueue(encode(d,state.values[key(d)]),d.label,key(d));};
 $('export').onclick=()=>{const blob=new Blob([JSON.stringify({format:STORAGE,layout:110,target:profile.target,sourceCore:profile.sourceCore,values:state.values,mappings:state.mappings},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob),a=node('a',{href:url,download:'FZED_settings.json'});a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
-$('import').onclick=()=>$('file').click();$('file').onchange=async()=>{const file=$('file').files[0];if(!file)return;try{if(file.size>1024*1024)throw Error('Settings file too large');const data=validate(JSON.parse(await file.text()));setArmed(false);state.values=data.values;state.mappings=data.mappings;const fx=state.values['cc:112'];state.variants.fx=fx===undefined?-1:fxVariant(fx);save();render();status('Settings opened locally · output locked · no MIDI sent');}catch(e){status('Import refused: '+e.message);}finally{$('file').value='';}};
+$('import').onclick=()=>$('file').click();$('file').onchange=async()=>{const file=$('file').files[0];if(!file)return;try{if(file.size>1024*1024)throw Error('Settings file too large');const data=validate(JSON.parse(await file.text()));state.values=data.values;state.mappings=data.mappings;const fx=state.values['cc:112'];state.variants.fx=fx===undefined?-1:fxVariant(fx);save();render();status('Settings opened in the editor only · no MIDI sent');}catch(e){status('Import refused: '+e.message);}finally{$('file').value='';}};
 $('octaveDown').onclick=()=>{octave=Math.max(0,octave-1);keyboard();};$('octaveUp').onclick=()=>{octave=Math.min(5,octave+1);keyboard();};$('keysToggle').onclick=()=>{releaseNotes();$('keys').hidden=!$('keys').hidden;};
 window.addEventListener('blur',()=>{cancelQueue();releaseNotes();});window.addEventListener('pagehide',()=>{cancelQueue();releaseNotes();});document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelQueue();releaseNotes();}});window.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('confirmation').open){learning=null;releaseNotes();document.querySelectorAll('.learning').forEach(x=>x.classList.remove('learning'));}});
 window.FZ_EDITOR=Object.freeze({encode,validate,profile,key,parseUserBank,bankEntries,presetSlotBytes,presetIndex,fzEcho,fzLines,fzSt,get userBank(){return userBank;}});

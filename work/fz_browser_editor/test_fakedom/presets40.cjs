@@ -14,7 +14,8 @@ async function run(pass){const h=await boot();const {$,sent,d,w}=h;const checks=
  go('lfo1');check('LFO 1 presets',barNames(),['LF VIBRATO','LF TREMOLO','LF WOBBLE']);
  // open a stretch preset locally
  go('stretch');const sel=bar().querySelector('select');sel.value=String(E.userBank.presets.find(p=>p.name==='ST REVERSE').slot);
- bar().children.find(b=>b.textAll==='Open').click();await wait(20);
+ const before=h.sent.length;bar().children.find(b=>b.textAll==='Open').click();await wait(20);
+ check('Open sends nothing',h.sent.length,before);check('Open leaves output enabled',h.$('arm').getAttribute('aria-pressed'),'true');
  check('opened: order REVERSE, next SKIP CUT',[h.tile(7).querySelector('output').textContent,h.tile(6).querySelector('output').textContent],['REVERSE','SKIP, CUT LEAD-IN']);
  // send it: stretch values as 88 / 89 pairs, ON last
  const rev=E.userBank.presets.find(p=>p.name==='ST REVERSE');const ents=E.bankEntries(rev);

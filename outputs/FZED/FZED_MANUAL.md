@@ -20,7 +20,7 @@ This manual describes the FZED optional software and the FZED browser editor, no
 3. Load and execute the FZED optional software on the FZ. Entering optional software cuts existing audio; do not rely on holding a note while entering it.
 4. Choose the startup option on the FZ: retain the loaded voice's settings, or initialise them. Retain is the usual choice for an already prepared sound. When there is no usable voice, the program follows its no-voice/init path.
 5. Open the FZED browser editor and select the MIDI output connected to the FZ and the correct MIDI channel.
-6. Enable browser output explicitly, then test one control, such as cutoff, while playing a note. The browser starts locked and never sends a patch automatically.
+6. Enable browser output explicitly, then test one control, such as cutoff, while playing a note. The browser starts locked and never sends a patch automatically. While output is locked, moving a control makes the **Output locked** button flash: press it to start sending.
 
 ### Connecting The Browser Editor
 
@@ -57,7 +57,7 @@ A dash means **no local value is known**. It does not mean zero or the FZ's defa
 | MIDI actions | Separately confirm whether learned command CCs are allowed to run |
 | Unlearn | Remove learned assignments from the current view |
 | Send view | Confirm and send only stored, non-action values on the visible view |
-| Save/Open settings | Export/import editor JSON; importing locks output and runs no actions |
+| Save/Open settings | Export/import editor JSON; importing sends nothing and runs no actions |
 | Notes / bend thru | Forward notes, bend, aftertouch and selected performance CCs to the selected output channel |
 | Clock thru | Independently forward MIDI clock and transport messages |
 | Keyboard / octave / velocity | Audition notes without automatic note triggering on startup |
@@ -67,7 +67,7 @@ MIDI Learn listens only on the chosen input. Parameter assignments operate on th
 
 Explicit command buttons also have their own MIDI Learn control next to each command choice. Learned commands are disabled by default. Turn on **MIDI actions** and confirm to allow learned command CCs; a rising value of 64 or higher triggers the chosen command once, and another trigger requires the CC to return below 64 first. This opt-in can start recording or change sample data, so keep Output locked until ready and turn MIDI actions off when finished. On-screen command buttons continue to ask for confirmation each time.
 
-Changing a port or channel locks output and releases notes and sustain at their original destination. ESC in the browser releases its notes and cancels Learn. It does not operate the FZ's physical ESC key. Avoid MIDI feedback and simultaneous indexed CC10/11 edits from two controllers on the same channel.
+Changing a port or channel, or a MIDI device appearing or disappearing, locks output and releases notes and sustain at their original destination. ESC in the browser releases its notes and cancels Learn. It does not operate the FZ's physical ESC key. Avoid MIDI feedback and simultaneous indexed CC10/11 edits from two controllers on the same channel.
 
 ## 4. Menu Order
 
@@ -530,11 +530,11 @@ The editor keeps a preset bank in the same format as `USER_FZ.BIN`: 100 slots. I
 
 | Operation | Meaning |
 | --- | --- |
-| Open | Apply a preset to the editor's controls; output is locked and nothing is sent |
+| Open | Apply a preset to the editor's controls only; nothing is sent (use Send to put it on the FZ). Output stays enabled, so the next control you move goes to the FZ on its own |
 | Send | Confirm, then replay the settings to the current voice (the matrix is cleared first when the preset asks for it) |
 | Save as preset… | Store the editor's settings in a slot |
 | Rename / Delete | Change a slot's name, or empty it |
-| Open USER_FZ.BIN | Read another compatible bank; output is locked |
+| Open USER_FZ.BIN | Read another compatible bank; nothing is sent |
 | Download USER_FZ.BIN | Save the editor's bank as a file, to keep, move to another browser or share |
 | Bundled bank / New empty bank | Go back to the supplied bank, or start from 100 empty slots |
 | Save Settings | Save edited values and Learn assignments as JSON (a different format) |

@@ -164,3 +164,5 @@ header label:has(#followMode){gap:7px}
 .fzscreen{margin:0;display:flex;flex-direction:column;align-items:flex-start;gap:3px;flex:0 0 auto}.fzscreen figcaption{font-size:8.5px;font-weight:700;letter-spacing:.2em;color:var(--muted)}
 .fzscreen pre{margin:0;font:11px/1.1 var(--dot);letter-spacing:0;color:var(--lcd-ink);background:var(--lcd);background-image:var(--lcd-light);border:7px solid var(--bezel);border-radius:3px;box-shadow:0 0 0 1px #000,var(--glow),inset 0 1px 5px rgba(0,0,0,.25);padding:5px 7px 4px;white-space:pre;min-width:calc(16 * .6em + 14px)}
 
+#arm.nudge{animation:armnudge .9s ease-out 2}
+@keyframes armnudge{0%,100%{box-shadow:none}35%{box-shadow:0 0 0 3px rgba(255,75,43,.85)}}
