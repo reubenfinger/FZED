@@ -2,7 +2,7 @@
 
 ## Loop Mode ORIGINAL Restores Loop Points
 
-- FZED: Loop Mode ORIGINAL now also puts the voice's loop points back as they were when FZED took the voice (it already restored the loop times and the sustain / end loop). A preset wave's perfect loop comes back after Loop Start / End have moved it. Moving Loop Start / End afterwards works from the knob position as before. STRETCH OFF also gives the voice's own loop points. Space: the three copies of the voice's loop table share one routine, which freed the bytes.
+- FZED: Loop Mode ORIGINAL now also puts the voice's loop points back as they were when FZED took the voice (it already restored the loop times and the sustain / end loop). A preset wave's perfect loop comes back after Loop Start / End have moved it. Moving Loop Start / End afterwards works from the knob position as before. STRETCH OFF keeps the loop points you set before Stretch (with the voice's own loop times and sustain / end loop, as before); choose ORIGINAL after it for the voice's own points. Space: the three copies of the voice's loop table share one routine, which freed the bytes.
 
 ## Stretch Sustain At Names
 

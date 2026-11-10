@@ -289,7 +289,7 @@ Stretch cuts the voice's play range (start to end) into 2-8 back-to-back segment
 | Next / Lead-In | TRACE: after a loop's time, play on through the material to the next loop. SKIP: jump straight to it. A loop earlier in the sample is always a jump. CUT LEAD-IN: start the note at the first loop instead of the sample start |
 | Order | Forward, Reverse, There + Back (for example 1 3 5 7 8 6 4 2) or Shuffle 1-8 (each one a fixed order) |
 | Skew | Even in the middle. Below: earlier segments hold longer and later ones shorter (speeding up); above: the reverse |
-| Stretch On/Off | On builds the loops. Off puts the voice's own loops (and its start, if Cut Lead-In moved it) back |
+| Stretch On/Off | On builds the loops. Off puts the loops back as they were before Stretch: your loop points as you last set them, with the voice's own loop times and sustain / end loop (and its start, if Cut Lead-In moved it). Loop Mode Original then gives the voice's own loop points |
 
 With Cut Lead-In and Reverse or Shuffle, the voice's start point moves to the first loop. The software keeps your own start point and works the segments out from it; it is put back by Play, Forward or Stretch Off. If you move the start yourself meanwhile, that becomes the new start. Leaving with ENTER while Stretch is on keeps the stretch loops (and the moved start), so a saved voice plays as heard.
 

@@ -612,14 +612,15 @@ LOOPCC:             ; bl = 86 loop mode, 87 loop start, 88 loop end, 126 loop wi
     mov [si+0x13],al
     jmp .tim
 .org:
-    mov ax,[LSV]
-    mov [si+0x12],ax
     push si                 ; FZED: ORIGINAL also puts the loop points back (PERF's copy from when the voice was set up)
     mov si,BUF
     mov di,LBUF
     mov cx,0x40
     call MOVB
     pop si
+..@ORGKEEP:         ; STRETCH OFF enters here: sustain / end loop and loop times back, the edited loop points kept
+    mov ax,[LSV]
+    mov [si+0x12],ax
 .tim:
     push si
     lea di,[si+0x64]

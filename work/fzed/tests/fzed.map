@@ -483,6 +483,7 @@ Real              Virtual           Name
             652C              652C  LOOPCC
             6534              6534  LOOPCC.n126
             654C              654C  LOOPCC.org
+            655A              655A  ..@ORGKEEP
             6560              6560  LOOPCC.tim
             6571              6571  LOOPCC.one
             6585              6585  ..@PARK0
@@ -1935,19 +1936,19 @@ Real              Virtual           Name
             DCC5              D4C5  STRET2
             DCE4              D4E4  STOFF
             DD1A              D51A  STOFF.n
-            DD35              D535  S_STO
-            DD45              D545  PERSL
-            DD54              D554  PERSL.sh
-            DD6B              D56B  PERSL.m
-            DD71              D571  PERSL.r
-            DD72              D572  CAPIN
-            DD79              D579  CAPIN.r
-            DD7A              D57A  CHINTO
-            DD88              D588  CHINTO.s
-            DD8F              D58F  S_PSO
-            DD9F              D59F  S_CI0
-            DDB0              D5B0  S_CI1
-            DDC1              D5C1  S_PSS
+            DD31              D531  S_STO
+            DD41              D541  PERSL
+            DD50              D550  PERSL.sh
+            DD67              D567  PERSL.m
+            DD6D              D56D  PERSL.r
+            DD6E              D56E  CAPIN
+            DD75              D575  CAPIN.r
+            DD76              D576  CHINTO
+            DD84              D584  CHINTO.s
+            DD8B              D58B  S_PSO
+            DD9B              D59B  S_CI0
+            DDAC              D5AC  S_CI1
+            DDBD              D5BD  S_PSS
 
 ---- Section ov4 --------------------------------------------------------------
 
