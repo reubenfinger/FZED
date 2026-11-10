@@ -1,6 +1,6 @@
 # FZED overlay plan: design brief for review
 
-Status: proposal, nothing built. Work happens on the `next` branch only. `main` stays the hardware-tested release (v1.0).
+Status: proposal, nothing built. Revision 2: corrected after the first review (section 5). Work happens on the `next` branch only. `main` stays the hardware-tested release (v1.0).
 
 The aim is to make FZED modular through disk overlays, in two steps:
 
@@ -20,8 +20,8 @@ Step 1 is the priority. Step 2 is optional and has open questions.
   |---|---|---|
   | Low | 6000h-7FFFh, `fzed.asm` up to `tools40.asm` | 16 bytes |
   | High | `fxkz.asm` to `capru.asm`, up to the `SIG` word | 10 bytes |
-  | `lv` | B800h-BDFFh: `fx4m.asm`, `fx5k.asm`, `capr2z.asm` (BE00h is THT) | 2 bytes |
-  | `xt` | DC00h, sectors 38-41 | 3 bytes |
+  | `lv` | B800h-BDFFh, sectors 38-39: `fx4m.asm`, `fx5k.asm`, `capr2z.asm` (BE00h is THT) | 2 bytes |
+  | `xt` | DC00h, sectors 40-43 | 3 bytes |
 
   Free space is the `5A` padding before each area's limit in `fzed.lst`.
 - **Overlays:**
@@ -32,12 +32,13 @@ Step 1 is the priority. Step 2 is optional and has open questions.
   - The existing tools overlays are sectors 46-49 (`ov2`-`ov5`). How full they are: 46 full, 47 about 500 bytes free, 48 about 45 free, 49 about 30 free.
 - **Shared memory around the overlay area:**
   - FZ calls go through `L6004X` (`fx/fx4m.asm:18`), which, with live FX and capture off, moves the stack to DBFEh. The stack grows down towards the overlay's end signature. Existing overlays put code that makes FZ calls low, so a deep stack only reaches data.
-  - The Karplus-Strong render clears `KSB` = D400h-DBFFh (`fxkz.asm`, `FXONE`), so it overwrites any loaded overlay.
+  - Every non-filter render clears `KSB` = D400h-DBFFh (`FXONE`, `fxkz.asm:1479-1486`), once per voice and per chop slice, so it overwrites any loaded overlay.
+  - The curve build uses D400h-D801h (`fx5k.asm:32`). The filter's scratch, map and variables use D400h-DBFDh (`svfi.asm:16-21, 455-465`). Position's variables are at D7F0h-D7FDh (`fx3i.asm:13-17`).
   - Echo and position (modes 12 and 13) use `DBUF` D400h and `TBUF` D600h (`fx3i.asm`).
   - `LVBUF` (D2F0h-D3EFh) is the live FX buffer, the wave writer's chunk buffer and capture's saved settings (`LVBUF+40h` = CAh marker).
 - **Tests:**
   - `work/fzed/tests/` has an emulator of FZED's own code (the ROM calls are stubbed). `original40.py`, `stretch40l.py` and `oneshot40n.py` are good models; run them with `VER=fzed` after copying `fzedflat.bin` and `fzed.map` into `tests/`.
-  - `stretch40.py` (1 check) and `tools40.py` (4 checks) already fail on the current build: their expected messages are out of date.
+  - `stretch40l.py`, `oneshot40n.py`, `stretch40.py` and `tools40.py` are in FZED-private only. There, `stretch40.py` (1 check) and `tools40.py` (4 checks) already fail on the current build: their expected messages are out of date.
   - Editor tests: `work/fz_browser_editor/test_fakedom/*.cjs` (Node).
 
 ## 2. Step 1: preset waves into an overlay
@@ -47,8 +48,8 @@ Step 1 is the priority. Step 2 is optional and has open questions.
 - **CC111, `WVSEL` (line 47):** `v>>3` gives 0 (off) or 1-15; `WSEL` = band - 1.
 - **CC9, `WVCC` (line 55):** below 64 arms; 120+ loads once. `cmp byte [WSEL],7 / jae .r` refuses bands 8-15, so CC111 values 64-127 are unused today.
 - **`WVLOAD` (line 70, about 375 bytes):**
-  - Refuses with live FX on, in bank mode, with chop slices, while recording, or for a voice under 1800 words.
-  - Calls: `LVOFF`, `WVSH` (`tools40.asm`), ROM call 117 (`APIC 117,8`), `INIT`, `PSETUP`, `AFTER`, `LVWR`, `DEC2`, `NMSG`.
+  - Refuses with capture on (line 71) or in bank mode, before releasing live FX (line 75). After that it refuses with chop slices, while recording, if a new voice can't be allocated (line 94), if the end is before the start (line 112), or for a voice under 1808 words (line 114).
+  - Calls: `LVOFF`, `WVSH` (`tools40.asm`), `INIT`, `PSETUP`, `AFTER`, `LVWR`, `DEC2`, `NMSG`. ROM calls in the tree: 117, 119 (delete, 412h-byte frame), 169 and A2h (print).
   - Writes 1808 words (1800 = 11 cycles + 8) in chunks of 128 words, through `LVBUF`.
   - Sets loop 0 as the sustain and end loop, original key 57, keys 21-93, rate 36k.
 - **The waves:**
@@ -133,3 +134,46 @@ Step 1 is the priority. Step 2 is optional and has open questions.
 4. Hardware test on an FZ-1.
 5. Pre-release v1.1-beta1.
 6. Step 2 only after Step 1 is stable on hardware.
+
+## 5. Review 1 and decisions
+
+The first review (Fable, 10 Nov) confirmed the build, sizes, line numbers, sector-50 layout and that the emulator loads overlays from the flat image (`t8g2.py:16`). Corrections are folded into sections 1-2 above. These change the plan.
+
+### Step 1 changes
+
+- **Stack margin is the real risk, not eviction.**
+  - Eviction is safe: nothing in `WVLOAD`'s tree reaches `OVCALL` or ROM call BFh, and `PARSE` only runs from the main loop.
+  - But ROM call 119's frame takes the stack from DBFEh down to about D7ECh, only 30-45 bytes above the end signature before an interrupt lands. The wave functions and `S_WV` run after the FZ calls, so "FZ-calling code first" doesn't protect them.
+  - Plan:
+    - Keep the top of the sector empty: new waves fill upward, so the newest is the first casualty.
+    - After the FZ calls, check `[D7BEh] == 4032h` and refuse (`WAVE: REFUSED`) if it changed.
+    - Add an emulator stub that scribbles 412h bytes below sp on ROM calls 117, 119 and 169, so tests can catch a clobber.
+- **Keep today's refusal messages.**
+  - Test `CAPON` and `BKON` in `WVCC` before the stub, about 14 resident bytes. Capture on then still shows `WAVE: REFUSED`, and bank mode still leaves live FX alone.
+  - Keep `WVLOAD`'s own `LVOFF`.
+- **Disk dependency (user-visible change).** A wave load will need the FZED disk in the drive after any render, capture, tool use or buffer-using live effect. Today it never does. With the disk out it shows `TOOLS NOT LOADED` after releasing live FX. On an HxC this is invisible; with a real floppy swapped out it is new. *Needs a decision from Neil.*
+- **Test fixture.** The capture-test fixture refuses every wave. The bit-identical test needs a clean voice-mode setup.
+- **Housekeeping.**
+  - `mkimg.py`'s "holds something on the base disk" guard must cover sector 50.
+  - Update the committed `tests/fzedflat.bin` and `fzed.map`, `outputs/`, the "33 sectors" / "32 KB" comments and the stale error text at `fzed.asm:2868`.
+  - New wave names also go in `remote_sl/build_sl_templates.py` (lines 102, 130) and `make_cc_appendix.py`.
+
+### Step 2 changes (still optional, after Step 1 is stable)
+
+- **Selection:** leave CC112's 15 bands alone. Add a separate selector (0 = off, n = module) that overrides the type inside `FXMOF`.
+  - That needs a jump from `xt` (3 bytes free) into `lv`.
+  - Option (c) would move 8 of the 15 types for presets built by `build_presets.py:38`. Option (a) would silently change old presets.
+- **The hook is bigger than 5-8 bytes.**
+  - `FXRUN` sends mode 12 or more to the live-engine render (`fxkz.asm:258`) and mode 9 or more to the fast loop (`fxkz.asm:297`).
+  - `LPW`/`LPM` have 14 entries, so a mode of 14 or 15 would read past them into code.
+  - Most of the hook goes in `lv`, with jumps from the high area (10 bytes free).
+- **Rendering:**
+  - `FXONE`'s D400h clear would erase the module, so EXT must skip it.
+  - Prefer a chunk entry in the `FXLP` form (called once per 256 words) to a per-sample call.
+- **Names:** show a resident "EXT" when it's selected and the module's name at render start. Never load a module on a knob sweep (disk access, live FX released).
+- **Versioning:** the signature encodes only the sector. Modules need an ABI version field and fixed entry points, so a newer disk in the drive can't make an older program jump to wrong addresses.
+
+### Existing low risk (not caused by this plan)
+
+- Echo and position overwrite D400h but seem to leave D7BEh. A sample word equal to the signature there would pass `OVCALL`'s check, which also tests D400h.
+- Possible fix: clear D7BEh whenever a buffer user claims the area. To be checked separately.
