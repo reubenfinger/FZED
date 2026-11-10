@@ -1,5 +1,10 @@
 # FZED Menu Revision
 
+## Manual: What Changes Live
+
+- Section 1 now says which kinds of control change sounding notes and which apply from the next note.
+- New Appendix B lists every control by page as live, next note or command, from FZED's code and the hardware tests so far; LFO 1's rate, waveform, attack and three of its depths are marked not yet confirmed.
+
 ## Output Lock
 
 - Opening a preset (Open), a settings file or a USER_FZ.BIN bank no longer locks output: none of them sends anything, and the next control you move goes to the FZ as usual. Use a preset's Send to put the whole preset on the FZ.

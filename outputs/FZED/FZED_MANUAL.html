@@ -1,13 +1,13 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>FZED User Manual</title><style>
 *{box-sizing:border-box}body{margin:0;background:#f7f9f8;color:#202b2a;font:16px/1.7 system-ui,sans-serif;letter-spacing:0}header{background:#202426;color:#e9f4f2;padding:24px max(20px,calc((100% - 1000px)/2))}header b{font-size:28px}header a{color:#76e5d2;margin-left:20px}main{max-width:1040px;padding:32px 20px 80px;margin:auto}h1{font-size:38px}h2{font-size:25px;margin-top:48px;border-bottom:1px solid #b5c9c6;padding-bottom:8px}h3{font-size:19px;margin-top:30px}h1,h2,h3{line-height:1.3}a{color:#136958}nav{border-bottom:1px solid #b5c9c6;padding-bottom:22px}nav ul{columns:2;padding-left:22px;gap:30px}nav li{break-inside:avoid;font-size:14px;margin-bottom:6px}table{width:100%;border-collapse:collapse;font-size:14px;margin:22px 0;table-layout:fixed}th,td{text-align:left;vertical-align:top;padding:11px 13px;border-bottom:1px solid #c7d6d2;overflow-wrap:anywhere}th{background:#dbe9e5}tr:nth-child(even){background:#edf3f0}th:first-child,td:first-child{width:30%}code{font-size:13px;overflow-wrap:anywhere;background:#e5eeea;padding:2px 4px}li{margin:8px 0}p{margin:18px 0}@media(max-width:600px){nav ul{columns:1}h1{font-size:30px}h2{font-size:23px}th,td{padding:8px}table{font-size:13px}}@media print{body{background:white;font-size:11pt}header,nav{display:none}main{padding:0}h2{break-after:avoid}tr{break-inside:avoid}a{color:inherit}}
 pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#e5eeea;padding:16px;font-size:12px;line-height:1.6}pre code{padding:0;background:transparent}
-</style></head><body><header><b>FZED</b><a href="index.html">FZED browser editor</a></header><main><nav aria-label="Contents"><ul><li><a href="#section-1">User Manual</a></li><li><a href="#section-2">1. What FZED Is</a></li><li><a href="#section-3">2. Getting Started</a></li><li><a href="#section-4">3. Reading The Browser</a></li><li><a href="#section-5">4. Menu Order</a></li><li><a href="#section-6">5. Filter / Keys</a></li><li><a href="#section-7">6. ADSR</a></li><li><a href="#section-8">7. Envelope Stages</a></li><li><a href="#section-9">8. LFO 1</a></li><li><a href="#section-10">9. LFO 2</a></li><li><a href="#section-11">10. Key / Velocity</a></li><li><a href="#section-12">11. Controllers</a></li><li><a href="#section-13">12. Mod Matrix: Source, Destination, Amount</a></li><li><a href="#section-14">13. Play / Loop</a></li><li><a href="#section-15">14. Stretch</a></li><li><a href="#section-16">15. Record</a></li><li><a href="#section-17">16. Capture</a></li><li><a href="#section-18">17. Chop / Pattern</a></li><li><a href="#section-19">18. Slices</a></li><li><a href="#section-20">19. FX</a></li><li><a href="#section-21">20. Bank Builder</a></li><li><a href="#section-22">21. User Presets And Saving</a></li><li><a href="#section-23">22. Three Practical Starting Points</a></li><li><a href="#section-24">23. Troubleshooting And Limits</a></li><li><a href="#section-25">Appendix A: MIDI CC Reference</a></li><li><a href="#section-26">Software And Data</a></li><li><a href="#section-27">Credits And Licence</a></li></ul></nav><h1>FZED</h1>
+</style></head><body><header><b>FZED</b><a href="index.html">FZED browser editor</a></header><main><nav aria-label="Contents"><ul><li><a href="#section-1">User Manual</a></li><li><a href="#section-2">1. What FZED Is</a></li><li><a href="#section-3">2. Getting Started</a></li><li><a href="#section-4">3. Reading The Browser</a></li><li><a href="#section-5">4. Menu Order</a></li><li><a href="#section-6">5. Filter / Keys</a></li><li><a href="#section-7">6. ADSR</a></li><li><a href="#section-8">7. Envelope Stages</a></li><li><a href="#section-9">8. LFO 1</a></li><li><a href="#section-10">9. LFO 2</a></li><li><a href="#section-11">10. Key / Velocity</a></li><li><a href="#section-12">11. Controllers</a></li><li><a href="#section-13">12. Mod Matrix: Source, Destination, Amount</a></li><li><a href="#section-14">13. Play / Loop</a></li><li><a href="#section-15">14. Stretch</a></li><li><a href="#section-16">15. Record</a></li><li><a href="#section-17">16. Capture</a></li><li><a href="#section-18">17. Chop / Pattern</a></li><li><a href="#section-19">18. Slices</a></li><li><a href="#section-20">19. FX</a></li><li><a href="#section-21">20. Bank Builder</a></li><li><a href="#section-22">21. User Presets And Saving</a></li><li><a href="#section-23">22. Three Practical Starting Points</a></li><li><a href="#section-24">23. Troubleshooting And Limits</a></li><li><a href="#section-25">Appendix A: MIDI CC Reference</a></li><li><a href="#section-26">Appendix B: What Changes Live</a></li><li><a href="#section-27">Software And Data</a></li><li><a href="#section-28">Credits And Licence</a></li></ul></nav><h1>FZED</h1>
 <h2 id="section-1">User Manual</h2>
 <p>FZED optional software for Casio FZ hardware, operated through the FZED browser editor.</p>
 <h2 id="section-2">1. What FZED Is</h2>
 <p>FZED is optional software that runs on the Casio FZ and turns it into a more immediate, MIDI-controlled sampling instrument. The FZED browser editor sends parameter changes to FZED over MIDI. The FZ supplies the sample memory, sound generators, filters, envelopes, converters and audio outputs.</p>
 <p>The FZED optional software combines voice editing with performance tools: MIDI-controlled envelopes and loop windows, two LFO systems, a modulation matrix, sample-processing effects, slicing, rhythmic patterns, and an alternating record/play capture engine. It is not a replacement operating system, a plug-in hosted by the browser, or a new audio engine running on the computer. The FZED browser editor controls the hardware; it does not produce the FZ's audio.</p>
-<p>A stored voice is a sound definition. An active generator is one of the FZ's eight simultaneous playback resources. Editing a voice, changing a running generator and processing sample memory are different operations: they need not become audible at the same moment. Some changes affect held notes; others depend on a new note, a new capture, the voice's configuration or a render.</p>
+<p>A stored voice is a sound definition. An active generator is one of the FZ's eight simultaneous playback resources. Editing a voice, changing a running generator and processing sample memory are different operations: they need not become audible at the same moment. Some changes affect held notes; others depend on a new note, a new capture, the voice's configuration or a render. As a rule, the filter, envelopes, loop points, tape speed, LFO 2, the mod matrix and patterns change notes that are already sounding, while key ranges, play and loop mode, sample start, velocity and key-follow settings, and stretch apply from the next note you play. Appendix B lists every control.</p>
 <p>This manual describes the FZED optional software and the FZED browser editor, not a claim that every combination has been proved on hardware. The browser editor's controls and MIDI output have automated tests; visual browser checks and hardware testing remain necessary. Use a known-working voice and verify each new sound path on the FZ.</p>
 <h2 id="section-3">2. Getting Started</h2>
 <ol>
@@ -2454,10 +2454,120 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#e5eeea;padding:16px;
 </tr>
 </tbody>
 </table>
-<h2 id="section-26">Software And Data</h2>
+<h2 id="section-26">Appendix B: What Changes Live</h2>
+<p><strong>Live</strong> means a note that is already sounding changes as you move the control. <strong>Next note</strong> means the setting is stored straight away, but you hear it from the next note you play; a held note keeps what it started with. Commands act at once when triggered. Settings marked <em>not yet confirmed</em> have not been checked on the FZ for held notes; treat them as next note until you've heard otherwise.</p>
+<table>
+<thead>
+<tr>
+<th>Page</th>
+<th>Live</th>
+<th>Next note</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Filter / Keys</td>
+<td>DCF Cutoff, DCQ Resonance, Tape Speed</td>
+<td>Original Key, Lowest Key, Highest Key</td>
+<td>Tape Speed shifts held notes by octaves</td>
+</tr>
+<tr>
+<td>ADSR</td>
+<td>DCA and DCF Attack, Decay, Sustain Level, Release</td>
+<td>Vel &gt; Amp Level, Vel &gt; Flt Level</td>
+<td>A rate change is heard while that stage is still running; once a stage has finished there is nothing left to change</td>
+</tr>
+<tr>
+<td>Envelope Stages</td>
+<td>Amp and Flt Rate and Level for every step, Sustain Step, End Step</td>
+<td></td>
+<td>Held notes that haven't been released re-enter their sustain step</td>
+</tr>
+<tr>
+<td>LFO 1</td>
+<td>LFO Filter Depth</td>
+<td>LFO1 Delay</td>
+<td>Rate, Waveform, Attack and the Pitch, Amp and Res depths: <em>not yet confirmed</em></td>
+</tr>
+<tr>
+<td>LFO 2</td>
+<td>Rate / Division, Shape, Mode, Destination, Depth, Destination 2, Depth 2</td>
+<td>Delay, Fade-In</td>
+<td>Delay and fade-in start again with each note (or each retrigger)</td>
+</tr>
+<tr>
+<td>Key / Velocity</td>
+<td></td>
+<td>Every control</td>
+<td>Velocity, key follow and rate scaling are worked out when a note starts</td>
+</tr>
+<tr>
+<td>Controllers</td>
+<td></td>
+<td></td>
+<td>Mod wheel, foot and aftertouch depths and the Amp, Filter and Res offsets take effect the next time that wheel, pedal or aftertouch moves. Glide Time and Glide Mode apply to the next glide</td>
+</tr>
+<tr>
+<td>Mod Matrix</td>
+<td>Every source, destination and amount</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Play / Loop</td>
+<td>Sample End, Loop Start, Loop End, Loop Crossfade, Window Position</td>
+<td>Sample Start, Play Mode, Loop Mode</td>
+<td>Window Snap applies to later window moves. Preset Wave is a command: it replaces the sample</td>
+</tr>
+<tr>
+<td>Stretch</td>
+<td></td>
+<td>Every setting, and Stretch On/Off</td>
+<td>A stretch is a set of loops, and like any loop-mode change it is heard from the next note</td>
+</tr>
+<tr>
+<td>Record</td>
+<td></td>
+<td>Rate, Length, Input Gain, Auto Trig Level, Norm Filter</td>
+<td>They apply to the next recording. Arm, Start, Auto and Stop are commands</td>
+</tr>
+<tr>
+<td>Capture</td>
+<td>Amp+Flt Release</td>
+<td>Rate, Length, Input Gain, Hold, Transpose, Sync, the chord settings and Fade</td>
+<td>Capture settings apply to the next take. Capture On/Off and Recapture are commands</td>
+</tr>
+<tr>
+<td>Chop / Pattern</td>
+<td>Pattern, Pattern Rate, Pattern Smooth, DCF Cutoff</td>
+<td>Output (Choke)</td>
+<td>Sensitivity, Mode/Snap and Slice Count apply when you next make slices. Make / Play, Chop Into and Freeze Chop are commands</td>
+</tr>
+<tr>
+<td>Slices</td>
+<td></td>
+<td>Slice Move, Lowest, Highest, Output, Loop Mode</td>
+<td>Slice chooses which slice the other controls edit; Filter/Env/LFO1 chooses where those edits go. Copy Voice is a command</td>
+</tr>
+<tr>
+<td>FX</td>
+<td>Every effect setting, while Live FX is on</td>
+<td></td>
+<td>With Live FX off, the settings are used when you Render. Render, Normalise and Delete Unused are commands that change the sample</td>
+</tr>
+<tr>
+<td>Bank Builder</td>
+<td></td>
+<td></td>
+<td>Voice Pick, Voice Select, New Voice and Bank Add/Clear are commands; bank selection changes what the next note plays</td>
+</tr>
+</tbody>
+</table>
+<h2 id="section-27">Software And Data</h2>
 <p><strong>FZED optional software</strong> runs on the FZ hardware and performs the sound, editing, modulation and capture operations. <strong>The FZED browser editor</strong> runs on the computer and sends MIDI instructions to it. Both parts are needed for the browser controls to operate the hardware as described.</p>
 <p>The optional-software disk, audio samples, FZ voice files, browser settings JSON and USER_FZ.BIN preset bank are different resources. A browser settings file is not a replacement for a saved sample or voice. Keep separate backups of the sounds and the settings needed to recreate them.</p>
-<h2 id="section-27">Credits And Licence</h2>
+<h2 id="section-28">Credits And Licence</h2>
 <h3>Airwindows</h3>
 <p>FZED's Airwindows-derived effects processing, including the adapted Pockey2 and Tube2 algorithms, credits <strong>Chris Johnson / Airwindows</strong>. The FZED optional software adapts that processing for the Casio hardware; these are not unmodified desktop plug-ins, and identical output is not guaranteed. The FZED browser editor controls the hardware over MIDI and does not run these audio algorithms itself.</p>
 <p>Airwindows publishes its code under the <strong>MIT License</strong>. The repository licence is copyright (c) 2018 Chris Johnson. The Pockey2 and Tube2 processing files additionally state: <strong>Copyright (c) 2016 airwindows, Airwindows uses the MIT license</strong>. Both attributions are retained here. This is not an official Airwindows release and does not imply endorsement.</p>

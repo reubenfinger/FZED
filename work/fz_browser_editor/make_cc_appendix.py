@@ -154,7 +154,7 @@ for g, name in groups:
     L.append('')
 text = '\n'.join(L).rstrip() + '\n'
 man = (app / 'FZED_MANUAL.md').read_text()
-a = man.find('## Appendix A: MIDI CC Reference'); b = man.find('## Software And Data')
+a = man.find('## Appendix A: MIDI CC Reference'); b = man.find('## Appendix B'); b = b if b >= 0 else man.find('## Software And Data')
 man = (man[:a] if a >= 0 else man[:b]) + text + '\n' + man[b:]
 (app / 'FZED_MANUAL.md').write_text(man)
 print('appendix', len(L), 'lines,', n, 'pages')

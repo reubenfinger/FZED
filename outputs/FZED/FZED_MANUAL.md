@@ -9,7 +9,7 @@ FZED is optional software that runs on the Casio FZ and turns it into a more imm
 
 The FZED optional software combines voice editing with performance tools: MIDI-controlled envelopes and loop windows, two LFO systems, a modulation matrix, sample-processing effects, slicing, rhythmic patterns, and an alternating record/play capture engine. It is not a replacement operating system, a plug-in hosted by the browser, or a new audio engine running on the computer. The FZED browser editor controls the hardware; it does not produce the FZ's audio.
 
-A stored voice is a sound definition. An active generator is one of the FZ's eight simultaneous playback resources. Editing a voice, changing a running generator and processing sample memory are different operations: they need not become audible at the same moment. Some changes affect held notes; others depend on a new note, a new capture, the voice's configuration or a render.
+A stored voice is a sound definition. An active generator is one of the FZ's eight simultaneous playback resources. Editing a voice, changing a running generator and processing sample memory are different operations: they need not become audible at the same moment. Some changes affect held notes; others depend on a new note, a new capture, the voice's configuration or a render. As a rule, the filter, envelopes, loop points, tape speed, LFO 2, the mod matrix and patterns change notes that are already sounding, while key ranges, play and loop mode, sample start, velocity and key-follow settings, and stretch apply from the next note you play. Appendix B lists every control.
 
 This manual describes the FZED optional software and the FZED browser editor, not a claim that every combination has been proved on hardware. The browser editor's controls and MIDI output have automated tests; visual browser checks and hardware testing remain necessary. Use a known-working voice and verify each new sound path on the FZ.
 
@@ -858,6 +858,29 @@ Effect parameters, by effect (in FX Type order):
 | Bank Add/Clear | CC15 | ADD THIS VOICE 0-31; REARM 32-95; CLEAR CHANNEL 96-127 |
 | Chop Into | FZED 6 | OWN BANK 0-63; TARGET BANK 64-127 |
 | Freeze Chop | FZED 15 | 64-127 lets go of the current chop; its slices stay in the bank as plain voices |
+
+## Appendix B: What Changes Live
+
+**Live** means a note that is already sounding changes as you move the control. **Next note** means the setting is stored straight away, but you hear it from the next note you play; a held note keeps what it started with. Commands act at once when triggered. Settings marked *not yet confirmed* have not been checked on the FZ for held notes; treat them as next note until you've heard otherwise.
+
+| Page | Live | Next note | Notes |
+| --- | --- | --- | --- |
+| Filter / Keys | DCF Cutoff, DCQ Resonance, Tape Speed | Original Key, Lowest Key, Highest Key | Tape Speed shifts held notes by octaves |
+| ADSR | DCA and DCF Attack, Decay, Sustain Level, Release | Vel > Amp Level, Vel > Flt Level | A rate change is heard while that stage is still running; once a stage has finished there is nothing left to change |
+| Envelope Stages | Amp and Flt Rate and Level for every step, Sustain Step, End Step | | Held notes that haven't been released re-enter their sustain step |
+| LFO 1 | LFO Filter Depth | LFO1 Delay | Rate, Waveform, Attack and the Pitch, Amp and Res depths: *not yet confirmed* |
+| LFO 2 | Rate / Division, Shape, Mode, Destination, Depth, Destination 2, Depth 2 | Delay, Fade-In | Delay and fade-in start again with each note (or each retrigger) |
+| Key / Velocity | | Every control | Velocity, key follow and rate scaling are worked out when a note starts |
+| Controllers | | | Mod wheel, foot and aftertouch depths and the Amp, Filter and Res offsets take effect the next time that wheel, pedal or aftertouch moves. Glide Time and Glide Mode apply to the next glide |
+| Mod Matrix | Every source, destination and amount | | |
+| Play / Loop | Sample End, Loop Start, Loop End, Loop Crossfade, Window Position | Sample Start, Play Mode, Loop Mode | Window Snap applies to later window moves. Preset Wave is a command: it replaces the sample |
+| Stretch | | Every setting, and Stretch On/Off | A stretch is a set of loops, and like any loop-mode change it is heard from the next note |
+| Record | | Rate, Length, Input Gain, Auto Trig Level, Norm Filter | They apply to the next recording. Arm, Start, Auto and Stop are commands |
+| Capture | Amp+Flt Release | Rate, Length, Input Gain, Hold, Transpose, Sync, the chord settings and Fade | Capture settings apply to the next take. Capture On/Off and Recapture are commands |
+| Chop / Pattern | Pattern, Pattern Rate, Pattern Smooth, DCF Cutoff | Output (Choke) | Sensitivity, Mode/Snap and Slice Count apply when you next make slices. Make / Play, Chop Into and Freeze Chop are commands |
+| Slices | | Slice Move, Lowest, Highest, Output, Loop Mode | Slice chooses which slice the other controls edit; Filter/Env/LFO1 chooses where those edits go. Copy Voice is a command |
+| FX | Every effect setting, while Live FX is on | | With Live FX off, the settings are used when you Render. Render, Normalise and Delete Unused are commands that change the sample |
+| Bank Builder | | | Voice Pick, Voice Select, New Voice and Bank Add/Clear are commands; bank selection changes what the next note plays |
 
 ## Software And Data
 
