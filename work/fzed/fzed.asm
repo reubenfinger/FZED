@@ -614,6 +614,12 @@ LOOPCC:             ; bl = 86 loop mode, 87 loop start, 88 loop end, 126 loop wi
 .org:
     mov ax,[LSV]
     mov [si+0x12],ax
+    push si                 ; FZED: ORIGINAL also puts the loop points back (PERF's copy from when the voice was set up)
+    mov si,BUF
+    mov di,LBUF
+    mov cx,0x40
+    call MOVB
+    pop si
 .tim:
     push si
     lea di,[si+0x64]
@@ -751,12 +757,8 @@ PSETUP:
     mov [NE],ax
     mov ax,[GSAVE+6]
     mov [NE+2],ax
-    push si
-    lea si,[si+0x14]
     mov di,LBUF
-    mov cx,0x40
-    call MOVB
-    pop si
+    call CP40
     mov ax,[si+0x12]
     mov [LSV],ax
     cmp al,8
@@ -2221,15 +2223,12 @@ ADDREF:             ; voice addresses changed (delete unused): refresh PERF's co
     mov ax,[GSAVE+6]
     mov [AEH],ax
     mov [NE+2],ax
-    push si
-    lea si,[si+0x14]
     mov di,LBUF
-    mov cx,0x40
-    call MOVB
-    pop si
+    call CP40
+    mov di,BUF
+CP40:               ; FZED: the voice's 8 loop starts / ends (voice+14h, 40h bytes) -> di
     push si
     lea si,[si+0x14]
-    mov di,BUF
     mov cx,0x40
     call MOVB
     pop si

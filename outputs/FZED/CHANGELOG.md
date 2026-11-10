@@ -1,5 +1,9 @@
 # FZED Menu Revision
 
+## Loop Mode ORIGINAL Restores Loop Points
+
+- FZED: Loop Mode ORIGINAL now also puts the voice's loop points back as they were when FZED took the voice (it already restored the loop times and the sustain / end loop). A preset wave's perfect loop comes back after Loop Start / End have moved it. Moving Loop Start / End afterwards works from the knob position as before. STRETCH OFF also gives the voice's own loop points. Space: the three copies of the voice's loop table share one routine, which freed the bytes.
+
 ## Stretch Sustain At Names
 
 - The Sustain At knob now names its positions the way FZED reads them: NO SUSTAIN, then HOLD SEGMENT 1 up to the last segment, and the choices follow Segments (9 positions at 8 segments). Before, the names came from a fixed three-way list, so at 8 segments the second and third positions said NO SUSTAIN while FZED held segments 1 and 2. The values sent were already right; only the names changed. Manual and Appendix A updated.

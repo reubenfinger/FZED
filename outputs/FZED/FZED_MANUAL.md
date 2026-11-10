@@ -259,7 +259,7 @@ Capture length and rate are relatively slow destinations. Their updates now take
 | Function | Meaning |
 | --- | --- |
 | Sample Start / End | Requested sample playback bounds, scaled to the voice's available data |
-| Loop Mode | One-shot, original voice behaviour, or loop; the FZ shows ONE-SHOT, ORIGINAL or LOOP. One-shot stays one-shot when Sample End, Loop Start / End or the window move afterwards; those positions are remembered for Loop and Original |
+| Loop Mode | One-shot, original voice behaviour, or loop; the FZ shows ONE-SHOT, ORIGINAL or LOOP. Original puts the voice's own loops back exactly as they were when FZED took the voice: loop points, loop times and the sustain / end loop, so a preset wave's perfect loop returns after Loop Start / End have moved it. One-shot stays one-shot when Sample End, Loop Start / End or the window move afterwards; those positions are remembered for Loop |
 | Loop Start / End | Requested loop bounds |
 | Loop Crossfade | The FZ sample crossfade setting, useful for changing loop/playback character; not the capture fade or an external audio crossfader |
 | Window Position | Move the loop window while retaining its window relationship |
