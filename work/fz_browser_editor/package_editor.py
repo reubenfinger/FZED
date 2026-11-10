@@ -45,7 +45,7 @@ manifest = {'name':'FZED','target':'FZED','controller':'Core110','hardwareVerifi
     'unchangedFirmwareAndPresetBank':['Gills user bank'],
     'notInPackage':['FZED_SL_1_SOUND.syx','FZED_SL_2_MOD.syx','FZED_SL_3_SAMPLE.syx','FZED_SL_LAYOUT.json','FZED_REMOTE_SL.md']}   # ReMOTE SL files stay in the repository
 (APP/'MANIFEST.json').write_text(json.dumps(manifest,indent=2)+'\n')
-excluded = {'SHA256SUMS.txt','Gills_Core71_FZED_Menu.zip','CORE71_VERIFICATION.json','NORM_FILTER_VERIFICATION.md','NORM_FILTER_VERIFICATION.json',*manifest['notInPackage']}
+excluded = {'SHA256SUMS.txt','Gills_Core71_FZED_Menu.zip','CORE71_VERIFICATION.json','NORM_FILTER_VERIFICATION.md','NORM_FILTER_VERIFICATION.json','DEVELOPER.md',*manifest['notInPackage']}
 entries = {p.name:p for p in sorted(APP.iterdir()) if p.is_file() and p.name not in excluded}
 entries[standalone.name]=standalone
 (APP/'SHA256SUMS.txt').write_text(''.join(hashlib.sha256(p.read_bytes()).hexdigest()+'  '+name+'\n' for name,p in entries.items()))

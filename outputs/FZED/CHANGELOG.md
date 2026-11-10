@@ -1,5 +1,9 @@
 # FZED Menu Revision
 
+## README For Users
+
+- FZED.zip's README is now for users: what's in the zip, how to put the FZED disk on the FZ (the .hfe on an HxC's SD card, or the .img written to a 3.5" HD floppy) and how to connect the editor. The developer notes moved to DEVELOPER.md, which stays in the repository.
+
 ## Manual: What Changes Live
 
 - Section 1 now says which kinds of control change sounding notes and which apply from the next note.

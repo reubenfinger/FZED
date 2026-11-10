@@ -18,12 +18,28 @@ The links always give the current version.
 
 ## Getting started
 
-1. Copy `A FZ1_FZED.hfe` to your HxC's SD card, select it and load it on the FZ as optional software. The FZ's screen shows **FZED**.
-2. Connect a MIDI interface between your computer and the FZ.
-3. Open the editor in Chrome or Edge (online, or `FZED/FZED.html` from the zip), press **Connect MIDI**, choose the FZ's interface under **OUT** and the FZ's MIDI channel under **CH**, then press **Output locked** to enable output.
+### 1. Put FZED on the FZ: either way
+
+**A. HxC floppy emulator (SD card)**
+
+1. Copy `A FZ1_FZED.hfe` to the HxC's SD card. (A Gotek running HxC or FlashFloppy firmware reads the same `.hfe` from its USB stick.)
+2. On the emulator, select `A FZ1_FZED.hfe` as the disk in the drive.
+3. On the FZ, load it as optional software. The screen shows **FZED**.
+
+**B. Real 3.5" floppy disk**
+
+1. Use a 3.5" high-density (HD, 2HD) disk.
+2. Write `FZ1_FZED.img` to it with a floppy write utility that can write the FZ's disk layout: a raw image of 80 tracks x 2 sides x 8 sectors of 1024 bytes (1,310,720 bytes, MFM, high density). Tools for vintage formats, such as a Greaseweazle, can write it (a Greaseweazle can also write the `.hfe` directly). Ordinary PC tools that only write 1.44 MB disks can't produce this layout.
+3. Put the disk in the FZ and load it as optional software. The screen shows **FZED**.
+
+### 2. Connect the editor
+
+1. Connect a MIDI interface between your computer and the FZ.
+2. Open the editor in Chrome or Edge (online, or `FZED/FZED.html` from the zip) and press **Connect MIDI**.
+3. Choose the FZ's interface under **OUT** and the FZ's MIDI channel under **CH**, then press **Output locked** to enable output.
 4. Turn the editor's controls. The small screen beside each page title shows what the FZ's own screen should be showing.
 
-The manual explains every page and control, and its Appendix A lists every MIDI message by menu page if you'd rather use your own controller or sequencer.
+The manual explains every page and control. Its Appendix A lists every MIDI message by menu page, if you'd rather use your own controller or sequencer, and Appendix B says which controls change notes that are already sounding.
 
 ## In this repository
 
