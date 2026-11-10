@@ -7,10 +7,8 @@
   "controls": 400,
   "profileRawValueMappings": 51200,
   "sourceSHA256": {
-    "Core110 patch": "2ca1ae62f3c24b28ed92b2b98960cd3090fcb4ae9acb88bbe0d0f38a236ae90b",
-    "Core110 header": "fbd637351a3cdc1eb51a9f259051c4f48dd59d9a1ea2e5474f0b2e5cf9532c3c",
-    "FZED source": "1180d75e3030842af1647a0ee4a5ce426150edaf7527523ef1757b2d2f2daa19",
-    "FZED disk": "78fe13b4d36524a9fb87f137c356ec1bfa802582d3c7669b166c162e1b2529fb"
+    "FZED source": "f6aa854c82c36a627bc44fa6748a33e7b6596ba376070333e7d3229a2c2db134",
+    "FZED disk": "61774e60f2795655a76efd21f3cf8a4ea296ac8fcca847172d568520086b60dd"
   },
   "sourceReview": [
     "PERF40N READMEs and current FZED mappings cross-checked with Core110 (fzCode, fzSendCode, potSteps / stepRaw)",

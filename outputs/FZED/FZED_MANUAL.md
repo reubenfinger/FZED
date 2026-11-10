@@ -259,7 +259,7 @@ Capture length and rate are relatively slow destinations. Their updates now take
 | Function | Meaning |
 | --- | --- |
 | Sample Start / End | Requested sample playback bounds, scaled to the voice's available data |
-| Loop Mode | One-shot, original voice behaviour, or loop; the FZ shows ONE-SHOT, ORIGINAL or LOOP. Original puts the voice's own loops back exactly as they were when FZED took the voice: loop points, loop times and the sustain / end loop, so a preset wave's perfect loop returns after Loop Start / End have moved it. One-shot stays one-shot when Sample End, Loop Start / End or the window move afterwards; those positions are remembered for Loop |
+| Loop Mode | One-shot, original voice behaviour, or loop; the FZ shows ONE-SHOT, ORIGINAL or LOOP. One-shot stays one-shot when Sample End, Loop Start / End or the window move afterwards; those positions are remembered for Loop and Original |
 | Loop Start / End | Requested loop bounds |
 | Loop Crossfade | The FZ sample crossfade setting, useful for changing loop/playback character; not the capture fade or an external audio crossfader |
 | Window Position | Move the loop window while retaining its window relationship |
@@ -289,7 +289,7 @@ Stretch cuts the voice's play range (start to end) into 2-8 back-to-back segment
 | Next / Lead-In | TRACE: after a loop's time, play on through the material to the next loop. SKIP: jump straight to it. A loop earlier in the sample is always a jump. CUT LEAD-IN: start the note at the first loop instead of the sample start |
 | Order | Forward, Reverse, There + Back (for example 1 3 5 7 8 6 4 2) or Shuffle 1-8 (each one a fixed order) |
 | Skew | Even in the middle. Below: earlier segments hold longer and later ones shorter (speeding up); above: the reverse |
-| Stretch On/Off | On builds the loops. Off puts the loops back as they were before Stretch: your loop points as you last set them, with the voice's own loop times and sustain / end loop (and its start, if Cut Lead-In moved it). Loop Mode Original then gives the voice's own loop points |
+| Stretch On/Off | On builds the loops. Off puts the voice's own loops (and its start, if Cut Lead-In moved it) back |
 
 With Cut Lead-In and Reverse or Shuffle, the voice's start point moves to the first loop. The software keeps your own start point and works the segments out from it; it is put back by Play, Forward or Stretch Off. If you move the start yourself meanwhile, that becomes the new start. Leaving with ENTER (Keep Sound) while Stretch is on keeps the stretch loops, but puts the voice's own start and end back, so after Cut Lead-In the saved voice plays the lead-in before the loops. To save it exactly as heard, leave with Keep All Of Edit Voice or Keep All.
 

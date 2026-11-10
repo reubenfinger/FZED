@@ -80,8 +80,8 @@ STRET2:             ; PERF40L: STRETCH-style controls kept in this overlay (from
     cmp bl,7
     jz CAPIN
     ret
-STOFF:              ; PERF40M (from tools overlay 4): STRETCH OFF: the loops as before STRETCH (loop points as edited,
-    and byte [STSU],0x7f    ; loop times and sustain / end from PERF's copy), and its start if LEAD-IN CUT moved it
+STOFF:              ; PERF40M (from tools overlay 4): STRETCH OFF: the voice's own loops back (PERF's copy from when the
+    and byte [STSU],0x7f    ; voice was set up), and its start if LEAD-IN CUT moved it
     call L61DB
     cmp byte [STMV],0
     jz .n
@@ -104,8 +104,9 @@ STOFF:              ; PERF40M (from tools overlay 4): STRETCH OFF: the loops as 
     mov cx,16
     call MOVB
     pop si
-    call ..@ORGKEEP         ; as loop mode ORIGINAL (sustain / end loop, loop times, trace / skip) but the loop points
-                            ; are the ones edited before STRETCH, not the voice's set-up copy
+    mov bl,86
+    mov al,64
+    call LOOPCC             ; loop mode 'original': sustain / end loop, loop times and points (and trace / skip) back
     mov bx,S_STO
     jmp NMSG
 S_STO: db 'STRETCH OFF    ',0

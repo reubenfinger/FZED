@@ -41,6 +41,12 @@ The links always give the current version.
 
 The manual explains every page and control. Its Appendix A lists every MIDI message by menu page, if you'd rather use your own controller or sequencer, and Appendix B says which controls change notes that are already sounding.
 
+## Versions
+
+- `main` is the stable release: the downloads above and the online editor always come from it, and only builds tested on a real FZ-1 reach it.
+- Stable versions are tagged (v1.0, v1.1 ...) with a GitHub Release of their disk images and zip, so you can go back to any of them. The [changelog](outputs/FZED/CHANGELOG.md) says what changed.
+- New features are tried first on the `next` branch and published as pre-releases (for example v1.1-beta1). They may not be tested on hardware yet: use them if you want to help test, and use each pre-release's own zip for its editor.
+
 ## In this repository
 
 - `outputs/` - the released files: the disk images, the single-file editor (`FZED.html`), its manual and `FZED.zip`. `outputs/FZED/` holds the editor's source and docs.
