@@ -291,7 +291,7 @@ Stretch cuts the voice's play range (start to end) into 2-8 back-to-back segment
 | Skew | Even in the middle. Below: earlier segments hold longer and later ones shorter (speeding up); above: the reverse |
 | Stretch On/Off | On builds the loops. Off puts the loops back as they were before Stretch: your loop points as you last set them, with the voice's own loop times and sustain / end loop (and its start, if Cut Lead-In moved it). Loop Mode Original then gives the voice's own loop points |
 
-With Cut Lead-In and Reverse or Shuffle, the voice's start point moves to the first loop. The software keeps your own start point and works the segments out from it; it is put back by Play, Forward or Stretch Off. If you move the start yourself meanwhile, that becomes the new start. Leaving with ENTER while Stretch is on keeps the stretch loops (and the moved start), so a saved voice plays as heard.
+With Cut Lead-In and Reverse or Shuffle, the voice's start point moves to the first loop. The software keeps your own start point and works the segments out from it; it is put back by Play, Forward or Stretch Off. If you move the start yourself meanwhile, that becomes the new start. Leaving with ENTER (Keep Sound) while Stretch is on keeps the stretch loops, but puts the voice's own start and end back, so after Cut Lead-In the saved voice plays the lead-in before the loops. To save it exactly as heard, leave with Keep All Of Edit Voice or Keep All.
 
 ## 15. Record
 
