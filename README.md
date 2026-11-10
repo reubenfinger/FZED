@@ -1,5 +1,7 @@
 # FZED
 
+> **This is the `next` branch: trial features, not yet tested on a real FZ-1.** For the stable version use `main` and its downloads. Trial builds are published as pre-releases with their own disk images and editor zip.
+
 FZED is new optional software for the **Casio FZ-1** sampler, with a browser editor that works as its other half.
 
 FZED loads from disk like any FZ optional software and puts the whole voice under realtime MIDI control: filter, envelopes, two LFOs, a mod matrix, loop and window. It adds sample chopping with patterns, capture, effects, time-stretch and a bank builder. The editor runs in Chrome or Edge, shows each menu as one page of knobs and switches, and sends exactly what FZED expects, so you can use FZED without learning a single MIDI number.
@@ -40,6 +42,12 @@ The links always give the current version.
 4. Turn the editor's controls. The small screen beside each page title shows what the FZ's own screen should be showing.
 
 The manual explains every page and control. Its Appendix A lists every MIDI message by menu page, if you'd rather use your own controller or sequencer, and Appendix B says which controls change notes that are already sounding.
+
+## Versions
+
+- `main` is the stable release: the downloads above and the online editor always come from it, and only builds tested on a real FZ-1 reach it.
+- Stable versions are tagged (v1.0, v1.1 ...) with a GitHub Release of their disk images and zip, so you can go back to any of them. The [changelog](outputs/FZED/CHANGELOG.md) says what changed.
+- New features are tried first on the `next` branch and published as pre-releases (for example v1.1-beta1). They may not be tested on hardware yet: use them if you want to help test, and use each pre-release's own zip for its editor.
 
 ## In this repository
 
