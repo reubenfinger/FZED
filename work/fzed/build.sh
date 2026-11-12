@@ -1,5 +1,5 @@
 #!/bin/sh
-# Build FZED from this folder: needs nasm and python3. Makes fzed.bin (as assembled), fzedflat.bin (the 32 KB that
+# Build FZED from this folder: needs nasm and python3. Makes fzed.bin (as assembled), fzedflat.bin (the 34 KB that
 # goes on disk at sector 17), fzed.map and, given a base FZ disk image (any earlier PERF / FZED image), FZ1_FZED.img.
 # This is the FZED checkpoint (the FZED40N code, named FZED); later versions start from here.
 set -e

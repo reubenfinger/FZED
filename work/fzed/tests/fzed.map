@@ -281,6 +281,7 @@ Value     Name
 0000D2EC  SWSP
 0000D2EE  SWBX
 0000D2D6  WTV
+00000007  NWAVE
 0000D2D8  WNEW
 0000D0DC  PATN
 0000D0DD  PATR
@@ -1457,94 +1458,70 @@ Real              Virtual           Name
 ---- Section lv ---------------------------------------------------------------
 
 Real              Virtual           Name
-            B800              B800  S_WV
-            B811              B811  S_WR
-            B822              B822  L6004X
-            B86C              B86C  L6004X.p
-            B872              B872  WVSEL
-            B87D              B87D  WVSEL.off
-            B883              B883  WVCC
-            B88D              B88D  WVCC.h
-            B8A6              B8A6  WVCC.r
-            B8A7              B8A7  WVLOAD
-            B8CD              B8CD  WVLOAD.rs
-            B90B              B90B  WVLOAD.hv
-            B931              B931  WVLOAD.no
-            B937              B937  WVLOAD.ok
-            B941              B941  WVLOAD.ch
-            B951              B951  WVLOAD.g
-            B955              B955  WVLOAD.w
-            B993              B993  WVLOAD.done
-            BA00              BA00  WVLOAD.od
-            BA0D              BA0D  WVLOAD.ms
-            BA1E              BA1E  WVF
-            BA2B              BA2B  WVT
-            BA39              BA39  WVT.saw
-            BA3D              BA3D  WVT.p12
-            BA42              BA42  WVT.p25
-            BA47              BA47  WVT.sq
-            BA4A              BA4A  WVT.pl
-            BA51              BA51  WVT.r
-            BA52              BA52  WVT.tri
-            BA59              BA59  WVT.t1
-            BA5F              BA5F  WVT.sin
-            BA61              BA61  WVT.dsin
-            BA76              BA76  SIN
-            BAA0              BAA0  NEWVOICE
-            BAB0              BAB0  NEWVOICE.done
-            BAB2              BAB2  NEWVOICE.high
-            BAD4              BAD4  NEWVOICE.scan0
-            BAD9              BAD9  NEWVOICE.scan
-            BAEF              BAEF  NEWVOICE.found
-            BB1D              BB1D  NEWVOICE.busy
-            BB23              BB23  S_MRV
-            BB2B              BB2B  S_MSE
-            BB30              BB30  PATIQ
-            BB36              BB36  PATTICK
-            BB4B              BB4B  PATTICK.g0
-            BB6A              BB6A  PATTICK.c
-            BB79              BB79  PATTICK.free
-            BB96              BB96  PATTICK.nr
-            BBB9              BBB9  PATTICK.a
-            BBBC              BBBC  PATTICK.st
-            BBC5              BBC5  PATTICK.sp
-            BBD3              BBD3  PATTICK.lvl
-            BBE9              BBE9  PATTICK.up
-            BBF0              BBF0  PATTICK.msk
-            BC10              BC10  PATTICK.sm
-            BC2B              BC2B  PATTICK.n
-            BC30              BC30  PATTICK.p
-            BC36              BC36  PATTICK.q
-            BC3A              BC3A  PATTICK.r
-            BC3B              BC3B  LVRUNX
-            BC4E              BC4E  LVRUNX.on
-            BC58              BC58  LVRUNX.w
-            BC5B              BC5B  FXMOFP
-            BC6E              BC6E  FXMOFP.r
-            BC6F              BC6F  CKNOW
-            BC82              BC82  CINIT
-            BC98              BC98  CINIT.ng
-            BCB7              BCB7  CINIT.r
-            BCB8              BCB8  CENT
-            BCC2              BCC2  CENT.n7
-            BCCC              BCCC  CENT.t2
-            BCCF              BCCF  CBLD
-            BCCF              BCCF  CBLD.l
-            BCE4              BCE4  CBLD.r
-            BCE5              BCE5  THBUILD
-            BD14              BD14  CURVEQ
-            BD37              BD37  CURVEQ.ch
-            BD4E              BD4E  CURVEQ.r
-            BD4F              BD4F  CBSTEP
-            BD5F              BD5F  CBSTEP.go
-            BD71              BD71  CBSTEP.b
-            BDB7              BDB7  CBSTEP.r
-            BDB8              BDB8  CAPTICK
-            BDC2              BDC2  CAPTICK.n
-            BDC5              BDC5  CAPMX
-            BDCF              BDCF  CAPMX.n
-            BDD2              BDD2  CAPRE
-            BDEF              BDEF  CZERO
+            B800              B800  S_WR
+            B811              B811  L6004X
+            B85B              B85B  L6004X.p
+            B861              B861  WVSEL
+            B86C              B86C  WVSEL.off
+            B872              B872  WVCC
+            B87C              B87C  WVCC.h
+            B8AA              B8AA  WVCC.no
+            B8B0              B8B0  WVCC.r
+            B8B1              B8B1  NEWVOICE
+            B8C1              B8C1  NEWVOICE.done
+            B8C3              B8C3  NEWVOICE.high
+            B8E5              B8E5  NEWVOICE.scan0
+            B8EA              B8EA  NEWVOICE.scan
+            B900              B900  NEWVOICE.found
+            B92E              B92E  NEWVOICE.busy
+            B934              B934  S_MRV
+            B93C              B93C  S_MSE
+            B941              B941  PATIQ
+            B947              B947  PATTICK
+            B95C              B95C  PATTICK.g0
+            B97B              B97B  PATTICK.c
+            B98A              B98A  PATTICK.free
+            B9A7              B9A7  PATTICK.nr
+            B9CA              B9CA  PATTICK.a
+            B9CD              B9CD  PATTICK.st
+            B9D6              B9D6  PATTICK.sp
+            B9E4              B9E4  PATTICK.lvl
+            B9FA              B9FA  PATTICK.up
+            BA01              BA01  PATTICK.msk
+            BA21              BA21  PATTICK.sm
+            BA3C              BA3C  PATTICK.n
+            BA41              BA41  PATTICK.p
+            BA47              BA47  PATTICK.q
+            BA4B              BA4B  PATTICK.r
+            BA4C              BA4C  LVRUNX
+            BA5F              BA5F  LVRUNX.on
+            BA69              BA69  LVRUNX.w
+            BA6C              BA6C  FXMOFP
+            BA7F              BA7F  FXMOFP.r
+            BA80              BA80  CKNOW
+            BA93              BA93  CINIT
+            BAA9              BAA9  CINIT.ng
+            BAC8              BAC8  CINIT.r
+            BAC9              BAC9  CENT
+            BAD3              BAD3  CENT.n7
+            BADD              BADD  CENT.t2
+            BAE0              BAE0  CBLD
+            BAE0              BAE0  CBLD.l
+            BAF5              BAF5  CBLD.r
+            BAF6              BAF6  THBUILD
+            BB25              BB25  CURVEQ
+            BB48              BB48  CURVEQ.ch
+            BB5F              BB5F  CURVEQ.r
+            BB60              BB60  CBSTEP
+            BB70              BB70  CBSTEP.go
+            BB82              BB82  CBSTEP.b
+            BBC8              BBC8  CBSTEP.r
+            BBC9              BBC9  CAPTICK
+            BBD3              BBD3  CAPTICK.n
+            BBD6              BBD6  CAPMX
+            BBE0              BBE0  CAPMX.n
+            BBE3              BBE3  CAPRE
+            BC00              BC00  CZERO
 
 ---- Section xt ---------------------------------------------------------------
 
@@ -1553,19 +1530,19 @@ Real              Virtual           Name
             C00F              DC0F  SVK8.tp
             C022              DC22  SVK8.tm
             C030              DC30  SVK8.l
-            C057              DC57  ..@21.pos
-            C05A              DC5A  ..@21.ok
-            C067              DC67  ..@22.pos
-            C06A              DC6A  ..@22.ok
-            C08B              DC8B  ..@23.pos
-            C094              DC94  ..@23.ok
-            C0A1              DCA1  ..@24.pos
-            C0A4              DCA4  ..@24.ok
-            C0C5              DCC5  ..@25.pos
-            C0CE              DCCE  ..@25.ok
+            C057              DC57  ..@20.pos
+            C05A              DC5A  ..@20.ok
+            C067              DC67  ..@21.pos
+            C06A              DC6A  ..@21.ok
+            C08B              DC8B  ..@22.pos
+            C094              DC94  ..@22.ok
+            C0A1              DCA1  ..@23.pos
+            C0A4              DCA4  ..@23.ok
+            C0C5              DCC5  ..@24.pos
+            C0CE              DCCE  ..@24.ok
             C0CE              DCCE  SVK8.ty
-            C0DD              DCDD  ..@26.pos
-            C0E0              DCE0  ..@26.ok
+            C0DD              DCDD  ..@25.pos
+            C0E0              DCE0  ..@25.ok
             C0E0              DCE0  SVK8.mx
             C104              DD04  SVK8.st
             C110              DD10  SVK8.x
@@ -2059,4 +2036,33 @@ Real              Virtual           Name
             E76E              D76E  STRSB5
             E784              D784  S_STR
             E795              D795  S_STS
+
+---- Section ov6 --------------------------------------------------------------
+
+Real              Virtual           Name
+            E802              D402  WVLOAD
+            E82B              D42B  WVLOAD.rs
+            E869              D469  WVLOAD.hv
+            E897              D497  WVLOAD.no
+            E89D              D49D  WVLOAD.ok
+            E8A7              D4A7  WVLOAD.ch
+            E8B7              D4B7  WVLOAD.g
+            E8BB              D4BB  WVLOAD.w
+            E8F9              D4F9  WVLOAD.done
+            E966              D566  WVLOAD.od
+            E973              D573  WVLOAD.ms
+            E984              D584  WVF
+            E991              D591  WVT
+            E99F              D59F  WVT.saw
+            E9A3              D5A3  WVT.p12
+            E9A8              D5A8  WVT.p25
+            E9AD              D5AD  WVT.sq
+            E9B0              D5B0  WVT.pl
+            E9B7              D5B7  WVT.r
+            E9B8              D5B8  WVT.tri
+            E9BF              D5BF  WVT.t1
+            E9C5              D5C5  WVT.sin
+            E9C7              D5C7  WVT.dsin
+            E9DC              D5DC  SIN
+            EA06              D606  S_WV
 

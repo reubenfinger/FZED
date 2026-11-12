@@ -266,7 +266,7 @@ Capture length and rate are relatively slow destinations. Their updates now take
 | Window Snap | Free movement, zero-cross snapping, or whole frames |
 | Play Mode | Original, Reverse or Cue; the FZ shows ORIGINAL, REVERSE or CUE. Cue enables the bend/Cue sample-position scrub path; it is not an extra sample slot |
 | Preset Wave | Select one of the seven original waveforms: Saw, Square, Pulse 25%, Pulse 12%, Triangle, Sine or Double Sine |
-| Load Selected Wave | Deliberately replace/generate the selected preset wave |
+| Load Selected Wave | Deliberately replace/generate the selected preset wave. FZED reads the wave generator from its disk when needed, so keep the FZED disk in the drive (on an HxC, keep FZED selected); otherwise the FZ shows TOOLS NOT LOADED |
 
 These position controls are not absolute sample-number entry or a waveform editor with point readback. Firmware may constrain the result, and sample/loop validity matters. Zero-cross snapping can reduce discontinuities but cannot guarantee an inaudible edit in every sample. Capture guards refuse loop-window position/snap changes during capture.
 

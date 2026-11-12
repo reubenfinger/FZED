@@ -2865,7 +2865,7 @@ section xt follows=lv vstart=0xDC00
 %include "fx/fx5xi.asm"
 %include "fx/capr3u.asm"
 %if ($-$$) > 0x1000
-%error code sectors 38-41 full
+%error code sectors 40-43 full
 %endif
 %if ($-$$) < 0x1000
     times 0x1000-($-$$) db 0x5a
@@ -2880,3 +2880,5 @@ section ov4 follows=ov3 vstart=0xD400
 %include "fx/ov4.asm"
 section ov5 follows=ov4 vstart=0xD400
 %include "fx/ov5.asm"
+section ov6 follows=ov5 vstart=0xD400
+%include "fx/ov6.asm"

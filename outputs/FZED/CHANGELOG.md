@@ -1,5 +1,11 @@
 # FZED Menu Revision
 
+## Preset Waves From The FZED Disk (next)
+
+- FZED: the preset wave generator moved from resident memory into a disk overlay (sector 50), freeing about 495 bytes in the crowded lv code area for later work. The seven waves come out word for word as before, with the same messages and refusals (emulator check `work/fzed/tests/wave40.py`).
+- Loading a wave now reads FZED's disk when the overlay isn't already in memory (after a render, capture, tool or buffer-using live effect): keep the FZED disk in the drive, or the FZ shows TOOLS NOT LOADED.
+- Capture and bank mode are still refused with WAVE: REFUSED before the overlay loads. If the FZ's own calls ever push the stack into the overlay's end, the load is refused rather than run on damaged code.
+
 ## Loop Mode ORIGINAL Restores Loop Points
 
 - FZED: Loop Mode ORIGINAL now also puts the voice's loop points back as they were when FZED took the voice (it already restored the loop times and the sustain / end loop). A preset wave's perfect loop comes back after Loop Start / End have moved it. Moving Loop Start / End afterwards works from the knob position as before. STRETCH OFF keeps the loop points you set before Stretch (with the voice's own loop times and sustain / end loop, as before); choose ORIGINAL after it for the voice's own points. Space: the three copies of the voice's loop table share one routine, which freed the bytes.

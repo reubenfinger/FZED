@@ -1,6 +1,6 @@
 # FZED overlay plan: design brief for review
 
-Status: proposal, nothing built. Revision 2: corrected after the first review (section 5). Work happens on the `next` branch only. `main` stays the hardware-tested release (v1.0).
+Status: Step 1 built on `next` (wave overlay, sector 50; not yet tested on hardware). Step 2 not started. Revision 2: corrected after the first review (section 5). Work happens on the `next` branch only. `main` stays the hardware-tested release (v1.0).
 
 The aim is to make FZED modular through disk overlays, in two steps:
 
