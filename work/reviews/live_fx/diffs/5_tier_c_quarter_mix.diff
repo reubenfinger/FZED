@@ -1,0 +1,82 @@
+diff a/work/fzed/fx/fx2h.asm b/work/fzed/fx/fx2h.asm
+--- a/work/fzed/fx/fx2h.asm
++++ b/work/fzed/fx/fx2h.asm
+@@ -107,17 +107,11 @@
+     mov bx,[FXD]
+     sub ax,bx
+     jo .o
+-    imul word [FXW]
+-.j: shl ax,1
+-    rcl dx,1
+-    shl ax,1
+-    rcl dx,1
+-    add dx,bx
+-    xchg ax,dx
++.q: times 7 nop             ; tier (c): (wet - dry) * 0 / 1 / 2 / 3 quarters, written here by MIXQ
++    add ax,bx
+     pop bx
+ .r: ret
+-.o: call MIXOV
+-    jmp .j
++.o: jmp MIXWO
+ 
+ FXLX:               ; rectifier: negative half x k (k = 1 .. -1), minus the DC trim
+ .l: mov ax,[es:si]
+diff a/work/fzed/fx/fx4m.asm b/work/fzed/fx/fx4m.asm
+--- a/work/fzed/fx/fx4m.asm
++++ b/work/fzed/fx/fx4m.asm
+@@ -68,6 +68,43 @@
+ .r: ret
+ 
+ WVLOAD: ret                 ; (scratch build only: the wave generator is cut out to stand in for the overlay)
++MIXWO:              ; MIXW, wet - dry past 16 bits: the multiply as before
++    call MIXOV
++    shl ax,1
++    rcl dx,1
++    shl ax,1
++    rcl dx,1
++    add dx,bx
++    xchg ax,dx
++    pop bx
++    ret
++MIXQ:               ; FXPAR: Wet/Dry to the nearest quarter, and MIXW's step for it
++    mov ax,[FXW]
++    add ax,2048
++    and ax,0xf000
++    mov [FXW],ax
++    mov cx,16384
++    sub cx,ax
++    mov [FXW2],cx
++    shr ax,12
++    mov si,ax
++    shl si,3
++    sub si,ax
++    add si,.t
++    mov di,MIXW.q
++    mov cx,7
++    cld
++    push es
++    push ds
++    pop es
++    rep movsb
++    pop es
++    ret
++.t: db 0x31,0xc0, 0xeb,3, 0x90,0x90,0x90            ; 0:   xor ax,ax
++    db 0xc1,0xf8,2, 0xeb,2, 0x90,0x90               ; 1/4: sar ax,2
++    db 0xd1,0xf8, 0xeb,3, 0x90,0x90,0x90            ; 1/2: sar ax,1
++    db 0x8b,0xd0, 0xc1,0xfa,2, 0x2b,0xc2            ; 3/4: mov dx,ax / sar dx,2 / sub ax,dx
++    db 0xeb,5, 0x90,0x90,0x90,0x90,0x90             ; 1:   as it is (MIXW returns before this)
+ FXLXW:              ; rectifier, fully wet
+ .l: mov ax,[es:si]
+     or ax,ax
+diff a/work/fzed/fx/fxkz.asm b/work/fzed/fx/fxkz.asm
+--- a/work/fzed/fx/fxkz.asm
++++ b/work/fzed/fx/fxkz.asm
+@@ -415,6 +415,7 @@
+     mov cx,16384
+     sub cx,ax
+     mov [FXW2],cx
++    call MIXQ
+ .m: mov al,[FXIN]
+     xor ah,ah
+     mov cx,2560

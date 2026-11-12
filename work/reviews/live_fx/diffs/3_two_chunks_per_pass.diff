@@ -1,0 +1,11 @@
+diff a/work/fzed/fzed.asm b/work/fzed/fzed.asm
+--- a/work/fzed/fzed.asm
++++ b/work/fzed/fzed.asm
+@@ -281,6 +281,7 @@
+     call MATRIX
+     call RVPATCH
+     call LVRUNX             ; PERF38H: paced LCD, curve steps, then live FX
++    call LVRUNW             ; a second live chunk in the same pass
+     call PARSE
+     jc .idle
+     call MROUTE             ; bank CCs; bank mode: edit the voice on this CC's channel
