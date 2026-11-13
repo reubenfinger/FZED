@@ -431,7 +431,7 @@ FXPAR:              ; all render/live parameters from the CCs; LVLP = fast loop 
     mov bl,[FXRF]           ; Karplus-Strong period (CC94 = note at the original key) and feedback (CC95)
     xor bh,bh
     shl bx,1
-    mov ax,[cs:bx+KSPT]
+    mov ax,[bx+KSPT]
     call L61DB
     mov cl,[si+0xb1]
     and cl,3
@@ -463,13 +463,13 @@ FXPAR:              ; all render/live parameters from the CCs; LVLP = fast loop 
     mov bl,[FXM]
     xor bh,bh
     shl bx,1
-    mov ax,[cs:bx+LPW]
+    mov ax,[bx+LPW]
     cmp word [FXW],16384
     jz .w
-    mov ax,[cs:bx+LPM]
+    mov ax,[bx+LPM]
 .w: mov [LVLP],ax
     ret
-LPW: dw 0,FXLT,FXLT,FXLC,FXLR,FXLT,1,FXLU,SVLV,FXLX,FXLD,FXLB,FXLE,FXLQ
+LPW: dw 0,FXLT,FXLT,FXLC,FXLR,FXLT,1,FXLU,SVLV,FXLXW,FXLDW,FXLBW,FXLEW,FXLQW
 LPM: dw 0,FXLTM,FXLTM,FXLCM,FXLRM,FXLTM,1,FXLU,SVLV,FXLX,FXLD,FXLB,FXLE,FXLQ
 RINGPAR:            ; carrier step (16.16 per sample) from CC94 and the voice rate, locked to the active loop; RTAB shape
     call L61DB
@@ -1221,20 +1221,16 @@ LVKSCH:             ; Karplus-Strong on LVBUF: y = x + fb * (y[-P] + y[-P-1]) / 
 .ok: cmp word [FXW],16384
     jz .st
     push bx
-    push dx
     mov ax,dx
+    mov bx,[si]
+    sub ax,bx
+    jo .of
     imul word [FXW]
-    mov bx,ax
-    mov di,dx
-    mov ax,[si]
-    imul word [FXW2]
-    add ax,bx
-    adc dx,di
-    shr ax,14
-    shl dx,2
-    or ax,dx
-    mov dx,ax
-    pop bx
+.j: shl ax,1
+    rcl dx,1
+    shl ax,1
+    rcl dx,1
+    add dx,bx
     pop bx
 .st: mov [si],dx
     add si,2
@@ -1242,6 +1238,8 @@ LVKSCH:             ; Karplus-Strong on LVBUF: y = x + fb * (y[-P] + y[-P-1]) / 
     loop .l
     pop es
     ret
+.of: call MIXOV
+    jmp .j
 LVCPY:              ; making the clean copy, 128 words per main-loop pass (MIDI keeps flowing)
     mov ax,[LVLEN]
     mov dx,[LVLEN+2]
@@ -1297,24 +1295,19 @@ LVRDX:              ; cx words from wave dx:ax into [di] (PERF38H: runs up to th
     push di
     call LVSET
     pop di
+    cld
 .l: call LVRUNN             ; ax = words in this run, cx = words after it
-    push cx
+    xchg ax,cx
+    push es                 ; rep movsw reads DS:SI: DS on the sample window, ES on PERF's memory
+    push ds                 ; (the FZ's interrupt handlers load their own DS)
+    pop es
+    pop ds
+    rep movsw
+    push es
+    push ds
+    pop es
+    pop ds
     mov cx,ax
-    shr cx,1
-    jnc .e
-    mov ax,[es:si]
-    mov [di],ax
-    add si,2
-    add di,2
-.e: jcxz .d
-.p: mov ax,[es:si]
-    mov [di],ax
-    mov ax,[es:si+2]
-    mov [di+2],ax
-    add si,4
-    add di,4
-    loop .p
-.d: pop cx
     jcxz .r
     call LVBK
     jmp .l
@@ -1443,18 +1436,18 @@ THENT:              ; TapeHack / wavefolder curve entry: cx = k (|x| = 64k) -> a
     adc dx,0
     or dx,dx
     jz .ip
-    mov ax,[cs:STAB+512]
+    mov ax,[STAB+512]
     jmp .sv
 .ip: mov bx,ax
     shr bx,8
     shl bx,1
     and ax,0xff
-    mov dx,[cs:bx+STAB+2]
-    sub dx,[cs:bx+STAB]
+    mov dx,[bx+STAB+2]
+    sub dx,[bx+STAB]
     imul dx
     mov al,ah
     mov ah,dl
-    add ax,[cs:bx+STAB]
+    add ax,[bx+STAB]
 .sv: mul word [CGOUT]
     shl ax,1
     rcl dx,1
@@ -1547,9 +1540,12 @@ FXLT:               ; TapeHack, fully wet: table + interpolation, sign kept in b
     mov di,[bx+THT+2]
     sub di,[bx+THT]
     imul di
-    shr ax,6
-    shl dx,10
-    or ax,dx
+    shl ax,1                ; (dx:ax >> 6), low word
+    rcl dx,1
+    shl ax,1
+    rcl dx,1
+    mov al,ah
+    mov ah,dl
     add ax,[bx+THT]
     xor ax,bp
     sub ax,bp
@@ -1570,26 +1566,30 @@ FXLTM:              ; TapeHack with dry/wet mix
     mov di,[bx+THT+2]
     sub di,[bx+THT]
     imul di
-    shr ax,6
-    shl dx,10
-    or ax,dx
+    shl ax,1                ; (dx:ax >> 6), low word
+    rcl dx,1
+    shl ax,1
+    rcl dx,1
+    mov al,ah
+    mov ah,dl
     add ax,[bx+THT]
     xor ax,bp
     sub ax,bp
+    mov bx,[es:si]          ; out = dry + ((wet - dry) * FXW >> 14): the same word as the two-product form
+    sub ax,bx
+    jo .of
     imul word [FXW]
-    mov bx,ax
-    mov di,dx
-    mov ax,[es:si]
-    imul word [FXW2]
-    add ax,bx
-    adc dx,di
-    shr ax,14
-    shl dx,2
-    or ax,dx
-    mov [es:si],ax
+.j: shl ax,1
+    rcl dx,1
+    shl ax,1
+    rcl dx,1
+    add dx,bx
+    mov [es:si],dx
     add si,2
     loop .l
     ret
+.of: call MIXOV
+    jmp .j
 FXLC:               ; linear crush, fully wet
 .l: mov ax,[es:si]
     add ax,[CHALF]
@@ -1606,20 +1606,21 @@ FXLCM:              ; linear crush with mix
     jno .m
     mov ax,0x7fff
 .m: and ax,[CMASK]
+    mov bx,[es:si]          ; out = dry + ((wet - dry) * FXW >> 14): the same word as the two-product form
+    sub ax,bx
+    jo .of
     imul word [FXW]
-    mov bx,ax
-    mov di,dx
-    mov ax,[es:si]
-    imul word [FXW2]
-    add ax,bx
-    adc dx,di
-    shr ax,14
-    shl dx,2
-    or ax,dx
-    mov [es:si],ax
+.j: shl ax,1
+    rcl dx,1
+    shl ax,1
+    rcl dx,1
+    add dx,bx
+    mov [es:si],dx
     add si,2
     loop .l
     ret
+.of: call MIXOV
+    jmp .j
 FXLR:               ; ring mod, fully wet: phase bp.di (16.16)
     mov bp,[FXRPI]
     mov di,[FXRPF]
@@ -1649,25 +1650,38 @@ FXLRM:              ; ring mod with mix
     shl ax,1
     rcl dx,1
     mov ax,dx
+    mov bx,[es:si]
+    sub ax,bx
+    jo .of
     imul word [FXW]
-    push dx
-    push ax
-    mov ax,[es:si]
-    imul word [FXW2]
-    pop bx
-    add ax,bx
-    pop bx
-    adc dx,bx
-    shr ax,14
-    shl dx,2
-    or ax,dx
-    mov [es:si],ax
+.j: shl ax,1
+    rcl dx,1
+    shl ax,1
+    rcl dx,1
+    add dx,bx
+    mov [es:si],dx
     add di,[FXRIF]
     adc bp,[FXRII]
     add si,2
     loop .l
     mov [FXRPI],bp
     mov [FXRPF],di
+    ret
+.of: call MIXOV
+    jmp .j
+FXLBW:              ; bit mangle, fully wet
+    mov ax,[MGM]
+.l: xor [es:si],ax
+    add si,2
+    loop .l
+    ret
+MIXOV:              ; wet - dry did not fit 16 bits (flags from the SUB): dx:ax = (wet - dry) * FXW all the same
+    js .p
+    imul word [FXW]
+    sub dx,[FXW]
+    ret
+.p: imul word [FXW]
+    add dx,[FXW]
     ret
 TUINIT:             ; Tube2 static curve over the signed input: THT[k] for x = -32768 + 128k (TUENT), k = 0..513
     mov al,[FXIN]           ; pad = CC115 (127 = none)
@@ -1782,6 +1796,10 @@ SQRTQ:              ; ax = 0..65535 (Q15) -> ax = square root (Q15); table over 
     or ax,ax
     jz .r
     xor cl,cl
+    or ah,ah
+    jnz .n
+    xchg al,ah              ; below 256: four of the steps below at once
+    mov cl,4
 .n: cmp ax,16384
     jae .t
     shl ax,2
@@ -1789,17 +1807,18 @@ SQRTQ:              ; ax = 0..65535 (Q15) -> ax = square root (Q15); table over 
     jmp .n
 .t: mov bx,ax
     sub bx,16384
-    shr bx,9
-    shl bx,1
+    mov bl,bh               ; (bx >> 9) * 2
+    and bx,0x00fe
     and ax,511
     push cx
-    mov cx,[cs:bx+SQN2+2]
-    sub cx,[cs:bx+SQN2]
+    mov cx,[bx+SQN2+2]
+    sub cx,[bx+SQN2]
     mul cx
-    shr ax,9
-    shl dx,7
-    or ax,dx
-    add ax,[cs:bx+SQN2]
+    shr dx,1                ; (dx:ax >> 9), low word
+    rcr ax,1
+    mov al,ah
+    mov ah,dl
+    add ax,[bx+SQN2]
     pop cx
     shr ax,cl
 .r: ret
@@ -1813,9 +1832,10 @@ TLOOK:              ; ax = input sample -> Tube2 static curve (table + interpola
     mov ax,[bx+THT+2]
     sub ax,[bx+THT]
     imul dx
-    shr ax,7
-    shl dx,9
-    or ax,dx
+    shl ax,1                ; (dx:ax >> 7), low word
+    rcl dx,1
+    mov al,ah
+    mov ah,dl
     add ax,[bx+THT]
     ret
 TUPREP:             ; live: FXTP = curve of the clean word just before this chunk
@@ -1899,17 +1919,15 @@ FXLU:               ; Tube2: static curve, then the slew stage, clamp, mix
     cmp word [FXW],16384
     jz .st
     mov ax,dx
+    mov bx,[es:si]
+    sub ax,bx
+    jo .of
     imul word [FXW]
-    mov bx,ax
-    mov di,dx
-    mov ax,[es:si]
-    imul word [FXW2]
-    add ax,bx
-    adc dx,di
-    shr ax,14
-    shl dx,2
-    or ax,dx
-    mov dx,ax
+.j: shl ax,1
+    rcl dx,1
+    shl ax,1
+    rcl dx,1
+    add dx,bx
 .st: mov [es:si],dx
     add si,2
     pop cx
@@ -1917,6 +1935,8 @@ FXLU:               ; Tube2: static curve, then the slew stage, clamp, mix
     jz .x
     jmp .l
 .x: ret
+.of: call MIXOV
+    jmp .j
 FXSMP:              ; ax = sample -> processed sample
     mov [FXD],ax
     cmp byte [FXM],6        ; Karplus-Strong (render): 1024-word history ring
@@ -2095,12 +2115,12 @@ MU:                 ; mu-law encode, keep the top rez bits, decode (Pockey2), si
     shl di,1
     shr ax,7
     and ax,0xff
-    mov dx,[cs:di+LOGT+2]
-    sub dx,[cs:di+LOGT]
+    mov dx,[di+LOGT+2]
+    sub dx,[di+LOGT]
     mul dx
     mov al,ah
     mov ah,dl
-    add ax,[cs:di+LOGT]
+    add ax,[di+LOGT]
     mov dx,8
     sub dx,bx
     mov bx,dx
@@ -2128,12 +2148,12 @@ MU:                 ; mu-law encode, keep the top rez bits, decode (Pockey2), si
     shl bx,1
     shl ax,3
     and ax,0xf8
-    mov dx,[cs:bx+DEXT+2]
-    sub dx,[cs:bx+DEXT]
+    mov dx,[bx+DEXT+2]
+    sub dx,[bx+DEXT]
     mul dx
     mov al,ah
     mov ah,dl
-    add ax,[cs:bx+DEXT]
+    add ax,[bx+DEXT]
     add ax,32768
     pop cx
     mov cl,ch

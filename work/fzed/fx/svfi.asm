@@ -92,16 +92,16 @@ SVK8:               ; cx words at es:si through the filter (state SVLL/SVBL/SVLH
     add ax,ax               ; undo the headroom
     SVSAT16 ax
 .mx: dw 0x9090              ; (patched: nop nop / jmp short .st)
-    imul word [FXW]         ; out = (wet * FXW + dry * (16384 - FXW)) >> 14
-    mov [SVTMP],ax
-    mov [SVTMP+2],dx
-    mov ax,[SVDRY]
-    imul word [FXW2]
-    add ax,[SVTMP]
-    adc dx,[SVTMP+2]
-    shr ax,14
-    shl dx,2
-    or ax,dx
+    mov bx,[SVDRY]          ; out = dry + ((wet - dry) * FXW >> 14)
+    sub ax,bx
+    jo .o
+    imul word [FXW]
+.j: shl ax,1
+    rcl dx,1
+    shl ax,1
+    rcl dx,1
+    add dx,bx
+    mov ax,dx
 .st: mov [es:si],ax
     add si,2
     dec cx
@@ -110,6 +110,8 @@ SVK8:               ; cx words at es:si through the filter (state SVLL/SVBL/SVLH
 .x: mov [SVLH],di
     mov [SVBH],bp
     ret
+.o: call MIXOV
+    jmp .j
 
 SVPAR:              ; coefficients from CC94 (type), CC115 (cutoff), CC116 (resonance)
     mov bl,[FXIN]

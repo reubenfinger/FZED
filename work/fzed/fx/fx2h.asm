@@ -16,7 +16,7 @@ FXMOF:              ; al = internal FX mode for CC112 (keeps bx cx dx)
     mul ah
     shr ax,7
     mov bx,ax
-    mov al,[cs:bx+FXMT]
+    mov al,[bx+FXMT]
     xor ah,ah
     pop bx
     ret
@@ -104,20 +104,20 @@ MIXW:               ; ax = wet, FXD = dry -> mixed with CC117 (keeps bx cx)
     cmp word [FXW],16384
     jz .r
     push bx
+    mov bx,[FXD]
+    sub ax,bx
+    jo .o
     imul word [FXW]
-    push dx
-    push ax
-    mov ax,[FXD]
-    imul word [FXW2]
-    pop bx
-    add ax,bx
-    pop bx
-    adc dx,bx
-    shr ax,14
-    shl dx,2
-    or ax,dx
+.j: shl ax,1
+    rcl dx,1
+    shl ax,1
+    rcl dx,1
+    add dx,bx
+    xchg ax,dx
     pop bx
 .r: ret
+.o: call MIXOV
+    jmp .j
 
 FXLX:               ; rectifier: negative half x k (k = 1 .. -1), minus the DC trim
 .l: mov ax,[es:si]

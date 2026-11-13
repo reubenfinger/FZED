@@ -77,6 +77,59 @@ WVCC:               ; CC9
     jmp NMSG
 .r: ret
 
+; FZED (live FX review set 2): fully wet loops for rectifier, decimator and echo / comb, here in the space the
+; wave overlay freed
+FXLXW:              ; rectifier, fully wet
+.l: mov ax,[es:si]
+    or ax,ax
+    jns .p
+    imul word [RCK]
+    shl ax,1
+    rcl dx,1
+    mov ax,dx
+.p: sub ax,[RCDC]
+    jno .m
+    mov ax,0x8000
+.m: mov [es:si],ax
+    add si,2
+    loop .l
+    ret
+FXLDW:              ; decimator, fully wet: block place and held word in registers
+    mov dx,[FXPOS]
+    mov bx,[DCN]
+    mov ax,[FXHELD]
+.l: or dx,dx
+    jnz .h
+    mov ax,[es:si]
+.h: mov [es:si],ax
+    inc dx
+    cmp dx,bx
+    jb .n
+    xor dx,dx
+.n: add si,2
+    loop .l
+    mov [FXPOS],dx
+    mov [FXHELD],ax
+    ret
+FXLEW:              ; echo / comb, fully wet
+    mov di,DBUF
+    mov bx,[EG]
+.l: mov ax,[di]
+    imul bx
+    shl ax,1
+    rcl dx,1
+    mov ax,[es:si]
+    add dx,ax
+    jno .m
+    mov dx,0x7fff
+    or ax,ax
+    jns .m
+    mov dx,0x8000
+.m: mov [es:si],dx
+    add si,2
+    add di,2
+    loop .l
+    ret
 NEWVOICE:           ; CC16: choose the first empty voice after an armed rising edge
                     ; FZ Voice Edit selector at ROM 0x787B-0x7892 sets evn/ev/segment at E02/E04/E06.
     cmp byte [BKON],0

@@ -1,5 +1,10 @@
 # FZED Menu Revision
 
+## Faster Live FX (next)
+
+- FZED: live FX passes are shorter, from the live FX review's sets 1 and 2 (`work/reviews/live_fx/`): a faster read of each chunk into the live buffer, tighter inner loops, a one-multiply Wet/Dry mix, and fully wet loops for rectifier, decimator and echo / comb (in the space the wave overlay freed). The sound is unchanged: every mode and setting in the emulator comparison (sweep, chase and render) gives the same words as before.
+- Needs a hardware soak test: the faster read briefly changes a CPU segment register while interrupts can arrive (see the review's section on DS).
+
 ## Preset Waves From The FZED Disk (next)
 
 - FZED: the preset wave generator moved from resident memory into a disk overlay (sector 50), freeing about 495 bytes in the crowded lv code area for later work. The seven waves come out word for word as before, with the same messages and refusals (emulator check `work/fzed/tests/wave40.py`).

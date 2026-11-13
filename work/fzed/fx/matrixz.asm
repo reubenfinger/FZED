@@ -804,7 +804,10 @@ MXREC:              ; bx = record
     mov [MXOLD],ax
     mov ax,[MXNU]
     mov [bx+MXUSE],ax
-    mov word [MXD0],1       ; fast destinations 1-7: written every pass while used
+    cmp word [MXOLD],0      ; nothing routed now or last pass: both destination loops would do nothing
+    jnz .w
+    jmp PTICK
+.w: mov word [MXD0],1       ; fast destinations 1-7: written every pass while used
 .fd: mov bx,[MXD0]
     mov ax,1
     mov cl,bl
