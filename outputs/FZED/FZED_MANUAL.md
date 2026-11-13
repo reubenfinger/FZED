@@ -467,7 +467,7 @@ Delete Unused and Normalise are separate FX-page commands, not parameters of the
 | Xover Fuzz | Crossover dead-zone/fuzz character; threshold and crossover-to-fuzz blend |
 | Rectifier | Partial/full half- or full-wave rectification; rectify and DC trim |
 | Decimator | Sample-and-hold style coarsening; hold in sample words; second effect control unused |
-| Linear Crush | Reduce effective amplitude resolution; bits control; frequency reduction is render-only; two effect controls unused |
+| Linear Crush | Reduce effective amplitude resolution; bits control; frequency reduction (DeFreq) works live and on render; two effect controls unused |
 | Bit Mangle | XOR masks applied to high and low sample bits; intentionally abrupt/digital results |
 | Echo / Comb | Delayed/reflected sample combination; delay in words, signed gain; one echo or three reflections |
 | Position | Reorder sample windows; reverse, stutter or scramble, plus window size |

@@ -359,7 +359,9 @@ CBSTEP:             ; one step: 32 entries into CSH; after the last, THT takes t
 
 ; ---- Tube2 live: no slew stage. The live curve (CKNOW +32) holds the static curve with FXLU's slew stage at zero
 ; slew, its clamp and x1.923 built in, so a live word is one lookup (and the mix). Render keeps FXLU.
-TUBAKE:             ; ax = static curve value -> live curve value (FXLU with slew = 0, TGSN for the curve being built)
+TUPOST:             ; Tube2 slew stage (FXLU, render): ax = curve value y, bx = slew factor (Q14) -> ax:
+    mov bp,[TGS]            ; y -= y*|y|*s*gs, clamp +/-0.52, x 1.923
+TUPB:               ; bp = gain scaling
     mov di,ax
     mov cx,ax
     or cx,cx
@@ -368,12 +370,27 @@ TUBAKE:             ; ax = static curve value -> live curve value (FXLU with sle
 .a: imul cx
     shl ax,1
     rcl dx,1
-    mov ax,dx               ; (t * 16384) << 2 >> 16 = t: the zero-slew factor needs no multiply
-    imul word [TGSN]
+    mov ax,dx               ; t = y*|y|
+    imul bx                 ; (t * s) >> 14, saturated: a fast fall at high levels overflowed 16 bits and
+    mov cx,dx               ; flipped the word's sign (full-scale clicks at high pad). Fits when dx is
+    add cx,0x2000           ; -2000h..1FFFh
+    cmp cx,0x3fff
+    ja .s
+    shl ax,1
+    rcl dx,1
+    shl ax,1
+    rcl dx,1
+    jmp .k
+.s: mov dx,0x7fff           ; s > 0, so the sign is t's (y's)
+    or di,di
+    jns .k
+    inc dx
+.k: mov ax,dx
+    imul bp
     shl ax,1
     rcl dx,1
     sub di,dx
-    cmp di,17039            ; clamp +/-0.52, then x 1.923
+    cmp di,17039
     jle .c1
     mov di,17039
 .c1: cmp di,-17039
@@ -390,6 +407,10 @@ TUBAKE:             ; ax = static curve value -> live curve value (FXLU with sle
     rcl dx,1
     mov ax,dx
     ret
+TUBAKE:             ; ax = static curve value -> live curve value: the slew stage at zero slew (s = 1.0, TGSN for
+    mov bx,16384            ; the curve being built)
+    mov bp,[TGSN]
+    jmp TUPB
 FXLV7:              ; Tube2, fully wet (LPW): live = the live curve only; render = FXLU
     cmp byte [LVON],2
     jz .l
@@ -445,3 +466,31 @@ FXLV7M:             ; Tube2 with dry/wet mix (LPM): live = the live curve, then 
     ret
 .of: call MIXOV
     jmp .j
+
+; ---- linear crush DeFreq live: the decimator's block placement (DCPREP) with the hold length FXFREQ, and the
+; crush applied to each held word, as FXSMP does in render (hold blocks from the start of the voice)
+DCQ:                ; LVCHK, live, before the chunk at clean offset dx:ax (from the old inline decimator test)
+    cmp byte [FXM],10
+    jz .d
+    cmp byte [FXM],3
+    jnz .r
+    push si
+    push ax
+    push dx
+    mov si,[LVVOI]
+    call FXFQ
+    pop dx
+    pop ax
+    pop si
+    mov cx,[FXFREQ]
+    cmp cx,1
+    jbe .r
+    mov [DCN],cx            ; (DCN is the decimator's; FXPAR sets it again for mode 10)
+.d: jmp DCPREP
+.r: ret
+CRU:                ; ax -> linear crush of ax (as FXLC)
+    add ax,[CHALF]
+    jno .m
+    mov ax,0x7fff
+.m: and ax,[CMASK]
+    ret

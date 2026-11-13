@@ -260,28 +260,7 @@ FXRUN:
     jmp FXREN2
 .r2:
     call L61DB
-    mov bl,[si+0xb1]        ; the voice's rate scales DeFreq and blur like overallscale
-    and bx,3
-    shl bx,1
-    mov ax,[cs:bx+FXOST]
-    mov [FXOS],ax
-    mov ax,[cs:bx+FXFTT]
-    mov [FXF],ax
-    mov al,[FXDF]           ; freq = DeFreq^3 * F >> 32
-    mul al
-    xor dh,dh
-    mov dl,[FXDF]
-    mul dx
-    mov cx,ax
-    mov bx,dx
-    mul word [FXF]
-    push dx
-    mov ax,bx
-    mul word [FXF]
-    pop bx
-    add ax,bx
-    adc dx,0
-    mov [FXFREQ],dx
+    call FXFQ               ; FXOS, FXF, FXFREQ from the voice's rate (fx5k.asm)
     call THNEED
     jnz .nt
     call THBUILD
@@ -469,8 +448,8 @@ FXPAR:              ; all render/live parameters from the CCs; LVLP = fast loop 
     mov ax,[bx+LPM]
 .w: mov [LVLP],ax
     ret
-LPW: dw 0,FXLT,FXLT,FXLC,FXLR,FXLT,1,FXLV7,SVLV,FXLXW,FXLDW,FXLBW,FXLEW,FXLQW
-LPM: dw 0,FXLTM,FXLTM,FXLCM,FXLRM,FXLTM,1,FXLV7M,SVLV,FXLX,FXLD,FXLB,FXLE,FXLQ
+LPW: dw 0,FXLT,FXLT,FXLKW,FXLR,FXLT,1,FXLV7,SVLV,FXLXW,FXLDW,FXLBW,FXLEW,FXLQW
+LPM: dw 0,FXLTM,FXLTM,FXLKM,FXLRM,FXLTM,1,FXLV7M,SVLV,FXLX,FXLD,FXLB,FXLE,FXLQ
 RINGPAR:            ; carrier step (16.16 per sample) from CC94 and the voice rate, locked to the active loop; RTAB shape
     call L61DB
     mov bl,[FXRF]
@@ -1070,18 +1049,9 @@ LVCHK:              ; process (or, in bypass, restore) up to 128 words at LVSEGI
     jmp .dd
 .np: cmp byte [FXM],6
     jz .dd                  ; (Karplus-Strong segment too short: left unprocessed)
-    cmp byte [FXM],7
-    jnz .nt7
-    push ax
+.nt7: push ax                 ; decimator / linear crush hold: place in the block, held word (DCQ, fx5k.asm)
     push dx
-    call TUPREP
-    pop dx
-    pop ax
-.nt7: cmp byte [FXM],10       ; decimator: place in the block, held word
-    jnz .nt10
-    push ax
-    push dx
-    call DCPREP
+    call DCQ
     pop dx
     pop ax
 .nt10: cmp byte [FXM],12       ; echo: the delayed clean words
@@ -1623,6 +1593,84 @@ FXLCM:              ; linear crush with mix
     ret
 .of: call MIXOV
     jmp .j
+; ---- DeFreq hold length, shared by render and live linear crush
+FXFQ:               ; si = voice: FXOS, FXF and FXFREQ (DeFreq hold in words) from the voice's rate (keeps si)
+    mov bl,[si+0xb1]        ; the voice's rate scales DeFreq and blur like overallscale
+    and bx,3
+    shl bx,1
+    mov ax,[cs:bx+FXOST]
+    mov [FXOS],ax
+    mov ax,[cs:bx+FXFTT]
+    mov [FXF],ax
+    mov al,[FXDF]           ; freq = DeFreq^3 * F >> 32
+    mul al
+    xor dh,dh
+    mov dl,[FXDF]
+    mul dx
+    mov cx,ax
+    mov bx,dx
+    mul word [FXF]
+    push dx
+    mov ax,bx
+    mul word [FXF]
+    pop bx
+    add ax,bx
+    adc dx,0
+    mov [FXFREQ],dx
+    ret
+FXLKW:              ; linear crush, fully wet (LPW): with DeFreq (live) = held crushed words (DCQ, fx5k.asm); otherwise FXLC
+    cmp word [FXFREQ],1     ; (render takes this loop only without DeFreq; live: FXFREQ from DCQ)
+    ja .k
+    jmp FXLC
+.k: mov dx,[FXPOS]
+    mov bx,[DCN]
+    mov ax,[FXHELD]
+    call CRU
+.l: or dx,dx
+    jnz .h
+    mov ax,[es:si]
+    call CRU
+.h: mov [es:si],ax
+    inc dx
+    cmp dx,bx
+    jb .n
+    xor dx,dx
+.n: add si,2
+    loop .l
+    ret
+FXLKM:              ; linear crush with mix (LPM): with DeFreq (live) = held crushed words, mixed; otherwise FXLCM
+    cmp word [FXFREQ],1
+    ja .k
+    jmp FXLCM
+.k: mov di,[FXPOS]
+    mov ax,[FXHELD]
+    call CRU
+    mov bp,ax
+.l: or di,di
+    jnz .h
+    mov ax,[es:si]
+    call CRU
+    mov bp,ax
+.h: mov ax,bp
+    mov bx,[es:si]          ; out = dry + ((wet - dry) * FXW >> 14)
+    sub ax,bx
+    jo .of
+    imul word [FXW]
+.j: shl ax,1
+    rcl dx,1
+    shl ax,1
+    rcl dx,1
+    add dx,bx
+    mov [es:si],dx
+    inc di
+    cmp di,[DCN]
+    jb .n
+    xor di,di
+.n: add si,2
+    loop .l
+    ret
+.of: call MIXOV
+    jmp .j
 FXLR:               ; ring mod, fully wet: phase bp.di (16.16)
     mov bp,[FXRPI]
     mov di,[FXRPF]
@@ -1840,29 +1888,6 @@ TLOOK:              ; ax = input sample -> Tube2 static curve (table + interpola
     mov ah,dl
     add ax,[bx+THT]
     ret
-TUPREP:             ; live: FXTP = curve of the clean word just before this chunk
-    mov ax,[LVPOS]
-    or ax,[LVPOS+2]
-    jz .z
-    mov ax,[LVPOS]
-    mov dx,[LVPOS+2]
-    add ax,[LVSO]
-    adc dx,[LVSO+2]
-    add ax,[LVSRC]
-    adc dx,[LVSRC+2]
-    sub ax,1
-    sbb dx,0
-    mov di,LVTMP
-    mov cx,1
-    call LVRDX
-    mov ax,[LVTMP]
-    jmp .lk
-.z: mov ax,[LVBUF]
-.lk: call TLOOK
-    mov [FXTP],ax
-    push ds
-    pop es
-    ret
 FXLU:               ; Tube2: static curve, then the slew stage, clamp, mix
 .l: push cx
     mov ax,[es:si]
@@ -1884,40 +1909,9 @@ FXLU:               ; Tube2: static curve, then the slew stage, clamp, mix
     shr ax,2
     mov bx,16384
     add bx,ax
-.sg: mov ax,di              ; y -= y*|y|*s*gs
-    mov cx,ax
-    or cx,cx
-    jns .a
-    neg cx
-.a: imul cx
-    shl ax,1
-    rcl dx,1
-    mov ax,dx
-    imul bx
-    shl ax,1
-    rcl dx,1
-    shl ax,1
-    rcl dx,1
-    mov ax,dx
-    imul word [TGS]
-    shl ax,1
-    rcl dx,1
-    sub di,dx
-    cmp di,17039            ; clamp +/-0.52, then x 1.923
-    jle .c1
-    mov di,17039
-.c1: cmp di,-17039
-    jge .c2
-    mov di,-17039
-.c2: mov ax,di
-    mov bx,2521
-    imul bx
-    not dx
-    neg ax
-    sbb dx,-1
-    add dx,di
-    shl ax,1
-    rcl dx,1
+.sg: mov ax,di              ; y -= y*|y|*s*gs, clamp, x 1.923 (TUPOST, fx5k.asm)
+    call TUPOST
+    mov dx,ax
     cmp word [FXW],16384
     jz .st
     mov ax,dx

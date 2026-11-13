@@ -1,5 +1,14 @@
 # FZED Menu Revision
 
+## Linear Crush DeFreq Live; Tube2 Render Overflow Fixed (next)
+
+- FZED: Linear Crush's frequency reduction (DeFreq, CC114) now works live as well as on render. Live uses the decimator's block placement with the hold length render uses (from DeFreq and the voice's rate), and crushes each held word, so the live result is the render's word for word: emulator check at holds of 3, 12, 13 and 26 words, fully wet and mixed, at three voice rates. Cost per pass is about the same as before (fully wet 19,365 V50 clocks against 19,603 without the hold; mixed 31,367 against 29,411).
+- FZED: Tube2's render no longer clicks at high Pad settings. A fast fall at high level overflowed the slew stage's 16 bits and flipped the word's sign (a full-scale click); it now saturates. On an SU10 test sample at Pad 100% / Amount 73% this changed 42 words; at Pad 74% / Amount 35% and 50% / 50% nothing changed. Live Tube2 is unchanged.
+- How (space): the Tube2 slew stage is one routine (`TUPOST`, lv) shared by render and the live curve build; the DeFreq hold length is one routine (`FXFQ`) shared by render and live; the per-chunk setup Tube2 live no longer needed (`TUPREP`) is gone. Free: high area 28 bytes, lv 13.
+- Emulator check: render gives the same words as before in all 150 cases except the one overflowing word in the Pad 110 / Amount 20 Tube2 case (fully wet and mixed); sweep and chase are unchanged in every case; live, render, live again on Tube2 at Pad 100/73 and 110/20 matches the fixed model word for word.
+- The measurement build (`LVMEASURE=1`) no longer fits: the lv area has 13 bytes free.
+- Manual: Linear Crush's frequency reduction is no longer listed as render-only.
+
 ## Tube2 Live Without The Slew Stage (next)
 
 - FZED: live Tube2 now leaves out the slew stage, the part that reacts to how fast the wave is moving. Render is unchanged and still runs it, the same way Linear Crush's frequency reduction is render-only. Live keeps the static curve together with the slew stage's effect at zero slew, its clamp and its gain, built into the curve table, so each live word is one table lookup (and the Wet/Dry mix). In the emulator a fully wet live pass drops from 108,810 to 29,841 clocks (3.6 times faster) and a mixed pass from 114,783 to 39,687. Measured on the FZ, Tube2 ran at about 2,700-2,800 words per second fully wet; it should now come out near TapeHack (about 9,500).

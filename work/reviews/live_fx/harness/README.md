@@ -50,6 +50,16 @@ python3 -I prof.py /tmp/old 10 127 SQRTQ          # per-routine and per-instruct
 maps executed addresses to source lines through the build's `fzed.lst`. `lvh.py` is the harness
 itself; `sig.py` is the test voice.
 
+## Linear crush DeFreq, live against render
+
+```sh
+python3 -I crusheq.py /tmp/new RATE DEFREQ MIX BITS     # e.g. 0 127 127 90: rate index 0, hold 26 words
+```
+
+runs live linear crush with DeFreq over the test voice at the given voice rate index (0-3), then renders the
+same settings, and prints whether the two give the same words. The `runeq.sh` fixture plays at rate index 3,
+where DeFreq below about 127 gives a hold of 1 word, so it does not exercise the hold.
+
 ## Things to know
 
 - **DS = 1000h.** `tests/emu.py` treats any DS other than 0 as unknown memory. `lvh.py` wraps
