@@ -196,7 +196,8 @@ SVMCHK2:            ; PERF38I, SVPAR: the filter map is cleared once when the fi
     jmp SVMAPCHK            ; filter: as before
 .r: ret
 
-GAPENT:             ; |x| = 64k: crossover (x - T) * 32767 / (32767 - T) morphing to a pulse of GAPA as CC116 rises
+GAPENT:             ; |x| = 64k: crossover (x - T) * 32767 / (32767 - T) morphing to fuzz (GAPA * |x| / T, clipped at
+                    ; GAPA) as CC116 rises
     mov ax,cx
     shl ax,6
     sub ax,[GAPT]
@@ -212,7 +213,18 @@ GAPENT:             ; |x| = 64k: crossover (x - T) * 32767 / (32767 - T) morphin
 .cl: mov ax,32767
 .cr: mov bx,GAPA
     jmp short .mx
-.z: xor ax,ax
+.z: mov ax,cx              ; |x| <= T: crossover 0; fuzz rises to GAPA at T (T is the fuzz's clip point, so quiet
+    shl ax,6                ; material is not gated to silence)
+    mov bx,GAPA
+    mul bx
+    mov bx,[GAPT]
+    or bx,bx
+    jz .z0                  ; T = 0: here |x| = 0
+    div bx
+    mov bx,ax
+    xor ax,ax
+    jmp short .mx
+.z0: xor ax,ax
     xor bx,bx
 .mx: sub bx,ax              ; y = cross + (fuzz - cross) * c / 127
     push ax

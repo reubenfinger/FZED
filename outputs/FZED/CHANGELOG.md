@@ -1,5 +1,12 @@
 # FZED Menu Revision
 
+## XOver Fuzz No Longer Silences Quiet Material (next)
+
+- FZED: at the fuzz end of XOver Fuzz, the threshold is now the clip point instead of a gate. Below the threshold the signal rises in proportion to full fuzz level; above it, it is clipped at full fuzz level, as before. Before, everything quieter than the threshold came out as silence, so at middle and high thresholds most of a sample vanished (on an SU10 test sample at threshold 29%, 89% of the words were below it). The crossover end is unchanged (its dead zone is the effect), and CC116 still blends between the two. Live speed is unchanged: the curve is still one table.
+- Emulator check: the curve FZED builds equals the new formula in every entry at eight threshold / blend settings, including threshold 0.
+- Space: 26 bytes of the high area (2 left).
+- Manual: the effects table explains the threshold at each end of XOver Fuzz, and says Tube2's Amount has most effect at lower Pad settings (higher Pad drives more of the signal into Tube2's output clamp). That is how Tube2 works, not a change.
+
 ## Linear Crush DeFreq Live; Tube2 Render Overflow Fixed (next)
 
 - FZED: Linear Crush's frequency reduction (DeFreq, CC114) now works live as well as on render. Live uses the decimator's block placement with the hold length render uses (from DeFreq and the voice's rate), and crushes each held word, so the live result is the render's word for word: emulator check at holds of 3, 12, 13 and 26 words, fully wet and mixed, at three voice rates. Cost per pass is about the same as before (fully wet 19,365 V50 clocks against 19,603 without the hold; mixed 31,367 against 29,411).

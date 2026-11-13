@@ -464,7 +464,7 @@ Delete Unused and Normalise are separate FX-page commands, not parameters of the
 | --- | --- |
 | TapeHack | Coloured nonlinear sample processing; input drive and output level |
 | Wavefolder | Fold the waveform for added harmonics; fold drive and output |
-| Xover Fuzz | Crossover dead-zone/fuzz character; threshold and crossover-to-fuzz blend |
+| Xover Fuzz | Crossover dead-zone/fuzz character; threshold and crossover-to-fuzz blend. At the crossover end the threshold is a dead zone, so material quieter than it drops out; at the fuzz end it is the clip point, so a lower threshold gives more fuzz and quiet material is never silenced |
 | Rectifier | Partial/full half- or full-wave rectification; rectify and DC trim |
 | Decimator | Sample-and-hold style coarsening; hold in sample words; second effect control unused |
 | Linear Crush | Reduce effective amplitude resolution; bits control; frequency reduction (DeFreq) works live and on render; two effect controls unused |
@@ -472,7 +472,7 @@ Delete Unused and Normalise are separate FX-page commands, not parameters of the
 | Echo / Comb | Delayed/reflected sample combination; delay in words, signed gain; one echo or three reflections |
 | Position | Reorder sample windows; reverse, stutter or scramble, plus window size |
 | Ring Mod | Multiply by a modulation waveform; ring frequency and sine/square shape |
-| Tube2 | Nonlinear saturation character; pad and tube amount; the slew stage, which adds bite on fast-moving, bright material, is render-only, so Tube2 live is a little smoother than its render |
+| Tube2 | Nonlinear saturation character; pad and tube amount (Amount has most effect at lower Pad settings, about 30-60%: higher Pad drives more of the signal into Tube2's output clamp, which sounds the same whatever the Amount); the slew stage, which adds bite on fast-moving, bright material, is render-only, so Tube2 live is a little smoother than its render |
 | Karplus-Strong | Resonant/feedback processing; KS note and feedback |
 | Filter | Software effect filter, separate from the FZ DCF; cutoff, resonance, low/band/high-pass type and filter mix |
 | TapeHack > Pockey2 | Combined processing chain; render-only live setting |

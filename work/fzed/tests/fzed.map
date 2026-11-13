@@ -1462,16 +1462,17 @@ Real              Virtual           Name
             B737              B737  GAPENT.cl
             B73A              B73A  GAPENT.cr
             B73F              B73F  GAPENT.z
-            B743              B743  GAPENT.mx
-            B759              B759  CAPGO
-            B766              B766  CAPGO.vm
-            B771              B771  CAPGO.ok
-            B787              B787  CAPGO.e
-            B7BF              B7BF  CAPGO.bad
-            B7CA              B7CA  CAPGO.r
-            B7CB              B7CB  CMIDI
-            B7D2              B7D2  CSYC
-            B7DA              B7DA  CAPINIT
+            B759              B759  GAPENT.z0
+            B75D              B75D  GAPENT.mx
+            B773              B773  CAPGO
+            B780              B780  CAPGO.vm
+            B78B              B78B  CAPGO.ok
+            B7A1              B7A1  CAPGO.e
+            B7D9              B7D9  CAPGO.bad
+            B7E4              B7E4  CAPGO.r
+            B7E5              B7E5  CMIDI
+            B7EC              B7EC  CSYC
+            B7F4              B7F4  CAPINIT
             B7FE              B7FE  SIG
 
 ---- Section lv ---------------------------------------------------------------
