@@ -913,7 +913,8 @@ LVFINDPH:           ; playhead of the first note playing the voice (or a slice):
     mov [LVSEGI],al
     stc
     ret
-LVRUN:              ; main loop: copy step, or re-render 128 words: 3 of 4 chunks chase the playhead, 1 sweeps
+LVRUN:              ; main loop: copy step, or re-render 128 words: chunks chase the playhead until the chase is 512
+                    ; words ahead, then one sweeps (FZED; was 3 of 4 chase, 1 sweeps); at least 1 pass in 8 sweeps
     mov al,[LVON]
     or al,al
     jnz .a
@@ -941,7 +942,7 @@ LVRUN:              ; main loop: copy step, or re-render 128 words: 3 of 4 chunk
     jnz .nd
     call CURVEQ             ; PERF38H: only a changed curve, built in steps
 .nd: inc byte [LVCNT]
-    test byte [LVCNT],3
+    test byte [LVCNT],7
     jz .sw
     call LVFINDPH
     jc .sw
@@ -957,6 +958,7 @@ LVRUN:              ; main loop: copy step, or re-render 128 words: 3 of 4 chunk
     jnz .jp
     cmp ax,512
     jb .kp
+    jmp LVLEAD              ; FZED: chase 512 words ahead: back to the playhead, and this pass sweeps
 .jp: mov al,[LVPHS]
     mov [LVCSG],al
     mov ax,[LVPHO]

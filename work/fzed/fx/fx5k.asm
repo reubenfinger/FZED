@@ -145,7 +145,66 @@ LVRUNX:             ; main loop: paced LCD, a step of a curve being built, then 
 .on: cmp word [CBK],0xffff
     jz .w
     call CBSTEP
-.w: jmp LVRUNW
+.w:
+%ifdef LVMEASURE
+    call LVRUNW
+    jmp LVMEAS
+%else
+    jmp LVRUNW
+%endif
+
+LVLEAD:             ; FZED: from LVRUN, the chase cursor is 512 words ahead of the playhead: put it back on the
+    mov al,[LVPHS]          ; playhead's chunk for the next chase, and give this pass to the sweep
+    mov [LVCSG],al
+    mov ax,[LVPHO]
+    and ax,0xff80
+    mov [LVCPOS],ax
+    mov ax,[LVPHO+2]
+    mov [LVCPOS+2],ax
+    jmp LVRUN.sw
+
+%ifdef LVMEASURE
+; ---- measurement build only (build with LVMEASURE=1 sh build.sh): words of live processing per second on line 3,
+; 'LV nnnnnn W/S'. Counts LVNN (words done by the pass's last LVCHK) while live runs or bypasses; one second =
+; 103680 units of the ROM timer word 040Ah (32 per interrupt at the measured 3240 interrupts per second).
+LVMEAS:
+    mov al,[LVON]
+    cmp al,2
+    jb .t
+    cmp al,3
+    ja .t
+    mov ax,[LVNN]
+    mov word [LVNN],0
+    add [cs:.w],ax
+    adc word [cs:.w+2],0
+.t: mov ax,[0x40a]
+    mov dx,ax
+    sub ax,[cs:.last]
+    mov [cs:.last],dx
+    add [cs:.el],ax
+    adc word [cs:.el+2],0
+    cmp word [cs:.el+2],1
+    jb .r
+    ja .p
+    cmp word [cs:.el],0x9500
+    jb .r
+.p: sub word [cs:.el],0x9500
+    sbb word [cs:.el+2],1
+    mov ax,[cs:.w]
+    mov dx,[cs:.w+2]
+    mov word [cs:.w],0
+    mov word [cs:.w+2],0
+    mov di,.s+8
+    mov cx,6
+    call DECN
+    mov bx,.s
+    jmp NMSG
+.r: ret
+.w: dw 0,0
+.el: dw 0,0
+.last: dw 0
+.s: db 'LV 000000 W/S',0
+%endif
 
 ; ---- curve tables: one entry function for every curve mode, full builds (render, mode change) and builds in steps
 FXMOFP:             ; FXPAR: internal mode; XOVER FUZZ (14) runs as TapeHack with GAPF = 1
