@@ -2089,9 +2089,9 @@ Real              Virtual           Name
             E9B0              D5B0  WVT.pl
             E9B7              D5B7  WVT.r
             E9B8              D5B8  WVT.tri
-            E9BF              D5BF  WVT.t1
-            E9C5              D5C5  WVT.sin
-            E9C7              D5C7  WVT.dsin
-            E9DC              D5DC  SIN
-            EA06              D606  S_WV
+            E9C2              D5C2  WVT.t1
+            E9C8              D5C8  WVT.sin
+            E9CA              D5CA  WVT.dsin
+            E9DF              D5DF  SIN
+            EA09              D609  S_WV
 

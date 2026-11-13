@@ -153,7 +153,8 @@ WVT: dw .saw,.sq,.p25,.p12,.tri,.sin,.dsin
     jb .r
     neg ax
 .r: ret
-.tri: test ax,0x8000
+.tri: add ax,0x4000           ; FZED: start a quarter cycle in, at zero going up: no step from silence at note-on
+    test ax,0x8000
     jz .t1
     not ax
 .t1: shl ax,1

@@ -1,5 +1,9 @@
 # FZED Menu Revision
 
+## Triangle Wave Starts At Zero (next)
+
+- FZED: the Triangle preset wave now starts a quarter cycle in, at zero going up, instead of at its lowest point. Starting at full level made a slight click at note-on. The wave's shape, level and loop are unchanged; only where the cycle starts moved.
+
 ## Live FX Chase Gets More Time (next)
 
 - FZED: live FX now give the work near the playing note more of the CPU. The chase (the 512 words just ahead of the playhead) runs every pass until it is 512 words ahead, then one pass goes to the sweep (the rest of the sample); at least one pass in eight always sweeps. Before, three passes in four chased and one swept, whatever the chase's lead. In the emulator a fast playhead gets 11-14% more chase chunks.
