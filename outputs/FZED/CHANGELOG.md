@@ -1,5 +1,13 @@
 # FZED Menu Revision
 
+## Tube2 Live Without The Slew Stage (next)
+
+- FZED: live Tube2 now leaves out the slew stage, the part that reacts to how fast the wave is moving. Render is unchanged and still runs it, the same way Linear Crush's frequency reduction is render-only. Live keeps the static curve together with the slew stage's effect at zero slew, its clamp and its gain, built into the curve table, so each live word is one table lookup (and the Wet/Dry mix). In the emulator a fully wet live pass drops from 108,810 to 29,841 clocks (3.6 times faster) and a mixed pass from 114,783 to 39,687. Measured on the FZ, Tube2 ran at about 2,700-2,800 words per second fully wet; it should now come out near TapeHack (about 9,500).
+- The sound live: on an SU10 test sample the difference from the full render is 44-51 dB below the signal, a little less bite on bright, fast-moving material.
+- How: the live curve has its own key (Tube2 + 32) while live runs, so a render (which turns live off first) builds the full curve and live builds its own on the next pass. The Tube2 entries in the fast-loop tables point to new loops that run FXLU when live is off. Space: 237 bytes of the lv area (116 left); the high area is unchanged.
+- Emulator check: render gives the same words as before in all 150 cases; sweep and chase are unchanged in every mode except Tube2, whose live output matches a word-exact model of the new loop fully wet and at five Wet/Dry settings; live, then render, then live again gives the full render and the live curve each time.
+- Manual: the effects table says the slew stage is render-only.
+
 ## Triangle Wave Starts At Zero (next)
 
 - FZED: the Triangle preset wave now starts a quarter cycle in, at zero going up, instead of at its lowest point. Starting at full level made a slight click at note-on. The wave's shape, level and loop are unchanged; only where the cycle starts moved.

@@ -472,7 +472,7 @@ Delete Unused and Normalise are separate FX-page commands, not parameters of the
 | Echo / Comb | Delayed/reflected sample combination; delay in words, signed gain; one echo or three reflections |
 | Position | Reorder sample windows; reverse, stutter or scramble, plus window size |
 | Ring Mod | Multiply by a modulation waveform; ring frequency and sine/square shape |
-| Tube2 | Nonlinear saturation character; pad and tube amount |
+| Tube2 | Nonlinear saturation character; pad and tube amount; the slew stage, which adds bite on fast-moving, bright material, is render-only, so Tube2 live is a little smoother than its render |
 | Karplus-Strong | Resonant/feedback processing; KS note and feedback |
 | Filter | Software effect filter, separate from the FZ DCF; cutoff, resonance, low/band/high-pass type and filter mix |
 | TapeHack > Pockey2 | Combined processing chain; render-only live setting |

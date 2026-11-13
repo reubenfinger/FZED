@@ -1523,29 +1523,41 @@ Real              Virtual           Name
             BAFC              BAFC  FXMOFP
             BB0F              BB0F  FXMOFP.r
             BB10              BB10  CKNOW
-            BB23              BB23  CINIT
-            BB39              BB39  CINIT.ng
-            BB58              BB58  CINIT.r
-            BB59              BB59  CENT
-            BB63              BB63  CENT.n7
-            BB6D              BB6D  CENT.t2
-            BB70              BB70  CBLD
-            BB70              BB70  CBLD.l
-            BB85              BB85  CBLD.r
-            BB86              BB86  THBUILD
-            BBB5              BBB5  CURVEQ
-            BBD8              BBD8  CURVEQ.ch
-            BBEF              BBEF  CURVEQ.r
-            BBF0              BBF0  CBSTEP
-            BC00              BC00  CBSTEP.go
-            BC12              BC12  CBSTEP.b
-            BC58              BC58  CBSTEP.r
-            BC59              BC59  CAPTICK
-            BC63              BC63  CAPTICK.n
-            BC66              BC66  CAPMX
-            BC70              BC70  CAPMX.n
-            BC73              BC73  CAPRE
-            BC90              BC90  CZERO
+            BB27              BB27  CKNOW.k
+            BB30              BB30  CINIT
+            BB46              BB46  CINIT.ng
+            BB65              BB65  CINIT.r
+            BB66              BB66  CENT
+            BB7A              BB7A  CENT.r7
+            BB7B              BB7B  CENT.n7
+            BB85              BB85  CENT.t2
+            BB88              BB88  CBLD
+            BB88              BB88  CBLD.l
+            BB9D              BB9D  CBLD.r
+            BB9E              BB9E  THBUILD
+            BBCD              BBCD  CURVEQ
+            BBF0              BBF0  CURVEQ.ch
+            BC07              BC07  CURVEQ.r
+            BC08              BC08  CBSTEP
+            BC18              BC18  CBSTEP.go
+            BC2A              BC2A  CBSTEP.b
+            BC70              BC70  CBSTEP.r
+            BC71              BC71  TUBAKE
+            BC7B              BC7B  TUBAKE.a
+            BC96              BC96  TUBAKE.c1
+            BC9F              BC9F  TUBAKE.c2
+            BCB6              BCB6  FXLV7
+            BCC0              BCC0  FXLV7.l
+            BCF1              BCF1  FXLV7M
+            BCFB              BCFB  FXLV7M.l
+            BD2E              BD2E  FXLV7M.j
+            BD41              BD41  FXLV7M.of
+            BD46              BD46  CAPTICK
+            BD50              BD50  CAPTICK.n
+            BD53              BD53  CAPMX
+            BD5D              BD5D  CAPMX.n
+            BD60              BD60  CAPRE
+            BD7D              BD7D  CZERO
 
 ---- Section xt ---------------------------------------------------------------
 

@@ -469,8 +469,8 @@ FXPAR:              ; all render/live parameters from the CCs; LVLP = fast loop 
     mov ax,[bx+LPM]
 .w: mov [LVLP],ax
     ret
-LPW: dw 0,FXLT,FXLT,FXLC,FXLR,FXLT,1,FXLU,SVLV,FXLXW,FXLDW,FXLBW,FXLEW,FXLQW
-LPM: dw 0,FXLTM,FXLTM,FXLCM,FXLRM,FXLTM,1,FXLU,SVLV,FXLX,FXLD,FXLB,FXLE,FXLQ
+LPW: dw 0,FXLT,FXLT,FXLC,FXLR,FXLT,1,FXLV7,SVLV,FXLXW,FXLDW,FXLBW,FXLEW,FXLQW
+LPM: dw 0,FXLTM,FXLTM,FXLCM,FXLRM,FXLTM,1,FXLV7M,SVLV,FXLX,FXLD,FXLB,FXLE,FXLQ
 RINGPAR:            ; carrier step (16.16 per sample) from CC94 and the voice rate, locked to the active loop; RTAB shape
     call L61DB
     mov bl,[FXRF]
