@@ -25,7 +25,7 @@ def run(bd, live):
             elif m[0] != 0xf8: st = None
             if len(m) > 1 and r.random() < .3: m = m[:1] + [0xf8] + m[1:]     # realtime byte inside a message
             bs += m
-        h.put(*bs[:200]); h.passes_run(r.randrange(1, 30))
+        h.put(*bs[:int(os.environ.get("BURST", "200"))]); h.passes_run(r.randrange(1, 30))
     h.passes_run(400)
     skip = set(range(0x4000, 0x6000)) | {h.MAP.get('CCN', 0xD2DB)}
     ram = bytes(b for i, b in enumerate(h.c.m[0x8000:0xD400]) if (i + 0x8000) not in skip)

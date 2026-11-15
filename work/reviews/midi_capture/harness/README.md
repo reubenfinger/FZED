@@ -12,3 +12,4 @@ Build a scratch copy first (`cp -r work/fzed /tmp/b && sh /tmp/b/build.sh`), the
   bursts) into two builds; compares the CCs applied, the clock count and the LCD.
 
 All clock figures are emulator counts with data-sheet timings. ROM calls are stubbed and cost nothing here.
+- `python3 -I clk.py OLD NEW`: passes until a clock byte queued behind 0, 20 and 60 CCs is counted.

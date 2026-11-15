@@ -141,12 +141,25 @@ At 120 BPM clocks are 20.8 ms apart, so a 13 ms pass already makes steps uneven 
 - **Check** (`harness/eqmidi.py`, 60 random bursts with running status, realtime bytes inside messages, notes, bend, SysEx; with live off and on): the same 142 CCs applied in the same order with the same values, the same clock count, the same last LCD lines with live off. Time-dependent state (LFO phase, live cursor, LCD lines with live on) differs, as expected for tier (b). I did not go through every differing RAM byte.
 - **Risk:** up to four CCs (about 12 ms on the FZ, 40 ms each for loop-start CCs) now run before the next key check and matrix pass. Filter still falls behind above about 110 CCs a second; a higher limit, or "until the ring is empty, at most eight", would cover it at more cost to live FX.
 
+### B2 + C1. Clock scan and ring guard (tier b and tier c; built, tested in the emulator)
+
+`diffs/b2_c1_clock_scan_ring_guard.diff`, against `next` (it does not include B1; the two overlap in the low area, see Bytes).
+
+- **B2, clock scan** (`RTSCAN`, `fx/matrixz.asm`, in front of `PARSE`). Once a pass, a second read index (`RTI`, D2DCh) runs over everything in the ring and hands only realtime bytes to `RTB2`. `PARSE` now skips realtime bytes.
+  - Result (`harness/clk.py`): a clock byte behind 20 or 60 queued CCs is counted in 1 pass; on `next` it takes 21 and 61 passes.
+  - It is still read once a pass, so the pass length (about 13 ms with TapeHack) remains as jitter. It no longer waits behind CCs and is no longer lost when CCs are dropped.
+- **C1, ring guard** (`RGUARD`, `fzed.asm`). Once a pass: if FZED's reader is 200 or more bytes behind the ROM's writer, it jumps to the newest byte and clears running status, so data bytes are ignored until the next status byte.
+  - Result (`harness/t2.py`, TapeHack live, 120 CCs a second): the backlog stops at 201 bytes, nothing arrives on a full ring, nothing is misread, and the worst wait falls from 708 to 550 ms. It still applies only 64 CCs a second: the guard prevents misreads, it does not add throughput.
+  - What a user notices: in a sweep too fast for FZED, a block of about 65 CCs is dropped at once and the control jumps to the current value. Notes in the dropped block are also missed by FZED's own held-note tracking (the ROM still plays them), which can leave the pattern restart or LFO 2 retrigger state wrong until the next note. A controller that never repeats its status byte gets no CCs until it sends one.
+- **Check** (`harness/eqmidi.py`, bursts of up to 60 bytes so the guard does not fire): the same 142 CCs in the same order with the same values, and the same clock count, with live off and on. Time-dependent state differs, as with B1.
+- **Bytes:** low area 15 used, 1 left; high area unchanged at 2. The room comes from: `L6398a` removed (the LOAD ERR wait now calls `L6398` 1,600 times, the same length); the redundant `push ax` / `pop ax` around `DISPATCH`; in `PARSE`, CC2-4 stored through one indexed write, poly pressure sharing channel pressure's store, and SysEx sharing the status path. None of those four changes was tested on its own beyond the check above.
+- **With B1:** B1 needs 9 more bytes in the low area than this leaves. Both together need room found elsewhere. I would take B1 first: it removes the backlog, which makes the guard a safety net and the clock scan a smaller gain.
+- **Risk:** `RGUARD` reads FZED's index at 8016h through DS, not CS as `L6331` does; both are 0 in FZED. Not run on hardware.
+
 ### Not built (ideas only, no code, untested)
 
-- **Count clocks ahead of the backlog (tier b).** A second read index that runs over the whole ring once a pass and handles only realtime bytes, with `PARSE` then skipping them. Clock would never wait behind CCs. About 35 bytes in the high area, which has 2: the room would have to come from tightening `PARSE`'s CC1-4 chain or from moving code out.
 - **Shorter idle wait (tier b).** `L6398` (`fzed.asm:2756`) waits 24,600 clocks, which is about 10.6 ms on the FZ, not the 3 ms its comment says. Halving the constant halves idle clock lateness. No bytes. It needs a check that nothing relies on the pace.
 - **Tier (a), faster byte fetch.** `PARSE` costs 330-380 clocks a byte, much of it the `call L6331` and its CS-override index updates. Inlining the read could save perhaps a third of `PARSE`. It is small next to B1.
-- **Ring protection (tier c).** FZED cannot see a wrap after it happens. It could detect a backlog over about 200 bytes and jump its index forward to the next status byte, losing CCs deliberately but never misreading them.
 - **The ROM's own clock counter.** The ROM counts clock bytes at 0DF0h inside its interrupt when 0DEFh is 1 (ROM 0E80h-0EB5h); it is off (FFh) by default. Turning it on would give FZED a count that is never late, but the same flag makes the ROM's note call log events to a buffer at 0BE2h (ROM 287Ah). Unverified; I would not use it without a hardware test.
 - **On the controller side:** no code change in FZED removes the limit of about 50-70 CCs a second with live FX on today. Limiting each knob to about 20 messages a second on the Gills would keep three knobs inside it.
 
@@ -163,7 +176,7 @@ At 120 BPM clocks are 20.8 ms apart, so a 13 ms pass already makes steps uneven 
 ## 8. Not done
 
 - No capture measurements, tiers or example code.
-- No tier (a) example and no example for the clock or ring ideas.
+- No tier (a) example. B1 and B2 + C1 are separate diffs that do not fit together as they stand.
 - The speed gap is not explained; the test overlay in section 3 is not written.
 - No MAME runs. LCD line cost not estimated.
 - The running-status mis-parse after a wrap is argued from the code, not reproduced.

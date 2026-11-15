@@ -15,7 +15,9 @@ class M(lvh.H):
         s.lp = s.addr('MAIN', 'call L6372')
         s.passes = 0; s.stage = {}
         for st in STAGES:
-            a = s.addr('MAIN', 'call ' + st); s.stage[st] = a
+            try: a = s.addr('MAIN', 'call ' + st)
+            except KeyError: a = s.addr('MAIN', 'call RTSCAN')       # builds with the clock scan (diff B2) enter PARSE through it
+            s.stage[st] = a
             s.span(st, a, a + s.lst[a][1])
         s.span('pass', s.lp, s.lp)
         s.hooks = []                      # callables run before every instruction: f(h)
