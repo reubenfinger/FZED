@@ -30,6 +30,7 @@ IQC equ 0xC3EA              ; [2] data count
 RSTAT equ MISC+0x100        ; MIDI running status
 RDCNT equ MISC+0x101
 RD1 equ MISC+0x102
+RTI equ 0xD2DC              ; review diff B2: read index for realtime bytes (word, high byte 0; free RAM)
 RNDS equ MISC+0x104         ; word
 MXR equ MISC+0x106          ; record being evaluated
 MXCH equ MISC+0x107
@@ -148,19 +149,28 @@ RAND:               ; al = random byte
     pop dx
     ret
 
+RTSCAN:             ; review diff B2: every pass, first take the realtime bytes (clock, start, stop) from the whole ring
+.l: mov bl,[RTI]            ; with their own read index, so a clock never waits behind queued CCs; PARSE skips them
+    cmp bl,[0x9d8]
+    jz .g
+    xor bh,bh
+    inc byte [RTI]
+    mov al,[bx+0x8d6]
+    cmp al,0xf8
+    jb .l
+    call RTB2
+    jmp .l
+.g: call RGUARD             ; review diff C1 (fzed.asm): a backlog of 200 bytes or more is dropped before the ring wraps
 PARSE:              ; MIDI in (running status): notes/pressure/bend/CC1-4 feed the matrix; CC10-110, 112-119 returned (CF=0, al = value)
     call L6331
     jc .r
     cmp al,0xf8
-    jb .nr
-    call RTB2
-    jmp PARSE
-.nr: cmp al,0x80
+    jae PARSE               ; realtime: RTSCAN has counted it
+    cmp al,0x80
     jb .dat
     cmp al,0xf0
     jb .st
-    mov byte [RSTAT],0      ; system common / SysEx: no running status
-    jmp PARSE
+    xor al,al               ; system common / SysEx: no running status
 .st: mov [RSTAT],al
     mov byte [RDCNT],0
     jmp PARSE
@@ -177,7 +187,7 @@ PARSE:              ; MIDI in (running status): notes/pressure/bend/CC1-4 feed t
 .chk: and dl,0xf0
     cmp dl,0xd0
     jnz .nat
-    mov [bx+CAT],al         ; channel pressure
+.cat: mov [bx+CAT],al        ; channel pressure
     jmp PARSE
 .nat: cmp dl,0xc0
     jz PARSE
@@ -189,9 +199,7 @@ PARSE:              ; MIDI in (running status): notes/pressure/bend/CC1-4 feed t
 .d2: mov byte [RDCNT],0
     mov ah,[RD1]            ; ah = first data byte, al = second
     cmp dl,0xa0             ; poly pressure: use as channel aftertouch
-    jnz .npa
-    mov [bx+CAT],al
-    jmp PARSE
+    jz .cat
 .npa: cmp dl,0x90
     jnz .non
     or al,al
@@ -221,17 +229,13 @@ PARSE:              ; MIDI in (running status): notes/pressure/bend/CC1-4 feed t
     jnz .c2
     mov [bx+CMW],al
     jmp PARSE
-.c2: cmp ah,2
-    jnz .c3
-    mov [bx+CM2],al
-    jmp PARSE
-.c3: cmp ah,3
-    jnz .c4
-    mov [bx+CM3],al
-    jmp PARSE
-.c4: cmp ah,4
-    jnz .c5
-    mov [bx+CM4],al
+.c2: cmp ah,4                ; CC2-4: CM2 / CM3 / CM4 are 16 bytes apart
+    ja .c5
+    mov cl,ah
+    shl cl,4
+    xor ch,ch
+    add bx,cx
+    mov [bx+CM2-0x20],al
     jmp PARSE
 .c5: cmp ah,5               ; CC5 = glide time
     jnz .c9

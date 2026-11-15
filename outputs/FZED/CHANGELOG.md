@@ -1,5 +1,14 @@
 # FZED Menu Revision
 
+## MIDI Keeps Up With Fast Knob Sweeps (next)
+
+- FZED: a main-loop pass can now apply up to four CCs instead of one, from the MIDI review (`work/reviews/midi_capture/`, diff B1). With a live effect on, CCs no longer queue up behind the live FX: in the emulator, scaled to the FZ's measured speed, three knobs at 120 CCs a second all land with TapeHack on (worst wait 14 ms, was 705 ms) and 109 a second with Filter on (was 35).
+- FZED: MIDI clock no longer waits behind queued CCs (diff B2). A clock byte behind 60 CCs is counted in the next pass instead of 61 passes later, so a clocked pattern stays even while you sweep.
+- FZED: if FZED ever falls 200 or more bytes behind the FZ's 256-byte MIDI receive buffer, it now skips to the newest byte instead of letting the buffer wrap (diff C1). Nothing is misread; a burst too fast to follow drops about 65 CCs at once and the control jumps to its current value.
+- With chop slices, a CC that copies its settings to every slice ends that pass's batch, so ESC, ENTER, the key check, the LFOs and the matrix keep today's timing (32 slices: at most about 145 ms between key checks; with four CCs it would have been about 575 ms). With slices the CC rate is limited by the copy to every slice either way.
+- Checks (emulator): the same CCs, in the same order with the same values, and the same MIDI clock count as before on random streams (running status, realtime bytes inside messages, bursts, SysEx); start-up values unchanged and ESC still exits; the source voice and all 32 slices end with the same settings as before; live FX sweep, chase and render output identical in all 430 cases. Not yet tested on hardware.
+- Space: the low area is full (0 bytes free); the room came from tightening start-up writes, the key check and three paths in the MIDI parser (all checked above).
+
 ## XOver Fuzz No Longer Silences Quiet Material (next)
 
 - FZED: at the fuzz end of XOver Fuzz, the threshold is now the clip point instead of a gate. Below the threshold the signal rises in proportion to full fuzz level; above it, it is clipped at full fuzz level, as before. Before, everything quieter than the threshold came out as silence, so at middle and high thresholds most of a sample vanished (on an SU10 test sample at threshold 29%, 89% of the words were below it). The crossover end is unchanged (its dead zone is the effect), and CC116 still blends between the two. Live speed is unchanged: the curve is still one table.
