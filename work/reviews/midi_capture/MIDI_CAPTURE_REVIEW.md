@@ -156,6 +156,18 @@ At 120 BPM clocks are 20.8 ms apart, so a 13 ms pass already makes steps uneven 
 - **With B1:** B1 needs 9 more bytes in the low area than this leaves. Both together need room found elsewhere. I would take B1 first: it removes the backlog, which makes the guard a safety net and the clock scan a smaller gain.
 - **Risk:** `RGUARD` reads FZED's index at 8016h through DS, not CS as `L6331` does; both are 0 in FZED. Not run on hardware.
 
+### All three together (built, tested in the emulator)
+
+`diffs/all_b1_b2_c1.diff`, against `next`: B1, B2 and C1 in one build. Low area 3 bytes free, high area 2.
+
+- **Results:** TapeHack live at 120 CCs a second: all applied, wait 7 ms median and 14 ms worst, backlog 6 bytes at most. Filter live: 109 of 120 a second, backlog 141 bytes at most, so the guard does not fire. A clock byte behind 60 queued CCs is counted in 1 pass. `eqmidi.py`: the same 142 CCs, order, values and clock count as `next`.
+- **Where the extra bytes came from** (all in start-up or the key check, none in the MIDI path):
+  - six start-up zero writes to neighbouring variables (81EDh-81F2h, and `CHOWN`) became four word writes: 18 bytes;
+  - `ZCM` and `TSENS` (8242h / 8243h) are set in one word write: 4 bytes;
+  - the key check `L6372` saves registers with `pusha` / `popa`: 3 bytes.
+- **Check of those** (`harness/initchk.py`): the start-up values of all those variables match `next`, and ESC still leaves FZED. `L6372` uses 6 more bytes of stack during FZ call 6 than before.
+- The clock scan and guard run once a pass, not once per CC.
+
 ### Not built (ideas only, no code, untested)
 
 - **Shorter idle wait (tier b).** `L6398` (`fzed.asm:2756`) waits 24,600 clocks, which is about 10.6 ms on the FZ, not the 3 ms its comment says. Halving the constant halves idle clock lateness. No bytes. It needs a check that nothing relies on the pace.
@@ -176,7 +188,7 @@ At 120 BPM clocks are 20.8 ms apart, so a 13 ms pass already makes steps uneven 
 ## 8. Not done
 
 - No capture measurements, tiers or example code.
-- No tier (a) example. B1 and B2 + C1 are separate diffs that do not fit together as they stand.
+- No tier (a) example.
 - The speed gap is not explained; the test overlay in section 3 is not written.
 - No MAME runs. LCD line cost not estimated.
 - The running-status mis-parse after a wrap is argued from the code, not reproduced.
