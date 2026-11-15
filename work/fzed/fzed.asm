@@ -7,6 +7,7 @@ org 0x6000
     add sp,2+%2
 %endmacro
 STATE equ 0x8018
+CCN equ 0xD2DB              ; review diff B1: CCs left in this pass (free RAM)
 LASTCC equ 0x8019
 BUF equ 0x8020
 ORIG equ 0x80D0
@@ -151,21 +152,14 @@ MAIN0:
     xor cx,cx
     mov dx,6
     call PRT
-    mov cx,200
-.w: call L6398a
+    mov cx,1600             ; (review: the same wait with L6398; L6398a went for room)
+.w: call L6398
     loop .w
     push word 7
     push word 0
     push word 0x57
     call L6004
     add sp,6
-    ret
-L6398a:
-    push cx
-    mov cx,0x3000
-.l: nop
-    loop .l
-    pop cx
     ret
 PRT:
     push cs
@@ -209,14 +203,12 @@ MAIN:
     mov word [LOUT],0x8000
     mov word [LRND],0x1234
     mov byte [CHN],8
-    mov byte [ZCM],1
-    mov byte [TSENS],64
-    mov byte [CHARM],0
-    mov byte [DARM],0
-    mov byte [CHCNT],0
-    mov word [CHBANK],0
-    mov word [CHOWN],0
-    mov byte [CHPLAY],0
+    mov word [ZCM],0x4001   ; (review: ZCM 1 and TSENS 64, neighbours at 8242h / 8243h, in one write)
+    xor ax,ax               ; (review: CHARM, DARM, CHCNT, CHBANK, CHPLAY are 81EDh-81F2h in a row: three word writes;
+    mov [CHARM],ax          ; the same zeros as the six separate writes, 18 bytes less)
+    mov [CHCNT],ax
+    mov [CHBANK+1],ax
+    mov [CHOWN],ax
     mov word [CHOKV],0xff   ; PERF40A: choke off, slice 1
     mov byte [CPARM],1
     mov word [VPICK],0x00ff ; PERF40H: no voice picked, no remote exit
@@ -253,6 +245,7 @@ MAIN:
 .nt: call STAT2             ; PERF40H: line 2 = the voice (or bank) being edited                        ; (PERF38E: no start-up audition note, no fixed output writes)
     mov ax,[0x9d8]
     mov [cs:0x8016],ax
+    mov [RTI],ax
     mov byte [cs:STATE],0
 .lp:
     call L6372
@@ -281,17 +274,19 @@ MAIN:
     call MATRIX
     call RVPATCH
     call LVRUNX             ; PERF38H: paced LCD, curve steps, then live FX
-    call PARSE
-    jc .idle
+    mov byte [CCN],4        ; review diff B1: up to 4 CCs a pass
+    call RTSCAN             ; review diffs B2 / C1: realtime bytes and the backlog guard, then PARSE (falls through)
+    jmp short .pj
+.pa: call PARSE              ; (2nd to 4th CC of a pass: the clock scan and guard run once a pass, not once a CC)
+.pj: jc .idle
     call MROUTE             ; bank CCs; bank mode: edit the voice on this CC's channel
     jnc .mr
     jmp .lp
 .mr:
-    push ax
-    call DISPATCH
-.sk:
-    pop ax
+    call DISPATCH           ; (keeps ax itself; the push / pop here went for room)
     call ECHOF              ; PERF38I: decimal echo, only for controls without their own message
+    dec byte [CCN]
+    jnz .pa
     jmp .lp
 .idle:
     mov al,[RST]
@@ -2723,11 +2718,7 @@ L6372:
     mov byte [EXITR],0
     xor ah,ah
     ret
-.k: push bx
-    push cx
-    push dx
-    push si
-    push di
+.k: pusha                    ; (review: pusha / popa with ax written into the saved frame: 3 bytes less than five pushes and pops)
     push word 0x6
     call L6004
     add sp,byte 0x2
@@ -2747,12 +2738,19 @@ L638E:
 L638F:
     mov ax,0x1
 L6392:
-    pop di
-    pop si
-    pop dx
-    pop cx
-    pop bx
+    mov bp,sp
+    mov [bp+14],ax          ; the saved ax
+    popa
     ret
+RGUARD:             ; review diff C1: FZED's reader 200 or more bytes behind the ROM's writer: jump to the newest byte and
+    mov al,[0x9d8]          ; drop running status, so nothing is misread when the 256-byte ring would have wrapped.
+    mov ah,al               ; Data bytes are then ignored until the next status byte. (DS = CS = 0, as everywhere here.)
+    sub ah,[0x8016]
+    cmp ah,200
+    jb .r
+    mov [0x8016],al
+    mov byte [RSTAT],0
+.r: ret
 L6398:
     push ax
     push cx
