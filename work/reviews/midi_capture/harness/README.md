@@ -13,3 +13,5 @@ Build a scratch copy first (`cp -r work/fzed /tmp/b && sh /tmp/b/build.sh`), the
 
 All clock figures are emulator counts with data-sheet timings. ROM calls are stubbed and cost nothing here.
 - `python3 -I clk.py OLD NEW`: passes until a clock byte queued behind 0, 20 and 60 CCs is counted.
+- `SHARE=0.29 python3 -I slicesweep.py BUILD 127 KNOBS RATE SECONDS`: the same sweep with 32 chop slices active; reports the
+  longest gap between key checks. With `OUT=file.json` it saves the CCs applied and the source and slice settings, to compare two builds.
