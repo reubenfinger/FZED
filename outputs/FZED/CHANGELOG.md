@@ -1,22 +1,26 @@
 # FZED Menu Revision
 
-## MIDI Keeps Up With Fast Knob Sweeps (next)
+# v1.1 (16 November 2026)
+
+Everything from here down to v1.0, tested on a real FZ-1. Live FX words-per-second readings from the measurement build are still to be taken; they are for the record, not a pass/fail test.
+
+## MIDI Keeps Up With Fast Knob Sweeps (v1.1)
 
 - FZED: a main-loop pass can now apply up to four CCs instead of one, from the MIDI review (`work/reviews/midi_capture/`, diff B1). With a live effect on, CCs no longer queue up behind the live FX: in the emulator, scaled to the FZ's measured speed, three knobs at 120 CCs a second all land with TapeHack on (worst wait 14 ms, was 705 ms) and 109 a second with Filter on (was 35).
 - FZED: MIDI clock no longer waits behind queued CCs (diff B2). A clock byte behind 60 CCs is counted in the next pass instead of 61 passes later, so a clocked pattern stays even while you sweep.
 - FZED: if FZED ever falls 200 or more bytes behind the FZ's 256-byte MIDI receive buffer, it now skips to the newest byte instead of letting the buffer wrap (diff C1). Nothing is misread; a burst too fast to follow drops about 65 CCs at once and the control jumps to its current value.
 - With chop slices, a CC that copies its settings to every slice ends that pass's batch, so ESC, ENTER, the key check, the LFOs and the matrix keep today's timing (32 slices: at most about 145 ms between key checks; with four CCs it would have been about 575 ms). With slices the CC rate is limited by the copy to every slice either way.
-- Checks (emulator): the same CCs, in the same order with the same values, and the same MIDI clock count as before on random streams (running status, realtime bytes inside messages, bursts, SysEx); start-up values unchanged and ESC still exits; the source voice and all 32 slices end with the same settings as before; live FX sweep, chase and render output identical in all 430 cases. Not yet tested on hardware.
+- Checks (emulator): the same CCs, in the same order with the same values, and the same MIDI clock count as before on random streams (running status, realtime bytes inside messages, bursts, SysEx); start-up values unchanged and ESC still exits; the source voice and all 32 slices end with the same settings as before; live FX sweep, chase and render output identical in all 430 cases. Tested on the FZ-1: about 20 minutes of a MIDI sequence with polyphony and three CCs, across several live effects, with no glitches.
 - Space: the low area is full (0 bytes free); the room came from tightening start-up writes, the key check and three paths in the MIDI parser (all checked above).
 
-## XOver Fuzz No Longer Silences Quiet Material (next)
+## XOver Fuzz No Longer Silences Quiet Material (v1.1)
 
 - FZED: at the fuzz end of XOver Fuzz, the threshold is now the clip point instead of a gate. Below the threshold the signal rises in proportion to full fuzz level; above it, it is clipped at full fuzz level, as before. Before, everything quieter than the threshold came out as silence, so at middle and high thresholds most of a sample vanished (on an SU10 test sample at threshold 29%, 89% of the words were below it). The crossover end is unchanged (its dead zone is the effect), and CC116 still blends between the two. Live speed is unchanged: the curve is still one table.
 - Emulator check: the curve FZED builds equals the new formula in every entry at eight threshold / blend settings, including threshold 0.
 - Space: 26 bytes of the high area (2 left).
 - Manual: the effects table explains the threshold at each end of XOver Fuzz, and says Tube2's Amount has most effect at lower Pad settings (higher Pad drives more of the signal into Tube2's output clamp). That is how Tube2 works, not a change.
 
-## Linear Crush DeFreq Live; Tube2 Render Overflow Fixed (next)
+## Linear Crush DeFreq Live; Tube2 Render Overflow Fixed (v1.1)
 
 - FZED: Linear Crush's frequency reduction (DeFreq, CC114) now works live as well as on render. Live uses the decimator's block placement with the hold length render uses (from DeFreq and the voice's rate), and crushes each held word, so the live result is the render's word for word: emulator check at holds of 3, 12, 13 and 26 words, fully wet and mixed, at three voice rates. Cost per pass is about the same as before (fully wet 19,365 V50 clocks against 19,603 without the hold; mixed 31,367 against 29,411).
 - FZED: Tube2's render no longer clicks at high Pad settings. A fast fall at high level overflowed the slew stage's 16 bits and flipped the word's sign (a full-scale click); it now saturates. On an SU10 test sample at Pad 100% / Amount 73% this changed 42 words; at Pad 74% / Amount 35% and 50% / 50% nothing changed. Live Tube2 is unchanged.
@@ -25,7 +29,7 @@
 - The measurement build (`LVMEASURE=1`) no longer fits: the lv area has 13 bytes free.
 - Manual: Linear Crush's frequency reduction is no longer listed as render-only.
 
-## Tube2 Live Without The Slew Stage (next)
+## Tube2 Live Without The Slew Stage (v1.1)
 
 - FZED: live Tube2 now leaves out the slew stage, the part that reacts to how fast the wave is moving. Render is unchanged and still runs it, the same way Linear Crush's frequency reduction is render-only. Live keeps the static curve together with the slew stage's effect at zero slew, its clamp and its gain, built into the curve table, so each live word is one table lookup (and the Wet/Dry mix). In the emulator a fully wet live pass drops from 108,810 to 29,841 clocks (3.6 times faster) and a mixed pass from 114,783 to 39,687. Measured on the FZ, Tube2 ran at about 2,700-2,800 words per second fully wet; it should now come out near TapeHack (about 9,500).
 - The sound live: on an SU10 test sample the difference from the full render is 44-51 dB below the signal, a little less bite on bright, fast-moving material.
@@ -33,31 +37,33 @@
 - Emulator check: render gives the same words as before in all 150 cases; sweep and chase are unchanged in every mode except Tube2, whose live output matches a word-exact model of the new loop fully wet and at five Wet/Dry settings; live, then render, then live again gives the full render and the live curve each time.
 - Manual: the effects table says the slew stage is render-only.
 
-## Triangle Wave Starts At Zero (next)
+## Triangle Wave Starts At Zero (v1.1)
 
-- FZED: the Triangle preset wave now starts a quarter cycle in, at zero going up, instead of at its lowest point. Starting at full level made a slight click at note-on. The wave's shape, level and loop are unchanged; only where the cycle starts moved.
+- FZED: the Triangle preset wave now starts a quarter cycle in, at zero going up, instead of at its lowest point. Starting at full level made a slight click at note-on. The wave's shape, level and loop are unchanged; only where the cycle starts moved. Checked on the FZ-1: no click.
 
-## Live FX Chase Gets More Time (next)
+## Live FX Chase Gets More Time (v1.1)
 
 - FZED: live FX now give the work near the playing note more of the CPU. The chase (the 512 words just ahead of the playhead) runs every pass until it is 512 words ahead, then one pass goes to the sweep (the rest of the sample); at least one pass in eight always sweeps. Before, three passes in four chased and one swept, whatever the chase's lead. In the emulator a fast playhead gets 11-14% more chase chunks.
 - The processed sound is the same in every mode except Karplus-Strong, whose live result depends on the order chunks are processed in by design.
 - For testing: `LVMEASURE=1 sh build.sh` makes a measurement build that shows live words per second on line 3 (`LV nnnnnn W/S`), timed by the FZ's timer at the measured 3,240 interrupts per second.
 
-## Faster Live FX (next)
+## Faster Live FX (v1.1)
 
 - FZED: live FX passes are shorter, from the live FX review's sets 1 and 2 (`work/reviews/live_fx/`): a faster read of each chunk into the live buffer, tighter inner loops, a one-multiply Wet/Dry mix, and fully wet loops for rectifier, decimator and echo / comb (in the space the wave overlay freed). The sound is unchanged: every mode and setting in the emulator comparison (sweep, chase and render) gives the same words as before.
-- Needs a hardware soak test: the faster read briefly changes a CPU segment register while interrupts can arrive (see the review's section on DS).
+- The faster read briefly changes a CPU segment register while interrupts can arrive (see the review's section on DS). Soak-tested on the FZ-1 with the MIDI test above: no glitches.
 
-## Preset Waves From The FZED Disk (next)
+## Preset Waves From The FZED Disk (v1.1)
 
 - FZED: the preset wave generator moved from resident memory into a disk overlay (sector 50), freeing about 495 bytes in the crowded lv code area for later work. The seven waves come out word for word as before, with the same messages and refusals (emulator check `work/fzed/tests/wave40.py`).
 - Loading a wave now reads FZED's disk when the overlay isn't already in memory (after a render, capture, tool or buffer-using live effect): keep the FZED disk in the drive, or the FZ shows TOOLS NOT LOADED.
 - Capture and bank mode are still refused with WAVE: REFUSED before the overlay loads. If the FZ's own calls ever push the stack into the overlay's end, the load is refused rather than run on damaged code.
 
-## Loop Mode ORIGINAL Restores Loop Points
+## Loop Mode ORIGINAL Restores Loop Points (v1.1)
 
 - FZED: Loop Mode ORIGINAL now also puts the voice's loop points back as they were when FZED took the voice (it already restored the loop times and the sustain / end loop). A preset wave's perfect loop comes back after Loop Start / End have moved it. Moving Loop Start / End afterwards works from the knob position as before. STRETCH OFF keeps the loop points you set before Stretch (with the voice's own loop times and sustain / end loop, as before); choose ORIGINAL after it for the voice's own points. Space: the three copies of the voice's loop table share one routine, which freed the bytes.
 - Manual: leaving with ENTER (Keep Sound) while Stretch is on keeps the stretch loops but puts the start and end back (a Cut Lead-In start is not kept); Keep All Of Edit Voice or Keep All saves it as heard. The manual had said ENTER kept the moved start.
+
+# v1.0
 
 ## Stretch Sustain At Names
 
