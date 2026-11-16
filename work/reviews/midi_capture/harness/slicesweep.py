@@ -1,6 +1,6 @@
 # t2 with chop slices: chop CC99 slices of the test voice first (127 = 32 slices), then sweep knobs. Reports CC timing,
 # the longest gap between key checks, and (OUT=file.json) the CCs applied and every slice's settings, to compare builds.
-# whether every slice ends with the source voice's settings (CHPROP).  usage: SHARE=0.29 python3 t2s.py BUILD CC99 KNOBS RATE SECS
+# usage: SHARE=0.29 python3 -I slicesweep.py BUILD CC99 KNOBS RATE SECS   (MH = the harness folder, default this one)
 import os, sys
 H = os.environ.get('MH') or os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, H)
 import mh
