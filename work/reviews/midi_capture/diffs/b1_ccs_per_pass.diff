@@ -1,0 +1,33 @@
+--- base/fzed.asm	2026-11-15 21:45:27.978068243 +0000
++++ new/fzed.asm	2026-11-15 21:55:43.834012339 +0000
+@@ -7,6 +7,7 @@
+     add sp,2+%2
+ %endmacro
+ STATE equ 0x8018
++CCN equ 0xD2DB              ; review diff B1: CCs left in this pass (free RAM D2DBh)
+ LASTCC equ 0x8019
+ BUF equ 0x8020
+ ORIG equ 0x80D0
+@@ -281,17 +282,17 @@
+     call MATRIX
+     call RVPATCH
+     call LVRUNX             ; PERF38H: paced LCD, curve steps, then live FX
+-    call PARSE
++    mov byte [CCN],4        ; review diff B1: up to 4 CCs a pass (was 1), so a live chunk no longer sets the CC rate
++.pa: call PARSE
+     jc .idle
+     call MROUTE             ; bank CCs; bank mode: edit the voice on this CC's channel
+     jnc .mr
+     jmp .lp
+ .mr:
+-    push ax
+-    call DISPATCH
+-.sk:
+-    pop ax
++    call DISPATCH           ; (keeps ax: its own push / pop; MXCAP does not change it. The push / pop here went for room)
+     call ECHOF              ; PERF38I: decimal echo, only for controls without their own message
++    dec byte [CCN]
++    jnz .pa
+     jmp .lp
+ .idle:
+     mov al,[RST]

@@ -1,0 +1,111 @@
+diff a/work/fzed/fx/fx4m.asm b/work/fzed/fx/fx4m.asm
+--- a/work/fzed/fx/fx4m.asm
++++ b/work/fzed/fx/fx4m.asm
+@@ -254,6 +254,57 @@
+     add ax,dx
+     ret
+ 
++FXLXW:              ; rectifier, fully wet
++.l: mov ax,[es:si]
++    or ax,ax
++    jns .p
++    imul word [RCK]
++    shl ax,1
++    rcl dx,1
++    mov ax,dx
++.p: sub ax,[RCDC]
++    jno .m
++    mov ax,0x8000
++.m: mov [es:si],ax
++    add si,2
++    loop .l
++    ret
++FXLDW:              ; decimator, fully wet: block place and held word in registers
++    mov dx,[FXPOS]
++    mov bx,[DCN]
++    mov ax,[FXHELD]
++.l: or dx,dx
++    jnz .h
++    mov ax,[es:si]
++.h: mov [es:si],ax
++    inc dx
++    cmp dx,bx
++    jb .n
++    xor dx,dx
++.n: add si,2
++    loop .l
++    mov [FXPOS],dx
++    mov [FXHELD],ax
++    ret
++FXLEW:              ; echo / comb, fully wet
++    mov di,DBUF
++    mov bx,[EG]
++.l: mov ax,[di]
++    imul bx
++    shl ax,1
++    rcl dx,1
++    mov ax,[es:si]
++    add dx,ax
++    jno .m
++    mov dx,0x7fff
++    or ax,ax
++    jns .m
++    mov dx,0x8000
++.m: mov [es:si],dx
++    add si,2
++    add di,2
++    loop .l
++    ret
+ NEWVOICE:           ; CC16: choose the first empty voice after an armed rising edge
+                     ; FZ Voice Edit selector at ROM 0x787B-0x7892 sets evn/ev/segment at E02/E04/E06.
+     cmp byte [BKON],0
+diff a/work/fzed/fx/fxkz.asm b/work/fzed/fx/fxkz.asm
+--- a/work/fzed/fx/fxkz.asm
++++ b/work/fzed/fx/fxkz.asm
+@@ -469,7 +469,7 @@
+     mov ax,[bx+LPM]
+ .w: mov [LVLP],ax
+     ret
+-LPW: dw 0,FXLT,FXLT,FXLC,FXLR,FXLT,1,FXLU,SVLV,FXLX,FXLD,FXLBW,FXLE,FXLQW
++LPW: dw 0,FXLT,FXLT,FXLC,FXLR,FXLT,1,FXLU,SVLV,FXLXW,FXLDW,FXLBW,FXLEW,FXLQW
+ LPM: dw 0,FXLTM,FXLTM,FXLCM,FXLRM,FXLTM,1,FXLU,SVLV,FXLX,FXLD,FXLB,FXLE,FXLQ
+ RINGPAR:            ; carrier step (16.16 per sample) from CC94 and the voice rate, locked to the active loop; RTAB shape
+     call L61DB
+@@ -1221,20 +1221,16 @@
+ .ok: cmp word [FXW],16384
+     jz .st
+     push bx
+-    push dx
+     mov ax,dx
++    mov bx,[si]
++    sub ax,bx
++    jo .of
+     imul word [FXW]
+-    mov bx,ax
+-    mov di,dx
+-    mov ax,[si]
+-    imul word [FXW2]
+-    add ax,bx
+-    adc dx,di
+-    shr ax,14
+-    shl dx,2
+-    or ax,dx
+-    mov dx,ax
+-    pop bx
++.j: shl ax,1
++    rcl dx,1
++    shl ax,1
++    rcl dx,1
++    add dx,bx
+     pop bx
+ .st: mov [si],dx
+     add si,2
+@@ -1242,6 +1238,8 @@
+     loop .l
+     pop es
+     ret
++.of: call MIXOV
++    jmp .j
+ LVCPY:              ; making the clean copy, 128 words per main-loop pass (MIDI keeps flowing)
+     mov ax,[LVLEN]
+     mov dx,[LVLEN+2]

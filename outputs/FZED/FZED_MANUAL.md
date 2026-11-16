@@ -259,14 +259,14 @@ Capture length and rate are relatively slow destinations. Their updates now take
 | Function | Meaning |
 | --- | --- |
 | Sample Start / End | Requested sample playback bounds, scaled to the voice's available data |
-| Loop Mode | One-shot, original voice behaviour, or loop; the FZ shows ONE-SHOT, ORIGINAL or LOOP. One-shot stays one-shot when Sample End, Loop Start / End or the window move afterwards; those positions are remembered for Loop and Original |
+| Loop Mode | One-shot, original voice behaviour, or loop; the FZ shows ONE-SHOT, ORIGINAL or LOOP. Original puts the voice's own loops back exactly as they were when FZED took the voice: loop points, loop times and the sustain / end loop, so a preset wave's perfect loop returns after Loop Start / End have moved it. One-shot stays one-shot when Sample End, Loop Start / End or the window move afterwards; those positions are remembered for Loop |
 | Loop Start / End | Requested loop bounds |
 | Loop Crossfade | The FZ sample crossfade setting, useful for changing loop/playback character; not the capture fade or an external audio crossfader |
 | Window Position | Move the loop window while retaining its window relationship |
 | Window Snap | Free movement, zero-cross snapping, or whole frames |
 | Play Mode | Original, Reverse or Cue; the FZ shows ORIGINAL, REVERSE or CUE. Cue enables the bend/Cue sample-position scrub path; it is not an extra sample slot |
 | Preset Wave | Select one of the seven original waveforms: Saw, Square, Pulse 25%, Pulse 12%, Triangle, Sine or Double Sine |
-| Load Selected Wave | Deliberately replace/generate the selected preset wave |
+| Load Selected Wave | Deliberately replace/generate the selected preset wave. FZED reads the wave generator from its disk when needed, so keep the FZED disk in the drive (on an HxC, keep FZED selected); otherwise the FZ shows TOOLS NOT LOADED |
 
 These position controls are not absolute sample-number entry or a waveform editor with point readback. Firmware may constrain the result, and sample/loop validity matters. Zero-cross snapping can reduce discontinuities but cannot guarantee an inaudible edit in every sample. Capture guards refuse loop-window position/snap changes during capture.
 
@@ -289,7 +289,7 @@ Stretch cuts the voice's play range (start to end) into 2-8 back-to-back segment
 | Next / Lead-In | TRACE: after a loop's time, play on through the material to the next loop. SKIP: jump straight to it. A loop earlier in the sample is always a jump. CUT LEAD-IN: start the note at the first loop instead of the sample start |
 | Order | Forward, Reverse, There + Back (for example 1 3 5 7 8 6 4 2) or Shuffle 1-8 (each one a fixed order) |
 | Skew | Even in the middle. Below: earlier segments hold longer and later ones shorter (speeding up); above: the reverse |
-| Stretch On/Off | On builds the loops. Off puts the voice's own loops (and its start, if Cut Lead-In moved it) back |
+| Stretch On/Off | On builds the loops. Off puts the loops back as they were before Stretch: your loop points as you last set them, with the voice's own loop times and sustain / end loop (and its start, if Cut Lead-In moved it). Loop Mode Original then gives the voice's own loop points |
 
 With Cut Lead-In and Reverse or Shuffle, the voice's start point moves to the first loop. The software keeps your own start point and works the segments out from it; it is put back by Play, Forward or Stretch Off. If you move the start yourself meanwhile, that becomes the new start. Leaving with ENTER (Keep Sound) while Stretch is on keeps the stretch loops, but puts the voice's own start and end back, so after Cut Lead-In the saved voice plays the lead-in before the loops. To save it exactly as heard, leave with Keep All Of Edit Voice or Keep All.
 
@@ -464,15 +464,15 @@ Delete Unused and Normalise are separate FX-page commands, not parameters of the
 | --- | --- |
 | TapeHack | Coloured nonlinear sample processing; input drive and output level |
 | Wavefolder | Fold the waveform for added harmonics; fold drive and output |
-| Xover Fuzz | Crossover dead-zone/fuzz character; threshold and crossover-to-fuzz blend |
+| Xover Fuzz | Crossover dead-zone/fuzz character; threshold and crossover-to-fuzz blend. At the crossover end the threshold is a dead zone, so material quieter than it drops out; at the fuzz end it is the clip point, so a lower threshold gives more fuzz and quiet material is never silenced |
 | Rectifier | Partial/full half- or full-wave rectification; rectify and DC trim |
 | Decimator | Sample-and-hold style coarsening; hold in sample words; second effect control unused |
-| Linear Crush | Reduce effective amplitude resolution; bits control; frequency reduction is render-only; two effect controls unused |
+| Linear Crush | Reduce effective amplitude resolution; bits control; frequency reduction (DeFreq) works live and on render; two effect controls unused |
 | Bit Mangle | XOR masks applied to high and low sample bits; intentionally abrupt/digital results |
 | Echo / Comb | Delayed/reflected sample combination; delay in words, signed gain; one echo or three reflections |
 | Position | Reorder sample windows; reverse, stutter or scramble, plus window size |
 | Ring Mod | Multiply by a modulation waveform; ring frequency and sine/square shape |
-| Tube2 | Nonlinear saturation character; pad and tube amount |
+| Tube2 | Nonlinear saturation character; pad and tube amount (Amount has most effect at lower Pad settings, about 30-60%: higher Pad drives more of the signal into Tube2's output clamp, which sounds the same whatever the Amount); the slew stage, which adds bite on fast-moving, bright material, is render-only, so Tube2 live is a little smoother than its render |
 | Karplus-Strong | Resonant/feedback processing; KS note and feedback |
 | Filter | Software effect filter, separate from the FZ DCF; cutoff, resonance, low/band/high-pass type and filter mix |
 | TapeHack > Pockey2 | Combined processing chain; render-only live setting |

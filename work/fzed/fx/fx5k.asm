@@ -145,7 +145,66 @@ LVRUNX:             ; main loop: paced LCD, a step of a curve being built, then 
 .on: cmp word [CBK],0xffff
     jz .w
     call CBSTEP
-.w: jmp LVRUNW
+.w:
+%ifdef LVMEASURE
+    call LVRUNW
+    jmp LVMEAS
+%else
+    jmp LVRUNW
+%endif
+
+LVLEAD:             ; FZED: from LVRUN, the chase cursor is 512 words ahead of the playhead: put it back on the
+    mov al,[LVPHS]          ; playhead's chunk for the next chase, and give this pass to the sweep
+    mov [LVCSG],al
+    mov ax,[LVPHO]
+    and ax,0xff80
+    mov [LVCPOS],ax
+    mov ax,[LVPHO+2]
+    mov [LVCPOS+2],ax
+    jmp LVRUN.sw
+
+%ifdef LVMEASURE
+; ---- measurement build only (build with LVMEASURE=1 sh build.sh): words of live processing per second on line 3,
+; 'LV nnnnnn W/S'. Counts LVNN (words done by the pass's last LVCHK) while live runs or bypasses; one second =
+; 103680 units of the ROM timer word 040Ah (32 per interrupt at the measured 3240 interrupts per second).
+LVMEAS:
+    mov al,[LVON]
+    cmp al,2
+    jb .t
+    cmp al,3
+    ja .t
+    mov ax,[LVNN]
+    mov word [LVNN],0
+    add [cs:.w],ax
+    adc word [cs:.w+2],0
+.t: mov ax,[0x40a]
+    mov dx,ax
+    sub ax,[cs:.last]
+    mov [cs:.last],dx
+    add [cs:.el],ax
+    adc word [cs:.el+2],0
+    cmp word [cs:.el+2],1
+    jb .r
+    ja .p
+    cmp word [cs:.el],0x9500
+    jb .r
+.p: sub word [cs:.el],0x9500
+    sbb word [cs:.el+2],1
+    mov ax,[cs:.w]
+    mov dx,[cs:.w+2]
+    mov word [cs:.w],0
+    mov word [cs:.w+2],0
+    mov di,.s+8
+    mov cx,6
+    call DECN
+    mov bx,.s
+    jmp NMSG
+.r: ret
+.w: dw 0,0
+.el: dw 0,0
+.last: dw 0
+.s: db 'LV 000000 W/S',0
+%endif
 
 ; ---- curve tables: one entry function for every curve mode, full builds (render, mode change) and builds in steps
 FXMOFP:             ; FXPAR: internal mode; XOVER FUZZ (14) runs as TapeHack with GAPF = 1
@@ -157,11 +216,16 @@ FXMOFP:             ; FXPAR: internal mode; XOVER FUZZ (14) runs as TapeHack wit
     mov al,1
 .r: ret
 
-CKNOW:              ; al ah dl = key of the curve the settings ask for
+CKNOW:              ; al ah dl = key of the curve the settings ask for; +32 = Tube2's live curve (LVON = 2)
     mov al,[GAPF]
     shl al,4
     or al,[FXM]
-    mov ah,[FXIN]
+    cmp al,7
+    jnz .k
+    cmp byte [LVON],2
+    jnz .k
+    or al,0x20
+.k: mov ah,[FXIN]
     mov dl,[FXOUT]
     ret
 
@@ -189,7 +253,11 @@ CINIT:              ; snapshot what the entries use
 CENT:               ; cx = entry k -> ax
     cmp byte [FXM],7
     jnz .n7
-    jmp TUENT
+    call TUENT
+    cmp byte [LVON],2       ; live (render turns live off first): the slew stage at zero slew is built in
+    jnz .r7
+    jmp TUBAKE
+.r7: ret
 .n7: cmp byte [GAPF],0
     jz .t2
     jmp GAPENT
@@ -289,3 +357,140 @@ CBSTEP:             ; one step: 32 entries into CSH; after the last, THT takes t
     jmp CURVEQ              ; settings moved on meanwhile: start the next one
 .r: ret
 
+; ---- Tube2 live: no slew stage. The live curve (CKNOW +32) holds the static curve with FXLU's slew stage at zero
+; slew, its clamp and x1.923 built in, so a live word is one lookup (and the mix). Render keeps FXLU.
+TUPOST:             ; Tube2 slew stage (FXLU, render): ax = curve value y, bx = slew factor (Q14) -> ax:
+    mov bp,[TGS]            ; y -= y*|y|*s*gs, clamp +/-0.52, x 1.923
+TUPB:               ; bp = gain scaling
+    mov di,ax
+    mov cx,ax
+    or cx,cx
+    jns .a
+    neg cx
+.a: imul cx
+    shl ax,1
+    rcl dx,1
+    mov ax,dx               ; t = y*|y|
+    imul bx                 ; (t * s) >> 14, saturated: a fast fall at high levels overflowed 16 bits and
+    mov cx,dx               ; flipped the word's sign (full-scale clicks at high pad). Fits when dx is
+    add cx,0x2000           ; -2000h..1FFFh
+    cmp cx,0x3fff
+    ja .s
+    shl ax,1
+    rcl dx,1
+    shl ax,1
+    rcl dx,1
+    jmp .k
+.s: mov dx,0x7fff           ; s > 0, so the sign is t's (y's)
+    or di,di
+    jns .k
+    inc dx
+.k: mov ax,dx
+    imul bp
+    shl ax,1
+    rcl dx,1
+    sub di,dx
+    cmp di,17039
+    jle .c1
+    mov di,17039
+.c1: cmp di,-17039
+    jge .c2
+    mov di,-17039
+.c2: mov ax,di
+    mov bx,2521
+    imul bx
+    not dx
+    neg ax
+    sbb dx,-1
+    add dx,di
+    shl ax,1
+    rcl dx,1
+    mov ax,dx
+    ret
+TUBAKE:             ; ax = static curve value -> live curve value: the slew stage at zero slew (s = 1.0, TGSN for
+    mov bx,16384            ; the curve being built)
+    mov bp,[TGSN]
+    jmp TUPB
+FXLV7:              ; Tube2, fully wet (LPW): live = the live curve only; render = FXLU
+    cmp byte [LVON],2
+    jz .l
+    jmp FXLU
+.l: mov bx,[es:si]
+    xor bx,0x8000
+    mov dx,bx
+    and dx,127
+    shr bx,6
+    and bx,0xfffe
+    mov ax,[bx+THT+2]
+    sub ax,[bx+THT]
+    imul dx
+    shl ax,1                ; (dx:ax >> 7), low word
+    rcl dx,1
+    mov al,ah
+    mov ah,dl
+    add ax,[bx+THT]
+    mov [es:si],ax
+    add si,2
+    loop .l
+    ret
+FXLV7M:             ; Tube2 with dry/wet mix (LPM): live = the live curve, then the mix as FXLU; render = FXLU
+    cmp byte [LVON],2
+    jz .l
+    jmp FXLU
+.l: mov bx,[es:si]
+    xor bx,0x8000
+    mov dx,bx
+    and dx,127
+    shr bx,6
+    and bx,0xfffe
+    mov ax,[bx+THT+2]
+    sub ax,[bx+THT]
+    imul dx
+    shl ax,1
+    rcl dx,1
+    mov al,ah
+    mov ah,dl
+    add ax,[bx+THT]
+    mov bx,[es:si]
+    sub ax,bx
+    jo .of
+    imul word [FXW]
+.j: shl ax,1
+    rcl dx,1
+    shl ax,1
+    rcl dx,1
+    add dx,bx
+    mov [es:si],dx
+    add si,2
+    loop .l
+    ret
+.of: call MIXOV
+    jmp .j
+
+; ---- linear crush DeFreq live: the decimator's block placement (DCPREP) with the hold length FXFREQ, and the
+; crush applied to each held word, as FXSMP does in render (hold blocks from the start of the voice)
+DCQ:                ; LVCHK, live, before the chunk at clean offset dx:ax (from the old inline decimator test)
+    cmp byte [FXM],10
+    jz .d
+    cmp byte [FXM],3
+    jnz .r
+    push si
+    push ax
+    push dx
+    mov si,[LVVOI]
+    call FXFQ
+    pop dx
+    pop ax
+    pop si
+    mov cx,[FXFREQ]
+    cmp cx,1
+    jbe .r
+    mov [DCN],cx            ; (DCN is the decimator's; FXPAR sets it again for mode 10)
+.d: jmp DCPREP
+.r: ret
+CRU:                ; ax -> linear crush of ax (as FXLC)
+    add ax,[CHALF]
+    jno .m
+    mov ax,0x7fff
+.m: and ax,[CMASK]
+    ret

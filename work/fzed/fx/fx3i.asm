@@ -257,6 +257,11 @@ FXLE:               ; echo / comb: x + g * DBUF, saturated, mix
     loop .l
     ret
 
+FXLQW:              ; position, fully wet: the chunk is DBUF
+    mov di,si
+    mov si,DBUF
+    rep movsw
+    ret
 FXLQ:               ; position: DBUF word, mix
     mov di,DBUF
 .l: mov ax,[es:si]

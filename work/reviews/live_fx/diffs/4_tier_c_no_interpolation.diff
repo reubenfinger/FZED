@@ -1,0 +1,51 @@
+diff a/work/fzed/fx/fxkz.asm b/work/fzed/fx/fxkz.asm
+--- a/work/fzed/fx/fxkz.asm
++++ b/work/fzed/fx/fxkz.asm
+@@ -1535,20 +1535,11 @@
+     mov bp,dx
+     xor ax,dx
+     sub ax,dx
+-    mov bx,ax
++    mov bx,ax               ; tier (c): the nearest curve point, no interpolation
++    add bx,32
+     shr bx,5
+     and bx,0xfffe
+-    and ax,63
+-    mov di,[bx+THT+2]
+-    sub di,[bx+THT]
+-    imul di
+-    shl ax,1                ; (dx:ax >> 6), low word
+-    rcl dx,1
+-    shl ax,1
+-    rcl dx,1
+-    mov al,ah
+-    mov ah,dl
+-    add ax,[bx+THT]
++    mov ax,[bx+THT]
+     xor ax,bp
+     sub ax,bp
+     mov [es:si],ax
+@@ -1561,20 +1552,11 @@
+     mov bp,dx
+     xor ax,dx
+     sub ax,dx
+-    mov bx,ax
++    mov bx,ax               ; tier (c): the nearest curve point, no interpolation
++    add bx,32
+     shr bx,5
+     and bx,0xfffe
+-    and ax,63
+-    mov di,[bx+THT+2]
+-    sub di,[bx+THT]
+-    imul di
+-    shl ax,1                ; (dx:ax >> 6), low word
+-    rcl dx,1
+-    shl ax,1
+-    rcl dx,1
+-    mov al,ah
+-    mov ah,dl
+-    add ax,[bx+THT]
++    mov ax,[bx+THT]
+     xor ax,bp
+     sub ax,bp
+     mov bx,[es:si]          ; out = dry + ((wet - dry) * FXW >> 14): the same word as the two-product form
