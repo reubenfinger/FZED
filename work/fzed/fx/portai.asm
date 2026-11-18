@@ -11,16 +11,6 @@ PG equ 0xC39A               ; [16] words: glide offset per channel, 1/8 semitone
 PHELD equ 0xC3BA            ; [16] notes held per channel
 PHN equ 0xC3CA              ; [16] 1 once a note has been played on the channel
 
-PINIT:
-    xor ax,ax
-    mov di,PGT
-    mov cx,(PHN+16-PGT)/2
-.c: mov [di],ax
-    add di,2
-    loop .c
-    mov al,64
-    call PSETT
-    ret
 
 PSETT:              ; al = glide time 0-127 -> PK = 1 - e^(-1.2 ms / T), T = 1 + t^2/32 ms
     and ax,0x7f
@@ -124,7 +114,7 @@ PNON:               ; note-on, bx = channel, ah = new note (keeps all registers)
     add ax,cx
     pop cx
     adc dx,cx
-    cmp dx,0                ; clamp to +/-127 x 256
+    or dx,dx                ; clamp to +/-127 x 256
     jl .neg
     jg .hi
     cmp ax,32512
@@ -168,7 +158,8 @@ GLDEC:              ; PERF38I: one glide step for every channel, called from PAT
     jns .k
     xor ax,ax
 .k: mov [bx+PG],ax
-.n: sub bx,2
+.n: dec bx
+    dec bx
     jns .l
 .r: ret
 

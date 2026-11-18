@@ -84,7 +84,7 @@ class CPU:
     def step(s):
         s.steps+=1
         start=s.ip
-        if not (0x6000<=start<s.codeend or 0xDC00<=start<0xEC00 or 0xB800<=start<0xBE00 or (s.ovl and 0xD400<=start<0xDBE0)): raise Bad('ip out of code %04x'%start)
+        if not (0x6000<=start<s.codeend or 0xDC00<=start<0xEC00 or 0xB800<=start<0xBE00 or (s.ovl and 0xD400<=start<0xDBE0) or (0xD402<=start<0xD7BE and s.m[0xD401]==0x40 and s.m[0xD7BF]==0x40)): raise Bad('ip out of code %04x'%start)
         rep=0; s.pfx=None
         op=s.fetch8()
         while op in (0x2e,0x26,0x3e,0x36,0xf3,0xf2):

@@ -197,8 +197,7 @@ DCPREP:             ; live decimator: block place and held clean word for the ch
 ; ---------- PERF38E: MIDI panic, voice INIT on demand, retain the voice at start ----------
 RETN: db 0                  ; 1 while PERF starts on an existing voice: PSETUP keeps its filter / envelopes
 VIARM: db 0                 ; voice INIT: 1 = waiting for the value to drop below 64
-S_PN: db 'ALL NOTES OFF   ',0
-S_VI: db 'VOICE INIT      ',0
+S_PN: db 'ALL NOTES OFF',0
 
 PANIC:              ; CC120 / CC123 on channel al: sustain off and a note-off for every key (the FZ's own notes),
     push ax         ; PERF's held-note and glide state cleared

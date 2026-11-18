@@ -80,21 +80,6 @@ TGS equ 0x83BE
 LVTMP equ 0x83C0
 KSB equ 0xD400
 THT equ 0xBE00
-FXINIT:
-    mov byte [FXMODE],5      ; TapeHack (PERF38C order)
-    mov byte [FXREZ],79     ; 12 bit
-    mov byte [FXDF],0
-    mov byte [FXIN],13      ; x1.0
-    mov byte [FXOUT],127
-    mov byte [FXMIX],127
-    mov byte [FXARM],0
-    mov byte [LVON],0
-    mov byte [LVDIRTY],0
-    mov byte [FXRF],80      ; ring carrier about 68 Hz
-    mov byte [CHSBV],0
-    mov byte [LVWAS],0
-    mov byte [FXRSH],0
-    jmp FX5INIT
 FXCC:               ; CC94 ring freq, 95 ring shape, 112 mode, 113 bits, 114 DeFreq, 115 input, 116 output, 117 mix, 118 render, 119 live
     mov bl,[cs:LASTCC]
     cmp bl,96
@@ -527,7 +512,8 @@ RINGPAR:            ; carrier step (16.16 per sample) from CC94 and the voice ra
     jb .s
     mov ax,-32767
 .s: mov [di],ax
-    add di,2
+    inc di
+    inc di
     add bx,2
     loop .t
 .tr: ret
@@ -618,7 +604,7 @@ LVOFF:              ; release: processed parts back from the copy, copy voice de
     mov al,[LVON]
     or al,al
     jnz .go
-    jmp .r
+    ret
 .go: cmp al,1
     jz .del
     cmp byte [LVDV],0
@@ -1205,8 +1191,10 @@ LVKSCH:             ; Karplus-Strong on LVBUF: y = x + fb * (y[-P] + y[-P-1]) / 
     add dx,bx
     pop bx
 .st: mov [si],dx
-    add si,2
-    add bx,2
+    inc si
+    inc si
+    inc bx
+    inc bx
     loop .l
     pop es
     ret
@@ -1949,7 +1937,8 @@ FXSMP:              ; ax = sample -> processed sample
     shl si,1
     mov cx,[si+KSB]
     sar cx,1
-    add si,2
+    inc si
+    inc si
     and si,2047
     mov dx,[si+KSB]
     sar dx,1

@@ -140,13 +140,19 @@ MAIN0:
     jnz .ld4
     mov di,0xdc00
 .ld4: inc bx
-    cmp bx,44
+    cmp bx,44               ; FZED41A: after sector 43, sector 51 (the start-up overlay) into D400h
+    jnz .ld5
+    mov bl,51
+    mov di,0xd400
+.ld5: cmp bx,52
     jb .ld
     cmp word [SIG],0x3750
     jnz .bad
+    cmp word [INITX-2],0x4033
+    jnz .bad
     mov byte [L6004],0xe9   ; loaded: FZ calls now go through L6004X (fx/fx4.asm)
     mov word [L6004+1],L6004X-(L6004+3)
-    jmp CAPINIT             ; PERF38Q: capture flag cleared, then MAIN
+    jmp MAIN                ; (CAPON is cleared first thing in INITX)
 .bad:
     mov bx,S_LE
     xor cx,cx
@@ -172,76 +178,10 @@ PRT:
     add sp,12
     ret
 S_LE: db 'LOAD ERR',0
-MAIN:
-    mov word [CURV],0
-    call MINIT
-    call MXINIT
-    mov byte [MODE],1
-    mov byte [0x8002],0xff
-    mov bx,S_TITLE
-    mov cx,1
-    xor dx,dx
-    call PRT
-    mov byte [RST],0
-    mov byte [AFL],0
-    mov byte [PREADY],0
-    mov word [LEN],50
-    mov byte [LRAW],4
-    mov byte [CBITS],8
-    mov byte [CARM],0
-    call FXINIT
-    call PBGET
-    push es
-    push ds
-    pop es
-    cld
-    mov di,LRATE
-    xor ax,ax
-    mov cx,0x20
-    rep stosw
-    pop es
-    mov word [LOUT],0x8000
-    mov word [LRND],0x1234
-    mov byte [CHN],8
-    mov word [ZCM],0x4001   ; (review: ZCM 1 and TSENS 64, neighbours at 8242h / 8243h, in one write)
-    xor ax,ax               ; (review: CHARM, DARM, CHCNT, CHBANK, CHPLAY are 81EDh-81F2h in a row: three word writes;
-    mov [CHARM],ax          ; the same zeros as the six separate writes, 18 bytes less)
-    mov [CHCNT],ax
-    mov [CHBANK+1],ax
-    mov [CHOWN],ax
-    mov word [CHOKV],0xff   ; PERF40A: choke off, slice 1
-    mov byte [CPARM],1
-    mov word [VPICK],0x00ff ; PERF40H: no voice picked, no remote exit
-    mov byte [L7F],0
-    mov byte [KEEPA],0      ; PERF40I: ENTER keeps the sound only (as before) until Gills says otherwise
-    xor ax,ax               ; PERF40J: chops into their own bank; no target-bank chop
-    mov [CHTO],ax
-    mov [CHBASE+1],ax
-    mov [0x801A],ax         ; PERF40L: STRETCH next TRACE, order FORWARD,
-    mov word [0x801C],64    ; skew even; PERF40M: start not moved (STMV)
-    mov word [STN],0x407F   ; PERF40F STRETCH: 8 segments, stretch 64, grain 100%
-    mov word [STG],0x007F   ; crossfade 0
-    mov word [STZ],0x007F   ; snap on, sustain none, off
-    mov ax,[0xdfc]
-    mov [DFCSV],ax
-    mov ax,[0x40a]
-    mov [LTM2],ax
-    mov byte [0x4d9],0
-    mov byte [0x4d6],0x40
-    call L61DB
-    cmp word [si+0x10],0
-    jz .emp
-    mov byte [RETN],1       ; existing voice: keep its filter and envelopes
-    call PSETUP
-    mov byte [RETN],0
-    call CHFINDO
-    jmp .nt
-.emp:
-    mov bx,S_E
-    xor cx,cx
-    mov dx,7
-    call PRT
-    mov byte [L7F],1
+MAIN:               ; FZED41A: the one-time start-up runs from sector 51 (fx/ov7.asm, loaded by MAIN0); ZF=1 empty voice
+    call INITX
+    jz .nt
+    call CHFINDO            ; (an overlay call: it loads over the start-up sector, so it runs here, after it)
 .nt: call STAT2             ; PERF40H: line 2 = the voice (or bank) being edited                        ; (PERF38E: no start-up audition note, no fixed output writes)
     mov ax,[0x9d8]
     mov [cs:0x8016],ax
@@ -737,7 +677,8 @@ PSETUP:
     xor bx,bx
 .g: mov ax,[si+bx+8]
     mov [bx+GSAVE],ax
-    add bx,2
+    inc bx
+    inc bx
     loop .g
     cmp byte [RETN],0
     jnz .ret
@@ -771,27 +712,6 @@ AFTER:
     jz .r
     call VDIRECT
 .r: ret
-PBGET:              ; PBSV = play-bank pointer; then play the edit voice directly (voice's own original/highest/lowest)
-    mov ax,[0xdfe]
-    mov [PNEG2],ax
-    mov ax,[0xe00]
-    mov [E00SV],ax
-    mov ax,[0xdfe]
-    or ax,ax
-    jz .calc
-    js .calc
-    mov [PBSV],ax
-    jmp VDIRECT
-.calc:
-    xor ax,ax
-    mov [PBSV],ax
-    mov ax,[0xdfc]
-    cmp ax,8
-    jae VDIRECT
-    mov cx,0x290
-    mul cx
-    add ax,0xe08
-    mov [PBSV],ax
 VDIRECT:
     mov word [0xdfe],0xffff
     mov word [0xe00],0xffff
@@ -1844,7 +1764,8 @@ RVPATCH:            ; reverse play mode + loop mode not one-shot: give each reve
     not al
     and [RVP],al
 .nx: add di,0x3a
-    add bx,2
+    inc bx
+    inc bx
     shl dl,1
     jnz .k
 .r: ret
@@ -1945,7 +1866,8 @@ NSETUP:             ; es:si -> wave memory at voice start (bank via port 22h), N
 .bad: stc
     ret
 NNEXT:              ; advance one word; ZF=1 when done
-    add si,2
+    inc si
+    inc si
     jnz .c
     mov al,[NBANK]
     mov ah,al
@@ -1970,7 +1892,8 @@ ISSLICE:            ; ZF=1 if gene di plays one of the chop slices
     jcxz .no
 .l: cmp ax,[bx+CHV]
     jz .y
-    add bx,2
+    inc bx
+    inc bx
     loop .l
 .no: or sp,sp              ; ZF=0
 .y: pop bx
@@ -1998,7 +1921,8 @@ CHPROP:             ; copy sound settings (mode, 54h..ADh, rate, loops) from the
     call CHPMV              ; PERF40G: all of 54h-ADh, or (per-slice mode) all but filter / envelopes / LFO 1
     pop si
     pop cx
-    add bx,2
+    inc bx
+    inc bx
     loop .l
     jmp CHLOOP
 .r: ret
@@ -2339,7 +2263,8 @@ CHOP:
     jb .lp
     xor bx,bx
 .lt: mov word [bx+di+0x64],0
-    add bx,2
+    inc bx
+    inc bx
     cmp bx,16
     jb .lt
     mov al,[CHI]            ; key = C2 + slice
@@ -2475,10 +2400,12 @@ WCOPY:              ; copy [NCNT]=CHL words from wave dx:ax to wave bx:cx (word 
     or al,ah
     out 0x22,al
     mov [es:di],dx
-    add si,2
+    inc si
+    inc si
     jnz .s
     inc byte [CHSB]
-.s: add di,2
+.s: inc di
+    inc di
     jnz .d
     inc byte [CHDB]
 .d: sub bp,1
@@ -2654,13 +2581,11 @@ RT: db 0xa0,0x76,0x77
 IGN: db 10,11,14,15,16,23,32,33,34,41,52,64,69
 INITT: db 0x78,1,0x79,2,0x7a,0x7f,0x7b,0x7f,0x7c,0xc0,0x82,0xff,0x83,0xff,0x84,0   ; DCA: sus step 2, end step 3, full sustain
        db 0x8a,1,0x8b,2,0x8c,0x7f,0x8d,0x7f,0x8e,0xc0,0x94,0xff,0x95,0xff,0x96,0   ; DCF: the same
-S_TITLE: db 'FZED',0
 S_P: db 'REC 36K  002.0S',0
 S_USD: db 'USED:ARM 120+',0
 S_ST: db 'IDLE ',0,'ARMED',0,'WAIT ',0,'REC  ',0,'DONE ',0,'USED ',0,'NOMEM',0
 
 S_C: db 'C=000 000',0
-S_E: db 'EMPTY-REC READY',0
 S_CN: db 'CHOP 00 SLICES',0
 S_CW: db 'CHOPPING...',0
 S_CO: db 'CHOP 00/00 OK  ',0   ; (+10..+13 are written: keep the length)
@@ -2669,8 +2594,8 @@ S_CK: db ' OK '
 S_CKM: db ' MEM'
 S_CKH: db ' HIT'
 S_CKV: db ' VOI'
-S_CB: db 'CHOP: NO BANK  ',0
-S_CV: db 'CHOP: NO VOICE ',0
+S_CB: db 'CHOP: NO BANK',0  ; (no trailing spaces: NMSG blanks the line first)
+S_CV: db 'CHOP: NO VOICE',0
 S_CM: db 'CHOP: NO MEMORY',0
 S_CS: db 'CHOP: TOO SHORT',0
 S_ZM: db 'CHOP EVEN      ',0,'CHOP EVEN+ZERO ',0,'CHOP TRANSIENT ',0
@@ -2837,8 +2762,6 @@ DISPATCH:           ; al = value of CC LASTCC (PERF's CC handlers; also used by 
 %include "fx/matrixz.asm"
 %include "fx/fx5bk.asm"
 %include "fx/capru.asm"
-CAPINIT: mov byte [CAPON],0
-    jmp MAIN
 %if ($-$$) < 0x57FE
     times 0x57FE-($-$$) db 0x5a
 %endif
@@ -2880,3 +2803,5 @@ section ov5 follows=ov4 vstart=0xD400
 %include "fx/ov5.asm"
 section ov6 follows=ov5 vstart=0xD400
 %include "fx/ov6.asm"
+section ov7 follows=ov6 vstart=0xD400
+%include "fx/ov7.asm"

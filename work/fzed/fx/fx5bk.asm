@@ -39,8 +39,10 @@ ECPREP2:
 .l: mov ax,[di]
     sar ax,cl
     add [si],ax
-    add si,2
-    add di,2
+    inc si
+    inc si
+    inc di
+    inc di
     dec bp
     jnz .l
     ret

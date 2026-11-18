@@ -1,6 +1,8 @@
 # FZED space audit, 17 November 2026
 
-This audit looks for room for three planned features: chop improvements, capture re-strike and the modular (EXT) effects. It was made on v1.1 (`main` = `next`, commit `b01419e`). Nothing here is built yet.
+This audit looks for room for three planned features: chop improvements, capture re-strike and the modular (EXT) effects. It was made on v1.1 (`main` = `next`, commit `b01419e`).
+
+**Status, 18 November 2026:** items 3.1 and 3.4 are built on `next` (not yet tested on hardware). Results: low area 349 bytes free, high 247, `lv` 18, `xt` 56; the start-up overlay uses 627 bytes of sector 51. Of the 52 `inc/dec` candidates, only 23 could be proven carry-safe once the routines' callers were followed (the rest return straight after the `add`, and a caller could read the carry), so 3.4 gave about 57 bytes, not 100. The capture-overlay helper in 3.4 is left for the capture work (3.2). Items 3.2 and 3.3 are not started.
 
 ## 1. Where things stand
 

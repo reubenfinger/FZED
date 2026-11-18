@@ -70,7 +70,7 @@ if __name__ == '__main__':
         ok = case(sys.argv[2], 'margin', 0x412, band=1, empty=True)['lcd'][-1] == 'WAVE 01 LOADED  '
         print(('PASS ' if ok else 'FAIL ') + 'a 412h-byte FZ-call frame leaves the overlay alone')
         r = case(sys.argv[2], 'deep', 0x430, band=1, empty=True)['lcd'][-1]
-        print(('PASS ' if r == 'WAVE: REFUSED   ' else 'FAIL ') + 'a stack that reaches the end signature is refused', r)
+        print(('PASS ' if r.rstrip() == 'WAVE: REFUSED' else 'FAIL ') + 'a stack that reaches the end signature is refused', r)
         sys.exit(0)
     sc = int(sys.argv[3], 0) if len(sys.argv) > 3 else 0x412
     json.dump(run(sys.argv[1], sc), open(sys.argv[2], 'w'))
