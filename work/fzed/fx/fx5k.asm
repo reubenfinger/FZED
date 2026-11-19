@@ -273,7 +273,8 @@ CBLD:               ; entries cx .. bp-1 into [di]
     pop di
     pop cx
     mov [di],ax
-    add di,2
+    inc di
+    inc di
     inc cx
     jmp .l
 .r: ret

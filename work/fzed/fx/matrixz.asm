@@ -62,45 +62,6 @@ FOFF: db 0,0x0f,0x10,0x0e,0x00,0x0a,0x0b,0x0c   ; fast destinations -> controlle
 SLOWCC: db 76,126,87,88,89,90,117,94             ; 126 = loop window (internal)             ; slow destinations 8-15 -> PERF CC
 MXBDEF: db 0,0,0,127,64,0,127,64
 
-MXINIT:             ; startup
-    call PINIT
-    call SVINIT
-    mov al,[0xbe0]          ; follow the FZ's own event queues from now on
-    mov [IQP],al
-    mov al,[0xde8]
-    mov [IQP+1],al
-    mov word [IQS],0
-    push es
-    push ds
-    pop es
-    cld
-    xor al,al
-    mov di,MISC
-    mov cx,0x150
-    rep stosb
-    mov di,MTX
-    mov cx,0x1d0
-    rep stosb
-    mov di,CNOTE
-    mov cx,16
-    mov al,60
-    rep stosb
-    mov si,0x5288
-    mov di,EFSAVE
-    mov cx,24
-    rep movsb
-    pop es
-    mov ax,[0x40a]
-    or ax,1
-    mov [RNDS],ax
-    xor bx,bx
-.c: push bx
-    call MXCLR
-    pop bx
-    inc bx
-    cmp bx,8
-    jb .c
-    ret
 
 MXCLR:              ; bx = record: no matrix slots, no LFO 2 delay/fade
     push si

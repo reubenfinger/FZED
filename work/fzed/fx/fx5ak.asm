@@ -1,19 +1,4 @@
 ; PERF38H part in 6000h-7FFFh: start-up, tables (see fx5.asm)
-FX5INIT:            ; FXINIT (start): pattern and pacing state
-    push es
-    push ds
-    pop es
-    cld
-    mov di,PATN
-    mov cx,0x24
-    xor al,al
-    rep stosb
-    pop es
-    mov byte [PATS],48
-    mov word [WSEL],0x00ff  ; no preset wave selected; WARM starts disarmed
-    mov byte [PV],127
-    mov word [CBK],0xffff
-    ret
 
 PSYN: db 3,4,6,8,12,16,24,48   ; clocks per step: 1/32, 1/16T, 1/16, 1/8T, 1/8, 1/4T, 1/4, 1/2
 PTAB: dw 0xffff,0xffff, 0x5555,0x1111, 0xffff,0x5555, 0x1111,0x1111   ; steps on, steps accented (bit n = step n)

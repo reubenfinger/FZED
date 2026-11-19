@@ -15,7 +15,7 @@ SWBX equ 0xD2EE
 WTV equ 0xD2D6              ; PERF38K: voice the wave goes into
 NWAVE equ 7                 ; FZED: preset waves in the wave overlay's WVT (CC111 bands 1-7)
 WNEW equ 0xD2D8             ; PERF38K: 1 = it was empty and has just been allocated
-S_WR: db 'WAVE: REFUSED   ',0
+S_WR: db 'WAVE: REFUSED',0
 
 L6004X:             ; FZ call: with live FX off, run it on the 2 KB KSB area (FZ calls can need over 1 KB)
     pop word [0x55f6]
@@ -126,7 +126,8 @@ FXLEW:              ; echo / comb, fully wet
     jns .m
     mov dx,0x8000
 .m: mov [es:si],dx
-    add si,2
+    inc si
+    inc si
     add di,2
     loop .l
     ret

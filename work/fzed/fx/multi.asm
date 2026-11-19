@@ -18,29 +18,6 @@ LVG0 equ 0x83F2
 CTX equ 0xC400
 CTXSZ equ 0x198
 LFOTMP equ 0xD0C0
-MINIT:              ; startup: record 0 = the FZ's edit voice, voice mode
-    xor ax,ax
-    mov [BKON],al
-    mov [ACTIVE],al
-    mov byte [BKARM],1      ; disarmed until CC15 sits in the middle
-    mov byte [ADDV],1      ; CC16 must first be below 64 before NEW VOICE can fire
-    mov word [BKBANK],0
-    mov [CURV],ax
-    mov di,RV
-    mov cx,8
-.z: mov [di],ax
-    add di,2
-    loop .z
-    mov al,[0xdea]
-    mov [DEASV],al
-    mov al,[0xdeb]
-    and al,0x0f
-    mov [CURCH],al
-    mov [RC],al
-    call L61DB
-    mov [RV],si
-    mov [CURV],si
-    ret
 CTXP:               ; bx = record index -> di = its context block
     push ax
     push dx
@@ -602,7 +579,8 @@ MRESTORE:           ; ESC / ENTER: the other touched voices back too (al = 0 ENT
     xor bx,bx
 .g: mov ax,[bx+GSAVE]
     mov [si+bx+8],ax
-    add bx,2
+    inc bx
+    inc bx
     loop .g
 .nx: pop bx
 .n: inc bx

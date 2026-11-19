@@ -295,8 +295,7 @@ SVRONE:             ; render voice si: start..loop from silence, loop settled tw
     mov [SVE],ax
     mov [SVE+2],dx
     mov byte [SVWF],1
-    call SVRANGE
-    ret
+    jmp SVRANGE
 .plain: mov ax,[si+8]
     mov dx,[si+0xa]
     and dx,0x1f
@@ -308,8 +307,7 @@ SVRONE:             ; render voice si: start..loop from silence, loop settled tw
     mov [SVE],ax
     mov [SVE+2],dx
     mov byte [SVWF],1
-    call SVRANGE
-    ret
+    jmp SVRANGE
 
 SVPRE:              ; live, before a chunk: carry the stream's state when the chunk follows its last one, else run up
     mov bl,[SVSTR]
@@ -407,9 +405,6 @@ SVLV:               ; live chunk (es:si = LVBUF, cx words): state carried or run
     call SVK8
     jmp SVPOST
 
-SVINIT:
-    call SVRESET
-    jmp SVCLR
 
 SVMAPCC:            ; bl = CC of a slow matrix destination; filter mode: 14 FX mix -> resonance, 15 FX param -> cutoff
     push ax                 ; CC112 in the filter band

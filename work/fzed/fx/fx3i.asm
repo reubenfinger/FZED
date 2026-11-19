@@ -15,7 +15,7 @@ PB equ 0xD7F4               ; window start (dword)
 PO equ 0xD7F8               ; place in the window
 PWW equ 0xD7FA              ; this window's length (shorter at the segment end)
 PQ equ 0xD7FC               ; window number (low word)
-S_RD: db 'RENDERED (LIVE) ',0
+S_RD: db 'RENDERED (LIVE)',0
 
 NXPAR2:             ; FXPAR: echo and position parameters
     mov al,[FXIN]           ; D = 1 + v^3 / 256
@@ -135,10 +135,12 @@ POPREP:             ; live position: DBUF = the chunk's source words, run by run
     mov si,TBUF
     add si,cx
     add si,cx
-.c: sub si,2
+.c: dec si
+    dec si
     mov ax,[si]
     mov [di],ax
-    add di,2
+    inc di
+    inc di
     inc bp
     loop .c
     jmp .run
@@ -252,7 +254,8 @@ FXLE:               ; echo / comb: x + g * DBUF, saturated, mix
     mov ax,0x8000
 .m: call MIXW
     mov [es:si],ax
-    add si,2
+    inc si
+    inc si
     add di,2
     loop .l
     ret
@@ -269,7 +272,8 @@ FXLQ:               ; position: DBUF word, mix
     mov ax,[di]
     call MIXW
     mov [es:si],ax
-    add si,2
+    inc si
+    inc si
     add di,2
     loop .l
     ret
