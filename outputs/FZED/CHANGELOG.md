@@ -6,8 +6,9 @@
 - Modules are effects (rendered in chunks of up to 256 words) or tools (run once). Each records which FZED build it belongs to, and FZED refuses one from any other build (EXT: BAD MODULE). A missing module shows TOOLS NOT LOADED. Either way the sample is left alone. Format: `work/fzed/fx/ext.asm`.
 - EXT NOISE (module 1, sector 52): adds noise; CC115 level, CC116 tone (127 white, lower darker); same noise on every render; peaks held at full scale.
 - Space: the EXT code uses 177 resident bytes (low area 192 free, high 227, lv 18, xt 56). The program on disk is 36 KB (sectors 17-52).
-- Emulator checks (`work/fzed/tests/ext41.py`): EXT NOISE gives exactly the words of a model of its code, including clipped peaks; level 0 leaves the sample unchanged; FZED 19 back to off renders the FX Type effect exactly as before; an empty module slot and a module from another build are refused with the sample untouched; a tool module runs once on the edit voice and renders nothing. Start-up, every other emulator test, the preset waves and live FX output (430 cases) are unchanged. Not yet tested on hardware.
-- Not yet in the editor or on the Gills: FZED 19 is sent by hand for now.
+- Emulator checks (`work/fzed/tests/ext41.py`): EXT NOISE gives exactly the words of a model of its code, including clipped peaks; level 0 leaves the sample unchanged; FZED 19 back to off renders the FX Type effect exactly as before; an empty module slot and a module from another build are refused with the sample untouched; a tool module runs once on the edit voice and renders nothing. Start-up, every other emulator test, the preset waves and live FX output (430 cases) are unchanged.
+- Tested on the FZ-1 with Gills Core 114: EXT NOISE renders and changes with level and tone, FZED 19 off renders the FX Type effect again, and an empty module slot shows TOOLS NOT LOADED.
+- The Gills has the control from Core 114 (FX page, turn the encoder for the FX EXT view). Not yet in the editor.
 
 # v1.2 (19 November 2026)
 
