@@ -240,7 +240,12 @@ FXRUN:
     mov bx,S_FW
     call NMSG
     call FXPAR
-    cmp byte [FXM],12       ; echo / position: rendered through the live engine
+    cmp byte [EXTS],0       ; FZED41B: FZED 19 chose an EXT disk module (fx/ext.asm)
+    jz .ne
+    call EXTPREP
+    jnc .ne
+    ret
+.ne: cmp byte [FXM],12       ; echo / position: rendered through the live engine
     jb .r2
     jmp FXREN2
 .r2:
@@ -1428,6 +1433,8 @@ FXONE:              ; render voice si between start and end, in chunks of up to 
     mov [FXRPF],ax
     mov [KSI],ax
     mov [FXTP],ax
+    cmp byte [EXTS],0       ; FZED41B: an EXT module is in D400h: leave it
+    jnz .ch
     push es                 ; clear the Karplus-Strong history
     push ds
     pop es

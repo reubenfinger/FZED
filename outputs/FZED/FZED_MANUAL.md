@@ -478,6 +478,20 @@ Delete Unused and Normalise are separate FX-page commands, not parameters of the
 | TapeHack > Pockey2 | Combined processing chain; render-only live setting |
 | Pockey2 | Resolution/frequency-reduction character; render-only live setting; two effect controls unused |
 
+### EXT Disk Modules
+
+EXT modules are extra effects and tools kept on the FZED disk rather than in memory, so new ones can be added without taking room from FZED. One is included so far: **EXT NOISE** (module 1).
+
+**Choosing a module.** Send FZED 19: CC10 = 88, CC11 = 19, then CC10 = 89, CC11 = the value. 0-7 is EXT OFF; then each block of 8 picks the next module: 8-15 module 1, 16-23 module 2 and so on up to module 15. Line 3 shows EXT OFF or EXT 01. Choosing a module reads nothing from the disk.
+
+**Running it.** Render (CC118) runs the chosen module instead of the FX Type effect. FZED loads the module from the disk, shows its name, then renders the edit voice and every chop slice, as an ordinary render does. Set FZED 19 back to 0-7 to render the FX Type effect again. Live FX are not affected: they always use FX Type.
+
+**The FZED disk must be in the drive** when you render with a module. If the module isn't on the disk, line 3 shows TOOLS NOT LOADED; if it belongs to a different FZED version, EXT: BAD MODULE. In both cases the sample is left as it was.
+
+| Module | Controls |
+| --- | --- |
+| 1 EXT NOISE | Adds noise to the sample. Tape Input (CC115) is the noise level: 0 adds none, and the level rises with the square of the knob up to full scale. Tape Output (CC116) is the tone: 127 is white noise, lower values darker. The same render gives the same noise every time. Peaks that would go past full scale are held at full scale. The other FX controls are not used, and the editor still shows them with their FX Type names |
+
 ### Remaining FX Controls
 
 | Function | Meaning |

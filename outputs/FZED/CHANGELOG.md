@@ -1,5 +1,14 @@
 # FZED Menu Revision
 
+## EXT Disk Modules And EXT NOISE (next)
+
+- FZED: new FZED 19 (CC10 = 88, CC11 = 19, then CC10 = 89, CC11 = value) chooses an EXT disk module: 0-7 off, then blocks of 8 for modules 1-15 (module n is disk sector 51 + n). With a module chosen, Render (CC118) loads it, shows its name and runs it instead of the FX Type effect, on the edit voice and every chop slice. Live FX are unchanged. Choosing a module reads nothing from the disk.
+- Modules are effects (rendered in chunks of up to 256 words) or tools (run once). Each records which FZED build it belongs to, and FZED refuses one from any other build (EXT: BAD MODULE). A missing module shows TOOLS NOT LOADED. Either way the sample is left alone. Format: `work/fzed/fx/ext.asm`.
+- EXT NOISE (module 1, sector 52): adds noise; CC115 level, CC116 tone (127 white, lower darker); same noise on every render; peaks held at full scale.
+- Space: the EXT code uses 177 resident bytes (low area 192 free, high 227, lv 18, xt 56). The program on disk is 36 KB (sectors 17-52).
+- Emulator checks (`work/fzed/tests/ext41.py`): EXT NOISE gives exactly the words of a model of its code, including clipped peaks; level 0 leaves the sample unchanged; FZED 19 back to off renders the FX Type effect exactly as before; an empty module slot and a module from another build are refused with the sample untouched; a tool module runs once on the edit voice and renders nothing. Start-up, every other emulator test, the preset waves and live FX output (430 cases) are unchanged. Not yet tested on hardware.
+- Not yet in the editor or on the Gills: FZED 19 is sent by hand for now.
+
 # v1.2 (19 November 2026)
 
 Tested on a real FZ-1. Frees memory for the planned work (chop, capture re-strike, modules); behaviour unchanged.

@@ -49,7 +49,8 @@ def check(cond, msg):
 for evmode, name in ((0x1d7, 'voice in the edit buffer'), (0, 'empty edit voice')):
     o, ol, _ = boot(sys.argv[1], evmode)
     n, nl, nsp = boot(sys.argv[3], evmode)
-    check(nl == ol[:26] + [51] + ol[26:],
+    check(nl == ol or nl == ol[:26] + [51] + ol[26:],   # (against a build before or after the start-up overlay)
+         
           '%s: sectors loaded %s (old %s)' % (name, nl, ol))
     diffs = []
     for lo, hi in ((0x0000, 0x6000), (0x8000, 0x8400), (0xBE00, 0xD400)):
