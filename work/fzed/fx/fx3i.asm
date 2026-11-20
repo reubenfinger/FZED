@@ -60,7 +60,8 @@ FXREN2:             ; render echo / position: clean copy, sweep everything once,
 .cp: call LVCPY
     cmp byte [LVON],2
     jnz .cp
-    call FXPAR
+.on: call FXPAR              ; (FZED41D: Render with live FX on comes in here: the same sweep over every word, at
+                            ; disintegration's age of the moment, which only moves in LVRUN)
     mov byte [LVDIRTY],0
     call LVSETLEN
     xor ax,ax

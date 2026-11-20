@@ -7,8 +7,9 @@
 DISH: db 0                  ; FZED 20 hiss 0-127 (DISH, DISD, DISP in this order)
 DISD: db 0                  ; FZED 21 decay rate
 DISP: db 0                  ; FZED 22 dropouts
-DAGE: dd 0                  ; age: high word 0 (new) .. FFFFh (gone), low word its fraction
+DIS4: db 0                  ; FZED 23 EVEN AGEING (FZED41D): not 0 = on
 DTM: dw 0                   ; timer at the last ageing step
+DAGE: dd 0                  ; age: high word 0 (new) .. FFFFh (gone), low word its fraction
 
 DISSET:             ; parameter 89 with STSEL 20-22: bl = 0-2, al = value (no LCD message: no room)
     xor bh,bh
@@ -26,12 +27,10 @@ DISSET:             ; parameter 89 with STSEL 20-22: bl = 0-2, al = value (no LC
 DISAGE:             ; LVRUN, every pass: live on, every 4096 timer units (about 40 ms) the age (high word) grows by
     cmp byte [LVON],2       ; decay^2 / 64 (DECAY 127: new to gone in about 10 s; 32: 2.7 minutes; 8: about 45 minutes)
     jnz .r
-.t: mov ax,[0x40a]           ; (capture's driver enters here)
-    mov dx,ax
-    sub ax,[DTM]
-    cmp ax,0x1000
-    jb .r
-    mov [DTM],dx
+    call DCOV               ; FZED41D: EVEN AGEING (fx/dis2.asm)
+    jc .r
+.t: call DTICK              ; (capture's driver enters here)
+    jc .r
     mov al,[DISD]
     mul al
     mov cx,1024             ; FZED41D: decay^2 x 1024 (FZED41C added it 256 times too low: 43 minutes at 127)
@@ -39,11 +38,14 @@ DISAGE:             ; LVRUN, every pass: live on, every 4096 timer units (about 
     add [DAGE],ax
     adc [DAGE+2],dx
     jnc .r
-    mov word [DAGE+2],0xffff
+    or word [DAGE+2],-1      ; (held at full)
 .r: ret
 
 DISPRM:             ; DISCH: the chunk's settings. ZF=1: new and no hiss, nothing to do. Else dx:ax = LVPOS, bp = dulling k, DHA / DTH / DU /
                     ; DQ / DDR set.
+    mov ax,[LVN]            ; FZED41D: words through the stage, for EVEN AGEING
+    add [DCNT],ax
+    adc word [DCNT+2],0
     mov bl,[DAGE+3]         ; a
     mov al,[DISH]
     mul al

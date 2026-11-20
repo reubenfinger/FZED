@@ -44,23 +44,26 @@ DISCH:              ; LVCHK, after the effect: LVN words in LVBUF, clean offset 
     mov si,LVBUF
     mov cx,[LVN]
     mov bx,[DQ]
-.dl: cmp byte [DDR],0
+.dl: cmp word [DDR],256
     jz .dn
     mov dx,2047
     sub dx,bx
     cmp dx,bx
     jb .e
     mov dx,bx
-.e: xor ax,ax
-    add dx,-128
-    jc .dw                  ; 128 or more words in: silent
-    shl dx,1
-    neg dx
-    mov ax,[si]
+.e: add dx,-128             ; FZED41D: gain = the larger of the stretch's level and the edge ramp
+    jnc .g
+    xor dx,dx               ; 128 or more words in: the stretch's level
+.g: shl dx,1
+    neg dx                  ; 256 - 2e near the edges
+    cmp dx,[DDR]
+    jge .m
+    mov dx,[DDR]
+.m: mov ax,[si]
     imul dx
     mov al,ah
     mov ah,dl
-.dw: mov [si],ax
+    mov [si],ax
 .dn: inc si
     inc si
     inc bx
@@ -95,3 +98,22 @@ DISCH:              ; LVCHK, after the effect: LVN words in LVBUF, clean offset 
 .x: pop es
     popa
     ret
+DCOV:               ; FZED41D, live FX only: with EVEN AGEING on, CF=1 until the stage has had as many words as the clean
+    cmp byte [DIS4],0       ; copy holds (LVLEN) since the last ageing step, so the age moves on only once the live engine
+    jz .r                   ; has been round, and old and new pieces differ by one step at most (CF=0 from cmp)
+    mov ax,[DCNT]
+    mov dx,[DCNT+2]
+    sub ax,[LVLEN]
+    sbb dx,[LVLEN+2]
+.r: ret
+DTICK:              ; CF=1 until 4096 timer units (about 40 ms) since the last ageing step; then a step: DCNT from 0
+    mov ax,[0x40a]
+    mov dx,ax
+    sub ax,[DTM]
+    cmp ax,0x1000
+    jb .r
+    mov [DTM],dx
+    xor ax,ax
+    mov [DCNT],ax
+    mov [DCNT+2],ax
+.r: ret

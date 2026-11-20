@@ -1,5 +1,15 @@
 # FZED Menu Revision
 
+## Render Keeps Live FX, Fading Dropouts, EVEN AGEING (next)
+
+- FZED: Render (CC118) with live FX on keeps what they give. The age stops, one sweep runs over every word through the FX Type and disintegration at that age, and live FX are released without the clean copy going back (RENDERED (LIVE)). Before this, Render with live FX on went back to the original and rendered the FX Type alone, so disintegration was lost. With live FX off, Render works as before.
+- FZED: dropouts fade as the sample ages instead of switching off at once: a stretch's level is 256 - (threshold - its hash) / 16, so it fades over about 16 steps of age at DROPOUTS 127. In an emulator run at DECAY 127, DROPOUTS 127, the largest jump the playhead met between neighbouring words fell from 10436 to 2985.
+- FZED: EVEN AGEING (FZED 23, above 0 = on): with live FX the age moves on only after the stage has had as many words as the clean copy holds since the last step. In the same emulator run it left no jumps beyond twice the test tone's own largest step (the age moved more slowly: 58 of 255 against 255). Capture always ages by time.
+- FZED: the render readout after Render shows the time only (`TIME 000.0S`); the words-per-second figure went, to make room.
+- Space afterwards: low 0 bytes, high 4, xt 1, lv 5, capture overlay 4.
+- Gills Core 118: FX EXT view P9 = EVEN AGEING (OFF / ON, sends FZED 23 = 0 or 127).
+- Emulator: `dis41.py` checks the fading dropouts word for word against the model, that each ageing step with EVEN AGEING on came after at least the clean copy's length of words, that off it is the timer alone again, and that Render with live FX on passes every 128-word piece through the stage at one age and the voice keeps exactly what came out. `capdis41.py` and `ext41.py` pass.
+
 ## Disintegration And EQ Fixes After The First Hardware Test (next)
 
 - FZED: disintegration aged 256 times too slowly (DECAY 127 took about 43 minutes, not 10 seconds), which is why it sounded subtle. Fixed: DECAY 127 about 10 s, 64 about 40 s, 32 under 3 minutes, 8 about 45 minutes.

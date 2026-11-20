@@ -128,7 +128,7 @@ STRP:               ; PERF40F parameters 88 (STRETCH control 0-9) and 89 (its va
     jnz .s20
     jmp EXTSEL
 .s20: sub bl,20             ; FZED41C: 20-22 disintegration (fx/dis1.asm)
-    cmp bl,3
+    cmp bl,4                ; (FZED41D: 23 EVEN AGEING)
     jae .s10
     jmp DISSET
 .s10: cmp byte [STSEL],11     ; PERF40H: 11 voice pick, 12 voice select, 13 exit: tools overlay 3

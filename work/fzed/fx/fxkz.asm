@@ -236,6 +236,8 @@ DEC3:               ; al (0-255) -> three digits at [di]
     inc di
     jmp DEC2
 FXRUN:
+    cmp byte [LVON],2       ; FZED41D: live FX on: Render keeps what they give, one even sweep (fx3i.asm)
+    jz FXREN2.on
     call LVOFF              ; render works on the original sample
     mov bx,S_FW
     call NMSG
@@ -313,43 +315,12 @@ FXRUN:
 .sv: mov cx,324
     div cx
 .sx: xor dx,dx
-    mov di,S_FT+11
+    mov di,S_FT+8           ; FZED41D: the time only (the words-per-second figure went, for room)
     mov cx,4
     call DECN
-    mov al,[S_FT+11]
-    mov [S_FT+12],al
-    mov byte [S_FT+11],'.'
-    mov ax,[FXN]            ; samples per second = N * 3240 / T
-    mov cx,3240
-    mul cx
-    push ax
-    push dx
-    mov ax,[FXN+2]
-    mul cx
-    pop dx
-    add dx,ax
-    pop ax
-    mov bx,[FXT]
-    mov cx,[FXT+2]
-.nm: jcxz .nd
-    shr cx,1
-    rcr bx,1
-    shr dx,1
-    rcr ax,1
-    jmp .nm
-.nd: or bx,bx
-    jz .z
-    cmp dx,bx
-    jae .big
-    div bx
-    jmp .ps
-.z: xor ax,ax
-    jmp .ps
-.big: mov ax,0xffff
-.ps: xor dx,dx
-    mov di,S_FT+4
-    mov cx,5
-    call DECN
+    mov al,[S_FT+8]
+    mov [S_FT+9],al
+    mov byte [S_FT+8],'.'
     mov bx,S_FT
     jmp NMSG
 FXPAR:              ; all render/live parameters from the CCs; LVLP = fast loop for this mode (0 = none)
@@ -2193,7 +2164,7 @@ S_RS0: db 'RING SINE',0
 S_RS1: db 'RING SQUARE',0
 S_LM: db 'LIVE: NO MEMORY',0
 S_LV: db 'LIVE: NO VOICE',0
-S_FT: db '00000/S 000.0S',0
+S_FT: db 'TIME 000.0S',0
 %include "fxtab.inc"
 %include "ringtabk.inc"
 %include "kstab.inc"
