@@ -116,7 +116,10 @@ DTICK:              ; CF=1 until 4096 timer units (about 40 ms) since the last a
     cmp ax,0x1000
     jb .r
     mov [DTM],dx
-    xor ax,ax
+    cmp word [DAGE+2],0     ; FZED41F: while the sample is new, each step takes a fresh seed for the dropout pattern
+    jnz .k                  ; (the timer: when the ageing starts decides it); once it ages, the seed stays put
+    mov [DSEED],dx
+.k: xor ax,ax
     mov [DCNT],ax
     mov [DCNT+2],ax
 .r: ret

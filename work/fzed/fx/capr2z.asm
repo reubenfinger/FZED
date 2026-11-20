@@ -13,6 +13,7 @@ CAPRE:              ; PERF38R (from the overlay, CAPON 1, in CSTART): release, C
     mov byte [CREM],0xCA    ; KSB stack, reloads the overlay and CAPSTART keeps the settings: FZED41C, they stay in LVBUF)
     mov byte [CAPON],0
     jmp CAPGO.k
+DSEED: dw 1                 ; FZED41F: dropout pattern seed (fx/dis2.asm DTICK, fx/dis3.asm DUNIT)
 DISCAP:             ; FZED41C (resident for room; from DISCP0 in the capture overlay), a take playing: disintegration
                     ; (fx/dis1.asm) over its next 64 words, in place. Each pass
                             ; builds on the last (as Basinski's tape loops); hiss is left out here, as it would build

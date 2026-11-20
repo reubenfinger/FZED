@@ -315,12 +315,12 @@ FXRUN:
 .sv: mov cx,324
     div cx
 .sx: xor dx,dx
-    mov di,S_FT+8           ; FZED41D: the time only (the words-per-second figure went, for room)
+    mov di,S_FT+3           ; FZED41D: the time only (the words-per-second figure went, for room)
     mov cx,4
     call DECN
-    mov al,[S_FT+8]
-    mov [S_FT+9],al
-    mov byte [S_FT+8],'.'
+    mov al,[S_FT+3]
+    mov [S_FT+4],al
+    mov byte [S_FT+3],'.'
     mov bx,S_FT
     jmp NMSG
 FXPAR:              ; all render/live parameters from the CCs; LVLP = fast loop for this mode (0 = none)
@@ -2148,7 +2148,7 @@ S_FD: db 'DEFREQ 000',0
 S_FI: db 'INPUT x010 ',0     ; (+10 is written: keep one space)
 S_FO: db 'OUTPUT 100%',0
 S_FX: db 'MIX 100%',0
-S_FW: db 'RENDERING...',0
+S_FW: db 'RENDERING',0      ; (FZED41F: dots gone, for room)
 S_L1: db 'LIVE FX ON',0
 S_L0: db 'LIVE FX OFF',0
 S_LP: db 'LIVE: NO POCKEY',0
@@ -2156,7 +2156,7 @@ S_KN: db 'KS NOTE 000',0
 S_KF: db 'KS FDBK 000%',0
 S_TP: db 'TUBE PAD 000%',0
 S_TA: db 'TUBE AMT 000%',0
-S_LC: db 'LIVE: COPYING..',0
+S_LC: db 'LIVE: COPYING',0  ; (FZED41F: dots gone, for room)
 S_LR: db 'LIVE RELEASED',0
 S_LI: db 'LIVE OFF: CLEAN',0
 S_RF: db 'RING 0000.0HZ',0
@@ -2164,7 +2164,7 @@ S_RS0: db 'RING SINE',0
 S_RS1: db 'RING SQUARE',0
 S_LM: db 'LIVE: NO MEMORY',0
 S_LV: db 'LIVE: NO VOICE',0
-S_FT: db 'TIME 000.0S',0
+S_FT: db '000.0S',0         ; (FZED41F: the render time alone, for room)
 %include "fxtab.inc"
 %include "ringtabk.inc"
 %include "kstab.inc"

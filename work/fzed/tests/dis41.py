@@ -16,20 +16,20 @@ import lvh, sig
 
 s16 = lambda v: ((v + 0x8000) & 0xffff) - 0x8000
 
-def dunit(u, thr):
-    h = ((u + 1) * 40503) & 0xffff
+def dunit(u, thr, seed=1):
+    h = ((u + seed) * 40503) & 0xffff         # FZED41F: + the seed
     h = (h & 0xff00) | ((h ^ (h >> 8)) & 0xff)
     h = (h * 40503) & 0xffff
     d = thr - h                         # FZED41D: a stretch fades over DTH - h = 0..4096
     return 256 if d <= 0 else max(0, 256 - (d >> 4))
 
-def model(buf, a, hiss, drop, co, prev, rn):
+def model(buf, a, hiss, drop, co, prev, rn, seed=1):
     ha = hiss                            # FZED41E: hiss on when HISS > 0
     if a == 0 and ha == 0: return list(buf), rn
     k = (((256 - a) ** 2) >> 1) | 0x300
     thr = (drop * a * 2) & 0xffff
     q = co & 2047; u = (co >> 11) & 0xffff
-    dr = dunit(u, thr)
+    dr = dunit(u, thr, seed)
     yh = s16(prev) >> 1; out = []
     for i, w in enumerate(buf):
         if a:
@@ -44,7 +44,7 @@ def model(buf, a, hiss, drop, co, prev, rn):
             v = s16(((v * g) >> 8) & 0xffff)
         q += 1
         if q == 2048:
-            q = 0; u = (u + 1) & 0xffff; dr = dunit(u, thr)
+            q = 0; u = (u + 1) & 0xffff; dr = dunit(u, thr, seed)
         if ha and not i & 1:               # FZED41E: every other word
             rn ^= (rn << 7) & 0xffff; rn ^= rn >> 9; rn ^= (rn << 8) & 0xffff     # xorshift 7, 9, 8
             n = s16(rn) >> (2 + ((128 - hiss) >> 4))
@@ -80,7 +80,7 @@ def step():
         if pos: prev = c.wave.get((sd + pos - 1) * 2, 0) | (c.wave.get((sd + pos - 1) * 2 + 1, 0) << 8)
         else: prev = buf[0]
         pend.append((c.rd16(c.r['sp']), dict(buf=buf, a=c.m[M['DAGE'] + 3], hiss=c.m[M['DISH']], drop=c.m[M['DISP']],
-                     co=(pos + so) & 0xffffffff, prev=prev, rn=h.M16(M['DRN']), n=n, pos=pos, seg=c.m[M['LVSEGI']])))
+                     co=(pos + so) & 0xffffffff, prev=prev, rn=h.M16(M['DRN']), seed=h.M16(M['DSEED']), n=n, pos=pos, seg=c.m[M['LVSEGI']])))
     elif pend and c.ip == pend[-1][0]:
         _, d = pend.pop()
         d['out'] = [h.M16(M['LVBUF'] + 2 * i) for i in range(d['n'])]; d['rnout'] = h.M16(M['DRN'])
@@ -102,7 +102,7 @@ def run_passes(n):
 def verify(label):
     bad = 0; first = None; changed = 0
     for i, d in enumerate(calls):
-        exp, rn = model(d['buf'], d['a'], d['hiss'], d['drop'], d['co'], d['prev'], d['rn'])
+        exp, rn = model(d['buf'], d['a'], d['hiss'], d['drop'], d['co'], d['prev'], d['rn'], d['seed'])
         if exp != d['out'] or rn != d['rnout']:
             bad += 1
             if first is None:
@@ -158,6 +158,14 @@ check(a1 - a0 == len(ticks) * 1024 * 127 * 127 and len(ticks) > 20 and min(gaps)
 verify('chase, ageing')
 fzed(21, 0)
 check(m32(M['DAGE']) == 0, 'DECAY 0 again: new')
+
+# 5b. the dropout seed (FZED41F): fresh while the sample is new, fixed once it ages, different the next time
+def seed(): return h.M16(M['DSEED'])
+run_passes(60); s0 = seed(); run_passes(60); s1 = seed()
+fzed(21, 127); run_passes(40); s2 = seed(); a2 = c.m[M['DAGE'] + 3]; run_passes(200); s3 = seed()
+fzed(21, 0); run_passes(60); fzed(21, 127); run_passes(40); s4 = seed()
+check(s0 != s1 and s2 == s3 and s4 != s2, 'dropout seed: changes while new (%04X %04X), stays put while ageing (%04X %04X, age %02X..), a new one next time (%04X)' % (s0, s1, s2, s3, a2, s4))
+fzed(21, 0)
 
 # 6. live off: the clean sample comes back exactly (the clean copy is never touched)
 wset(0xE0000000); fzed(22, 127); fzed(20, 127); run_passes(3 * (N // 128) + 8); calls.clear()

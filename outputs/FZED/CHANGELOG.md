@@ -1,5 +1,11 @@
 # FZED Menu Revision
 
+## A Different Dropout Pattern Each Run (next)
+
+- FZED: the dropout pattern is seeded from the timer while the sample is new, and the seed is fixed as soon as it starts ageing. Each run (DECAY up from 0, each new capture take) loses a different set of stretches in a different order; within a run they stay the same, so nothing tears over it. Before, every sample lost the same stretches every time.
+- FZED: for room, the render readout is the time alone (`012.3S`), and `RENDERING...` / `LIVE: COPYING..` lost their dots.
+- Emulator: `dis41.py` checks that the seed changes while the sample is new, stays put while it ages, and differs the next time; the stage still matches its model word for word (`dis41.py`, `capdis41.py`); `ext41.py` passes; start-up unchanged.
+
 ## EVEN AGEING Range (next)
 
 - FZED: EVEN AGEING (FZED 23) is a range: the age may take 2^(value / 16) steps each time the live engine has been round the sample (1-15 one, 16-31 two, ... 112-127 128); 0 is off. In the first version any value above 0 allowed one step a round, which was seamless but slow (several minutes for strong ageing on a 12 s sample).

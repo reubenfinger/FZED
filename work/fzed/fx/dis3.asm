@@ -8,7 +8,7 @@ DRN: dw 0xACE1              ; hiss noise state
 DCNT: dd 0                  ; FZED41D: words through the stage since the last ageing step
 DUNIT:              ; DU -> DDR. FZED41D: a stretch fades as DTH passes its hash h: level 256 - (DTH - h) / 16, so it
     mov ax,[DU]             ; goes over about 16 steps of age (DROPOUTS 127) instead of all at once
-    inc ax
+    add ax,[DSEED]          ; FZED41F: + the seed taken while the sample was new (fx/dis2.asm DTICK)
     mov bx,40503
     mul bx
     xor al,ah
