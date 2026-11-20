@@ -2690,6 +2690,7 @@ L639D:
 %include "fx/capr4a.asm"
 %include "fx/tools40.asm"
 %include "fx/ext.asm"
+%include "fx/dis1.asm"
 LOWEND:             ; (EXT modules record the four area ends of the build they belong to: fx/ext.asm)
 %if ($-$$) > 0x2000
 %error low code would overlap variables at 8000h
@@ -2764,6 +2765,7 @@ DISPATCH:           ; al = value of CC LASTCC (PERF's CC handlers; also used by 
 %include "fx/matrixz.asm"
 %include "fx/fx5bk.asm"
 %include "fx/capru.asm"
+%include "fx/dis2.asm"
 HIGHEND:
 %if ($-$$) < 0x57FE
     times 0x57FE-($-$$) db 0x5a
@@ -2789,6 +2791,7 @@ section xt follows=lv vstart=0xDC00
 %include "fx/fx3i.asm"
 %include "fx/fx5xi.asm"
 %include "fx/capr3u.asm"
+%include "fx/dis3.asm"
 XTEND:
 %if ($-$$) > 0x1000
 %error code sectors 40-43 full
@@ -2812,3 +2815,5 @@ section ov7 follows=ov6 vstart=0xD400
 %include "fx/ov7.asm"
 section ov8 follows=ov7 vstart=0xD400
 %include "fx/ext1.asm"
+section ov9 follows=ov8 vstart=0xD400
+%include "fx/ext2.asm"

@@ -152,30 +152,9 @@ NEWVOICE:           ; CC16: choose the first empty voice after an armed rising e
     jz .scan0
     cmp al,3                ; PERF39D: 4 = DONE (a finished recording) is not busy
     jbe .busy
-.scan0: mov si,0x2288
-    xor bx,bx
-.scan: cmp word [si+0x10],0
-    jz .found
-    add si,0xc0
-    inc bx
-    cmp bx,64
-    jb .scan
-    mov bx,S_NEVF
-    jmp NMSG
-.found:
-    push si
-    call LVOFF              ; PERF39D: live FX released, slices stop, back to the voice
-    mov byte [CHPLAY],0
-    call VDIRECT
-    pop si
-    mov [0xe04],si
-    mov word [0xe06],0
-    mov [0xe02],bx
-    mov [RV],si
-    mov [CURV],si
-    mov byte [RETN],0
-    call PSETUP
-    jmp STAT2               ; PERF40H: line 2 shows the new voice
+.scan0: push word NVSCAN     ; FZED41C: the scan and the switch are in tools overlay 3 (sector 47), beside COPYV
+    push word 0x402F
+    jmp OVCALL
 .busy: mov bx,S_RS
     jmp NMSG
 S_MRV: db 'REVERSE',0          ; FZED: play mode name (kept here for room)

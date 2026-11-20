@@ -491,6 +491,24 @@ EXT modules are extra effects and tools kept on the FZED disk rather than in mem
 | Module | Controls |
 | --- | --- |
 | 1 EXT NOISE | Adds noise to the sample. Tape Input (CC115) is the noise level: 0 adds none, and the level rises with the square of the knob up to full scale. Tape Output (CC116) is the tone: 127 is white noise, lower values darker. The same render gives the same noise every time. Peaks that would go past full scale are held at full scale. The other FX controls are not used, and the editor still shows them with their FX Type names |
+| 2 EXT EQ | A three-band EQ: CC113 bass (below about 300 Hz), CC114 mid, CC115 treble (above about 3 kHz), CC116 output level. 0 removes the band, 64 leaves it unchanged, 127 is about +12 dB. The band edges are for a 36 kHz voice: an 18 kHz voice halves them, 9 kHz quarters them. With every control at 64 the sample comes back as it was, less its lowest bit. Peaks that would go past full scale are held at full scale |
+
+### Disintegration
+
+Disintegration ages the sample as it plays, in the spirit of William Basinski's *Disintegration Loops*: the longer it runs, the duller it sounds, and parts of it drop out. It is a stage after the live effect, so it needs live FX on (CC119) and works with any FX Type. To hear it on its own, choose an effect and turn its FX Mix (CC117) right down.
+
+| Control | Send | Meaning |
+| --- | --- | --- |
+| HISS | FZED 20 | Noise added on top, rising with the square of the knob to about -24 dB. 0 is none |
+| DECAY | FZED 21 | How fast the sample ages. 127 takes it from new to fully aged in about 10 seconds, 16 in about 11 minutes, 8 in about 45 minutes. **0 makes it new again** |
+| DROPOUTS | FZED 22 | How many 57 ms stretches drop out as it ages. Each fades out and in over 3.5 ms. The same stretches go first and more join as it ages. At 127 and fully aged, nearly all of it is gone |
+
+Send FZED 20-22 as CC10 = 88, CC11 = 20 (or 21, 22), then CC10 = 89, CC11 = the value. The FZ's LCD doesn't show these values (there was no room); the Gills does.
+
+- The original stays safe. Live FX keep a clean copy, and disintegration works from it, so turning live FX off brings the sample back as it was. RENDERED (LIVE) keeps it as it sounds at that moment.
+- Dulling and dropouts follow the age; hiss doesn't. With DECAY at 0 the sample is new: only the hiss, if any, is added. While disintegration is on, the lowest bit of each word is 0.
+- The stretch timings are for a 36 kHz voice; at lower rates they are longer.
+- **In capture** (a take held until RECAPTURE suits it best), disintegration works on the take itself, 64 words at a time as it plays. Each pass builds on the last, as a real tape loop wears, rather than starting again from a clean copy. Hiss is left out in capture, because it would pile up pass after pass. Each new take starts new. Leaving capture keeps the take as it sounds then. The last few words of a take (fewer than 64) are left as they are.
 
 ### Remaining FX Controls
 
@@ -866,7 +884,7 @@ Effect parameters, by effect (in FX Type order):
 | --- | --- | --- |
 | Voice Pick | FZED 11 | 0-127, spread over the voices that have sound; the picked voice shows on line 2 |
 | Voice Select | FZED 12 | 64-127 selects the picked voice (voice mode only) |
-| New Voice | CC16 | REARM 0-63; WAIT 64-119; NEW VOICE 120-127 |
+| New Voice | CC16 | REARM 0-63; WAIT 64-119; NEW VOICE 120-127. Keep the FZED disk in the drive: the voice search is read from it (otherwise TOOLS NOT LOADED) |
 | Copy Voice | P126 | REARM 0-63; WAIT 64-119; COPY VOICE 120-127 |
 | Bank Select | CC14 | VOICE MODE 0-14; PLAY BANK 1 15-28; PLAY BANK 2 29-42; PLAY BANK 3 43-56; PLAY BANK 4 57-71; PLAY BANK 5 72-85; PLAY BANK 6 86-99; PLAY BANK 7 100-113; PLAY BANK 8 114-127 |
 | Bank Add/Clear | CC15 | ADD THIS VOICE 0-31; REARM 32-95; CLEAR CHANNEL 96-127 |

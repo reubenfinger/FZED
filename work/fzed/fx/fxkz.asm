@@ -911,7 +911,8 @@ LVRUN:              ; main loop: copy step, or re-render 128 words: chunks chase
 .p1: call THNEED
     jnz .nd
     call CURVEQ             ; PERF38H: only a changed curve, built in steps
-.nd: inc byte [LVCNT]
+.nd: call DISAGE             ; FZED41C: disintegration ages (fx/dis1.asm)
+    inc byte [LVCNT]
     test byte [LVCNT],7
     jz .sw
     call LVFINDPH
@@ -1078,7 +1079,8 @@ LVCHK:              ; process (or, in bypass, restore) up to 128 words at LVSEGI
     mov cx,[LVN]
     call [LVLP]
     pop es
-.dd: cmp byte [LVSEGI],0xff
+.dd: call DISCH              ; FZED41C: disintegration stage (fx/dis2.asm)
+    cmp byte [LVSEGI],0xff
     jz .dv
     mov byte [LVDS],1
     jmp .wr

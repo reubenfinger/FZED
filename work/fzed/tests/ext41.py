@@ -46,6 +46,30 @@ def noise_model(src, level_cc, tone_cc):
         out.append(r & 0xffff)
     return out
 
+
+def eq_model(src, b, m, t, o):
+    s16 = lambda v: ((v + 0x8000) & 0xffff) - 0x8000
+    def gain(v):
+        v &= 0x7f
+        return v << 6 if v < 64 else 4096 + (v - 64) * 192
+    gB, gM, gT, gO = gain(b), gain(m), gain(t), gain(o)
+    def sat(v): return 32767 if v > 32767 else (-32768 if v < -32768 else v)
+    L = H = None; out = []
+    for w in src:
+        x2 = s16(w) >> 1
+        if L is None: L = (x2 << 16) & 0xffffffff; H = L
+        def one(Y, k):
+            y = ((Y >> 16) ^ 0x8000) - 0x8000 if True else 0
+            d = s16(x2 - y); p = (d * k) << 1
+            Y = (Y + p) & 0xffffffff
+            return Y, (((Y >> 16) & 0xffff) ^ 0x8000) - 0x8000
+        L, low = one(L, 1671); H, lp3 = one(H, 13356)
+        high = s16(x2 - lp3); mid = s16(lp3 - low)
+        sm = high * gT + mid * gM + low * gB
+        v = sat(sm >> 11); v = sat((v * gO) >> 12)
+        out.append(v & 0xffff)
+    return out
+
 ok = True
 def check(c, msg):
     global ok
@@ -92,9 +116,9 @@ def plain(sel):
 a, la = plain(False); b, lb = plain(True)
 check(a == b and la == lb, 'FZED 19 = 0 again: the CC112 effect renders the same words as without EXT (%r)' % lb)
 
-# 5. empty slot (module 2 = sector 53, blank): refused, unchanged
+# 5. empty slot (module 3 = sector 54, blank): refused, unchanged
 g = boot(); before = words(g)
-cc(g, 115, 64); fzed(g, 19, 16); render(g)
+cc(g, 115, 64); fzed(g, 19, 24); render(g)
 check(words(g) == before and lcds(g)[-1].rstrip() == 'TOOLS NOT LOADED', 'empty module slot refused (%r), sample unchanged' % lcds(g)[-1])
 
 # 6. a module from another build: refused, unchanged
@@ -103,11 +127,11 @@ g = boot(other); before = words(g)
 cc(g, 115, 64); fzed(g, 19, 8); render(g)
 check(words(g) == before and lcds(g)[-1].rstrip() == 'EXT: BAD MODULE', 'module from another build refused (%r), sample unchanged' % lcds(g)[-1])
 
-# 7. a tool module (kind 2) in sector 53: runs once with si = edit voice, shows its message, renders nothing
+# 7. a tool module (kind 2) in sector 54 (module 3): runs once with si = edit voice, shows its message, renders nothing
 def tool(flat):
-    o = (53 - 17) * 1024; m = (52 - 17) * 1024
+    o = (54 - 17) * 1024; m = (52 - 17) * 1024
     t = bytearray(0x400)
-    t[0:2] = (0x4035).to_bytes(2, 'little'); t[2] = 1; t[3] = 2
+    t[0:2] = (0x4036).to_bytes(2, 'little'); t[2] = 1; t[3] = 2
     t[4:12] = flat[m + 4:m + 12]
     t[0x0C:0x0C + 10] = b'TEST TOOL\x00'
     t[0x20] = 0xF8; t[0x21] = 0xC3                  # init: clc; ret
@@ -118,12 +142,31 @@ def tool(flat):
     code += [0xE9] + list(((nm - at) & 0xffff).to_bytes(2, 'little'))   # jmp NMSG
     t[0x23:0x23 + len(code)] = bytes(code)
     t[0x150:0x150 + 10] = b'TOOL RAN  '; t[0x15A] = 0
-    t[0x3BE:0x3C0] = (0x4035).to_bytes(2, 'little')
+    t[0x3BE:0x3C0] = (0x4036).to_bytes(2, 'little')
     flat[o:o + 0x400] = t
 g = boot(tool); before = words(g); ev = g['c'].rd16(0xe04)
-fzed(g, 19, 16); render(g)
+fzed(g, 19, 24); render(g)
 c = g['c']
 check(c.m[0xD542] == 1 and c.rd16(0xD540) == ev, 'tool module ran once with si = the edit voice (%d, %04X)' % (c.m[0xD542], c.rd16(0xD540)))
 check(lcds(g)[-1].rstrip() == 'TOOL RAN' and words(g) == before, 'tool: its message shows (%r) and nothing was rendered' % lcds(g)[-1])
+
+# 8. EQ (module 2): unity gains give the original less its lowest bit; then a real EQ against the model
+g = boot(); before = words(g)
+for n, v in ((113, 64), (114, 64), (115, 64), (116, 64)): cc(g, n, v)
+fzed(g, 19, 20); render(g); after = words(g)
+check(after == [((((w ^ 0x8000) - 0x8000) >> 1) << 1) & 0xffff for w in before] and 'EXT EQ' in [x.rstrip() for x in lcds(g)],
+      'EQ, every gain 64: the original back, less the lowest bit (%r)' % lcds(g)[-3:])
+for gains in ((127, 64, 0, 64), (0, 127, 20, 100), (90, 30, 127, 40)):
+    g = boot()
+    for w in range(g['S'], g['E']):
+        v = int(9000 * ((w * 37) % 101 - 50) / 50) & 0xffff if w % 3 else (w * 811) & 0xffff
+        g['c'].wave[w * 2] = v & 0xff; g['c'].wave[w * 2 + 1] = v >> 8
+    before = words(g)
+    for n, v in zip((113, 114, 115, 116), gains): cc(g, n, v)
+    fzed(g, 19, 20); render(g); after = words(g)
+    exp = eq_model(before, *gains)
+    d = [i for i, (a, b) in enumerate(zip(after, exp)) if a != b]
+    check(not d, 'EQ bass/mid/treble/out %s: every word matches the model (%d differ%s)' % (gains, len(d),
+          (' first at %d: got %04X want %04X' % (d[0], after[d[0]], exp[d[0]])) if d else ''))
 
 print('ALL PASS' if ok else 'SOME FAILED')

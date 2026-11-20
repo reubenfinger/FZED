@@ -123,9 +123,14 @@ STRP:               ; PERF40F parameters 88 (STRETCH control 0-9) and 89 (its va
     ret
 .s9: cmp bl,89
     jnz .r
-    cmp byte [STSEL],19     ; FZED41B: 19 picks the EXT module (fx/ext.asm)
-    jnz .s10
+    mov bl,[STSEL]
+    cmp bl,19               ; FZED41B: 19 picks the EXT module (fx/ext.asm)
+    jnz .s20
     jmp EXTSEL
+.s20: sub bl,20             ; FZED41C: 20-22 disintegration (fx/dis1.asm)
+    cmp bl,3
+    jae .s10
+    jmp DISSET
 .s10: cmp byte [STSEL],11     ; PERF40H: 11 voice pick, 12 voice select, 13 exit: tools overlay 3
     jb .s
     cmp byte [STSEL],16     ; PERF40L: 16-18 (next, order, skew) are STRETCH too

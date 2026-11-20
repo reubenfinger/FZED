@@ -3,7 +3,8 @@
 ; PERF's own stack and not on the KSB area being loaded.
 CAPON equ 0xD2DA            ; 1 = capture mode running (overlay at D400h loaded)
 CAPGO:              ; RECORD AUTO (CC108) >= 64 while not armed: load the capture overlay and start it
-    cmp byte [BKON],0
+    mov byte [CREM],0       ; FZED41C: a fresh start (CAPRE comes in at .k)
+.k: cmp byte [BKON],0
     jz .vm
     mov bx,S_RS             ; voice mode only, as recording
     jmp NMSG

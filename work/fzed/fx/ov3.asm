@@ -69,6 +69,32 @@ COPYV:              ; 126 COPY VOICE (rising edge to >= 120): the edit voice int
     jmp STAT2               ; PERF40H: line 2 shows the copy
 .r: ret
 
+NVSCAN:             ; FZED41C (from NEWVOICE, fx4m.asm): first empty voice, then switch to it
+    mov si,0x2288
+    xor bx,bx
+.scan: cmp word [si+0x10],0
+    jz .found
+    add si,0xc0
+    inc bx
+    cmp bx,64
+    jb .scan
+    mov bx,S_NEVF
+    jmp NMSG
+.found:
+    push si
+    call LVOFF              ; PERF39D: live FX released, slices stop, back to the voice
+    mov byte [CHPLAY],0
+    call VDIRECT
+    pop si
+    mov [0xe04],si
+    mov word [0xe06],0
+    mov [0xe02],bx
+    mov [RV],si
+    mov [CURV],si
+    mov byte [RETN],0
+    call PSETUP
+    jmp STAT2               ; PERF40H: line 2 shows the new voice
+
 STRET2:             ; PERF40L: STRETCH-style controls kept in this overlay (from tools overlay 4): 6 CHOP INTO, 7 CAPTURE ON,
     mov bl,[STSEL]          ; 10 slices' filter / envelopes / LFO 1
     cmp bl,10

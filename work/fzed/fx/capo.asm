@@ -22,53 +22,55 @@
 ; CC23 / CC33 work as P5 / P6 (PERF38N). Ignored while capturing: preset waves (refused), CC98 and CC100-101 (chop
 ; actions), FX (112-119), loop controls (86-88, 126). Leaving keeps the last take as a normal, looped voice.
 CAPBASE equ 0xD400
-CRLM equ CAPBASE+0x7C4      ; PERF38Z: release 0 together, 1 top first (one note per stagger step)
-CHM equ CAPBASE+0x7C6       ; hold mode 0..7
-CCH equ CAPBASE+0x7C7       ; interval set 0..8
-CVM equ CAPBASE+0x7C8       ; velocity mode 0..3
-CRQ equ CAPBASE+0x7C9       ; 1 = recapture asked for
-CNN equ CAPBASE+0x7CA       ; notes in the chord
-CNS equ CAPBASE+0x7CB       ; notes started
-CPRN equ CAPBASE+0x7CC      ; word: random state
-CNK equ CAPBASE+0x7CE       ; 4 keys
-CNV equ CAPBASE+0x7D2       ; 4 velocities
-CSGI equ CAPBASE+0x7D8      ; stagger step 0..15
-CSGL equ CAPBASE+0x7D6      ; PERF38X: stagger step latched for the chord being played
-CFAD equ CAPBASE+0x7D9      ; PERF38U: fade step 0..7
-CTW equ CAPBASE+0x7DA       ; PERF38V: dword: words of the take being recorded
-CAW equ CAPBASE+0x7E6       ; dword: allocated record words (0 = none) (PERF38V: variables from 7C6h)
-CPRT equ CAPBASE+0x7DE      ; rate change waiting for the next capture (FFh = none)
-CPGN equ CAPBASE+0x7DF      ; gain change waiting (FFh = none)
-CST equ CAPBASE+0x7E0       ; 0 wait / start, 1 recording, 2 playing
-CLEN equ CAPBASE+0x7E1      ; length step 0..15
-CTR equ CAPBASE+0x7E3       ; transpose (signed)
-CSYN equ CAPBASE+0x7E4      ; sync 0 free, 1..7
-CFST equ CAPBASE+0x7E5      ; 1 = next take is the first in this allocation (set up as a new take)
-CLAST equ CAPBASE+0x7EA     ; word: timer at the last pass
-CEL equ CAPBASE+0x7EC       ; dword: timer units in this phase
-CHLD equ CAPBASE+0x7F0      ; dword: hold time
-CPCV equ CAPBASE+0x7F4      ; word: last clock division seen (FFFFh = none yet)
-CGS equ CAPBASE+0x7F6       ; 4 words: start / end of the fresh allocation
+CVB equ LVBUF+0x80-0x7C4    ; FZED41C: the variables (offsets 7C4h-7FDh as before) live in LVBUF+80h-B9h, not at the top
+                            ; of the window: kept through CAPRE's re-entry without copying (LVBUF is free while capture
+                            ; runs; disintegration's capture driver uses LVBUF+0-7Fh)
+CREM equ LVBUF+0xC0         ; FZED41C: CAh = CAPRE re-entry (CAPGO clears it)
+DCP equ LVBUF+0xBA          ; FZED41C: dword: disintegration's place in the take (0 at each new take)
+CRLM equ CVB+0x7C4      ; PERF38Z: release 0 together, 1 top first (one note per stagger step)
+CHM equ CVB+0x7C6       ; hold mode 0..7
+CCH equ CVB+0x7C7       ; interval set 0..8
+CVM equ CVB+0x7C8       ; velocity mode 0..3
+CRQ equ CVB+0x7C9       ; 1 = recapture asked for
+CNN equ CVB+0x7CA       ; notes in the chord
+CNS equ CVB+0x7CB       ; notes started
+CPRN equ CVB+0x7CC      ; word: random state
+CNK equ CVB+0x7CE       ; 4 keys
+CNV equ CVB+0x7D2       ; 4 velocities
+CSGI equ CVB+0x7D8      ; stagger step 0..15
+CSGL equ CVB+0x7D6      ; PERF38X: stagger step latched for the chord being played
+CFAD equ CVB+0x7D9      ; PERF38U: fade step 0..7
+CTW equ CVB+0x7DA       ; PERF38V: dword: words of the take being recorded
+CAW equ CVB+0x7E6       ; dword: allocated record words (0 = none) (PERF38V: variables from 7C6h)
+CPRT equ CVB+0x7DE      ; rate change waiting for the next capture (FFh = none)
+CPGN equ CVB+0x7DF      ; gain change waiting (FFh = none)
+CST equ CVB+0x7E0       ; 0 wait / start, 1 recording, 2 playing
+CLEN equ CVB+0x7E1      ; length step 0..15
+CTR equ CVB+0x7E3       ; transpose (signed)
+CSYN equ CVB+0x7E4      ; sync 0 free, 1..7
+CFST equ CVB+0x7E5      ; 1 = next take is the first in this allocation (set up as a new take)
+CLAST equ CVB+0x7EA     ; word: timer at the last pass
+CEL equ CVB+0x7EC       ; dword: timer units in this phase
+CHLD equ CVB+0x7F0      ; dword: hold time
+CPCV equ CVB+0x7F4      ; word: last clock division seen (FFFFh = none yet)
+CGS equ CVB+0x7F6       ; 4 words: start / end of the fresh allocation
 CAPSIG equ CAPBASE+0x7FE
 
 CAPSTART:
-    push es
+    cmp byte [CREM],0xCA
+    jnz .z
+    xor ax,ax               ; PERF38R: re-entered for a new allocation (CAPRE): the settings are kept, the take
+    mov [CREM],al           ; state starts again (FZED41C: they no longer need copying back)
+    mov [CAW],ax
+    mov [CAW+2],ax          ; (CST and CNS are already 0: re-entry comes from CSTART)
+    jmp short .c
+.z: push es
     push ds
     pop es
     cld
     mov di,CRLM
     mov cx,0x1D             ; PERF38V/Z: variables 7C4h-7FDh
-    cmp byte [LVBUF+0x40],0xCA
-    jnz .z
-    mov si,LVBUF            ; PERF38R: re-entered for a new allocation (CAPRE): the settings come back, the take
-    rep movsw               ; state starts again
-    pop es
     xor ax,ax
-    mov [LVBUF+0x40],al
-    mov [CAW],ax
-    mov [CAW+2],ax          ; (CST and CNS are already 0: re-entry comes from CSTART)
-    jmp short .c
-.z: xor ax,ax
     rep stosw               ; all variables 0
     pop es
     mov al,[LRAW]
@@ -267,7 +269,8 @@ CAPRUN:             ; one main-loop pass
     call CPNOTE
     inc byte [CNS]
     jmp .pl
-.h: cmp byte [CRQ],0        ; recapture asked for: now
+.h: call DISCP0             ; FZED41C
+    cmp byte [CRQ],0        ; recapture asked for: now
     jnz .end
     cmp byte [CHM],7        ; until RECAPTURE (turning P4 away ends it at the next check)
     jz .r
@@ -288,6 +291,29 @@ CAPRUN:             ; one main-loop pass
 .s3: mov byte [CST],3        ; PERF38U: fade first (no fade: on to the capture at the next pass)
     ret
 .r: ret
+DISCP0:             ; FZED41C: disintegration ages; once it is no longer new, DISCAP (capr2z.asm) works on the take
+    call DISAGE.t
+    cmp byte [DAGE+3],0
+    jnz DISCAP
+    ret
+DISRW:              ; FZED41C, from DISCAP (capr2z.asm): the 64 words at dx:ax through the stage, in place
+    push ax
+    push dx
+    mov cx,64
+    mov [LVN],cx
+    call LVRD
+    xor al,al
+    xchg al,[DISH]
+    call DISCH
+    mov [DISH],al
+    pop dx
+    pop ax
+    mov cx,64
+    call LVWR
+    push ds
+    pop es
+    ret
+
 CELLT:              ; PERF38W: CF=1 while CEL < dx:ax (bx, cx changed)
     mov cx,[CEL]
     mov bx,[CEL+2]
@@ -437,6 +463,9 @@ CREC:               ; recording: until the take's duration (PERF38W: the ROM rec
     mov [CNS],al
     mov [CRQ],al            ; presses during the recording don't count
     call CZERO
+    xor ax,ax               ; FZED41C: a new take is new (disintegration's age; its place goes on, or round
+    mov [DAGE],ax           ; again past the new take's end)
+    mov [DAGE+2],ax
     mov byte [CST],2
 .r: ret
 
@@ -776,8 +805,8 @@ S_CP2: db 'ORIG SAM 0000MS',0
 CVN: db 'SAMRNDFALRIS'      ; PERF39A: back from the resident data
 CFDT: db 0,1,2,4,8,16,24,32   ; fade / 50 ms (PERF39A: back from the resident data)
 S_CF: db 'FADE 0000MS',0
-%if ($-$$) > 0x7C4
-%error capture overlay too big (variables at DBC4h)
+%if ($-$$) > 0x7FE
+%error capture overlay too big (signature at DBFEh)
 %endif
     times 0x7FE-($-$$) db 0
     dw 0xCA9E
