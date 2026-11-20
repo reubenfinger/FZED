@@ -23,14 +23,14 @@ def dunit(u, thr):
     return 256 if d <= 0 else max(0, 256 - (d >> 4))
 
 def model(buf, a, hiss, drop, co, prev, rn):
-    ha = (hiss * hiss) >> 1
+    ha = hiss                            # FZED41E: hiss on when HISS > 0
     if a == 0 and ha == 0: return list(buf), rn
     k = (((256 - a) ** 2) >> 1) | 0x300
     thr = (drop * a * 2) & 0xffff
     q = co & 2047; u = (co >> 11) & 0xffff
     dr = dunit(u, thr)
     yh = s16(prev) >> 1; out = []
-    for w in buf:
+    for i, w in enumerate(buf):
         if a:
             d = s16((s16(w) >> 1) - yh)
             dx = s16(((d * k) << 1) >> 16)
@@ -44,9 +44,9 @@ def model(buf, a, hiss, drop, co, prev, rn):
         q += 1
         if q == 2048:
             q = 0; u = (u + 1) & 0xffff; dr = dunit(u, thr)
-        if ha:
-            rn = (rn * 25173 + 13849) & 0xffff
-            n = (s16(rn) * ha * 2) >> 16
+        if ha and not i & 1:               # FZED41E: every other word
+            rn ^= (rn << 7) & 0xffff; rn ^= rn >> 9; rn ^= (rn << 8) & 0xffff     # xorshift 7, 9, 8
+            n = s16(rn) >> (2 + ((128 - hiss) >> 4))
             v = v + n
             v = 32767 if v > 32767 else (-32768 if v < -32768 else v)
         out.append(v & 0xffff)

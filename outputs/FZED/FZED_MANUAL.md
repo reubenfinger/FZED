@@ -499,7 +499,7 @@ Disintegration ages the sample as it plays, in the spirit of William Basinski's 
 
 | Control | Send | Meaning |
 | --- | --- | --- |
-| HISS | FZED 20 | Noise added on top, rising with the square of the knob to about -12 dB. 0 is none |
+| HISS | FZED 20 | Noise added on top, in 6 dB steps (every 16 on the knob) from about -57 dB at 1 to about -15 dB at 113-127. 0 is none |
 | DECAY | FZED 21 | How fast the sample ages. 127 takes it from new to fully aged in about 10 seconds, 64 in about 40 seconds, 32 in under 3 minutes, 16 in about 11 minutes, 8 in about 45 minutes. **0 makes it new again** |
 | DROPOUTS | FZED 22 | How many 57 ms stretches drop out as it ages. A stretch doesn't vanish at once: it fades away as the sample ages (over about a sixteenth of the full ageing at 127, longer at lower settings), and its ends always fade over 3.5 ms. The same stretches go first and more join as it ages. At 127 and fully aged, nearly all of it is gone |
 | EVEN AGEING | FZED 23 | 0 = off. Above 0 = on: with live FX, the age only moves on once the live engine has been through as many words as the sample holds, so the pieces it has just written and the ones it wrote earlier are never more than one small step apart. This stops the tearing at fast DECAY rates; the price is that the age can only move as fast as the engine gets round the sample, so long samples at high rates age more slowly than the DECAY times above. Capture always ages by time |

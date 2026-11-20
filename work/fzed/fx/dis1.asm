@@ -41,18 +41,14 @@ DISAGE:             ; LVRUN, every pass: live on, every 4096 timer units (about 
     or word [DAGE+2],-1      ; (held at full)
 .r: ret
 
-DISPRM:             ; DISCH: the chunk's settings. ZF=1: new and no hiss, nothing to do. Else dx:ax = LVPOS, bp = dulling k, DHA / DTH / DU /
-                    ; DQ / DDR set.
+DISPRM:             ; DISCH: the chunk's settings. ZF=1: new and no hiss, nothing to do. Else dx:ax = LVPOS, bp = dulling k, DTH / DU / DQ /
+                    ; DDR set.
     mov ax,[LVN]            ; FZED41D: words through the stage, for EVEN AGEING
     add [DCNT],ax
     adc word [DCNT+2],0
     mov bl,[DAGE+3]         ; a
     mov al,[DISH]
-    mul al
-    shr ax,1                ; FZED41D: hiss HISS^2 / 2 (at most about -12 dB)
-    mov [DHA],ax
-    xor bh,bh
-    or ax,bx
+    or al,bl                ; (FZED41E: hiss is set in DISCH)
     jz .r
     mov al,[DISP]
     mul bl
@@ -81,4 +77,13 @@ DISPRM:             ; DISCH: the chunk's settings. ZF=1: new and no hiss, nothin
     pop dx
     pop ax
     or sp,sp                ; ZF=0
+.r: ret
+
+DCOV:               ; FZED41D (FZED41E: here for room), live FX only: with EVEN AGEING on, CF=1 until the stage has had as many words as the clean
+    cmp byte [DIS4],0       ; copy holds (LVLEN) since the last ageing step, so the age moves on only once the live engine
+    jz .r                   ; has been round, and old and new pieces differ by one step at most (CF=0 from cmp)
+    mov ax,[DCNT]
+    mov dx,[DCNT+2]
+    sub ax,[LVLEN]
+    sbb dx,[LVLEN+2]
 .r: ret

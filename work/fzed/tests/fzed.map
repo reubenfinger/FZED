@@ -881,31 +881,31 @@ Real              Virtual           Name
             7EAF              7EAF  S_OUT
             7EBA              7EBA  EXTS
             7EBB              7EBB  EXTSEL
-            7ED1              7ED1  EXTSEL.m
-            7ED4              7ED4  EXTPREP
-            7EE2              7EE2  EXTHDR
-            7EEC              7EEC  EXTHDR.c
-            7F13              7F13  EXTHDR.tl
-            7F1E              7F1E  EXTHDR.r
-            7F1F              7F1F  EXTHDR.bad
-            7F27              7F27  EXTSTMP
-            7F2F              7F2F  S_EXO
-            7F37              7F37  S_EXN
-            7F3E              7F3E  S_EXB
-            7F4E              7F4E  DISH
-            7F4F              7F4F  DISD
-            7F50              7F50  DISP
-            7F51              7F51  DIS4
-            7F52              7F52  DTM
-            7F54              7F54  DAGE
-            7F58              7F58  DISSET
-            7F70              7F70  DISSET.m
-            7F71              7F71  DISAGE
-            7F7D              7F7D  DISAGE.t
-            7F9B              7F9B  DISAGE.r
-            7F9C              7F9C  DISPRM
-            7FFF              7FFF  DISPRM.r
-            8000              8000  LOWEND
+            7ECD              7ECD  EXTPREP
+            7EDB              7EDB  EXTHDR
+            7EE5              7EE5  EXTHDR.c
+            7F0C              7F0C  EXTHDR.tl
+            7F17              7F17  EXTHDR.r
+            7F18              7F18  EXTHDR.bad
+            7F20              7F20  EXTSTMP
+            7F28              7F28  S_EXN
+            7F2F              7F2F  S_EXB
+            7F3F              7F3F  DISH
+            7F40              7F40  DISD
+            7F41              7F41  DISP
+            7F42              7F42  DIS4
+            7F43              7F43  DTM
+            7F45              7F45  DAGE
+            7F49              7F49  DISSET
+            7F61              7F61  DISSET.m
+            7F62              7F62  DISAGE
+            7F6E              7F6E  DISAGE.t
+            7F8C              7F8C  DISAGE.r
+            7F8D              7F8D  DISPRM
+            7FE7              7FE7  DISPRM.r
+            7FE8              7FE8  DCOV
+            7FFE              7FFE  DCOV.r
+            7FFF              7FFF  LOWEND
             8400              8400  FXCC
             8419              8419  FXCC.r0
             8439              8439  FXCC.k95
@@ -1504,14 +1504,12 @@ Real              Virtual           Name
             B77E              B77E  DISCH.dn
             B78F              B78F  DISCH.dc
             B791              B791  DISCH.h
-            B7A0              B7A0  DISCH.hl
-            B7BF              B7BF  DISCH.w
-            B7C5              B7C5  DISCH.x
-            B7C8              B7C8  DCOV
-            B7DE              B7DE  DCOV.r
-            B7DF              B7DF  DTICK
-            B7F9              B7F9  DTICK.r
-            B7FA              B7FA  HIGHEND
+            B7AF              B7AF  DISCH.hl
+            B7CF              B7CF  DISCH.w
+            B7DB              B7DB  DISCH.x
+            B7DE              B7DE  DTICK
+            B7F8              B7F8  DTICK.r
+            B7F9              B7F9  HIGHEND
             B7FE              B7FE  SIG
 
 ---- Section lv ---------------------------------------------------------------
@@ -1825,16 +1823,15 @@ Real              Virtual           Name
             CFB0              EBB0  S_CAPD
             CFC1              EBC1  CSYT
             CFC8              EBC8  DTH
-            CFCA              EBCA  DHA
-            CFCC              EBCC  DY
-            CFCE              EBCE  DQ
-            CFD0              EBD0  DU
-            CFD2              EBD2  DDR
-            CFD4              EBD4  DRN
-            CFD6              EBD6  DCNT
-            CFDA              EBDA  DUNIT
-            CFFB              EBFB  DUNIT.s
-            CFFF              EBFF  XTEND
+            CFCA              EBCA  DY
+            CFCC              EBCC  DQ
+            CFCE              EBCE  DU
+            CFD0              EBD0  DDR
+            CFD2              EBD2  DRN
+            CFD4              EBD4  DCNT
+            CFD8              EBD8  DUNIT
+            CFF9              EBF9  DUNIT.s
+            CFFD              EBFD  XTEND
 
 ---- Section ov ---------------------------------------------------------------
 

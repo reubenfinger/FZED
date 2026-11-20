@@ -20,13 +20,10 @@ EXTS: db 0                  ; FZED 19's module (in the program's own memory: 0 a
 EXTSEL:             ; parameter 89 with STSEL 19: al = 0-127
     shr al,3
     mov [EXTS],al
-    mov bx,S_EXO
-    or al,al
-    jz .m
-    mov di,S_EXN+4
+    mov di,S_EXN+4          ; (FZED41E: off shows EXT 00, for room)
     call DEC2
     mov bx,S_EXN
-.m: jmp NMSG
+    jmp NMSG
 
 EXTPREP:            ; FXRUN with a module chosen: load sector 51+n (OVCALL refuses in capture, CF=1), then EXTHDR
     mov al,[EXTS]
@@ -67,6 +64,5 @@ EXTHDR:             ; module loaded: same ABI and build, then its init; CF=1 = n
     stc
     ret
 EXTSTMP: dw LOWEND,HIGHEND,LVEND,XTEND
-S_EXO: db 'EXT OFF',0
 S_EXN: db 'EXT 00',0
 S_EXB: db 'EXT: BAD MODULE',0

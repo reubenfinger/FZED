@@ -1,5 +1,11 @@
 # FZED Menu Revision
 
+## Cheaper Live Hiss (next)
+
+- FZED: hiss costs about 60% fewer clocks, so it is less likely to push the live engine behind the playhead (the tearing heard with HISS up). The noise is now a multiply-free xorshift, its level set by a shift, and it is added to every other word only (white noise with every other value 0 is still white). HISS now moves in 6 dB steps, every 16 on the knob, from about -57 dB to about -15 dB; 0 is none. Measured on the timing model, per 128 words: hiss about 7,000 clocks, against about 18,000 before.
+- FZED: FZED 19 = 0 now shows `EXT 00` on the FZ LCD instead of `EXT OFF` (for room). The Gills still shows OFF.
+- Emulator: `dis41.py` and `capdis41.py` pass with the new hiss model; start-up unchanged.
+
 ## Render Keeps Live FX, Fading Dropouts, EVEN AGEING (next)
 
 - FZED: Render (CC118) with live FX on keeps what they give. The age stops, one sweep runs over every word through the FX Type and disintegration at that age, and live FX are released without the clean copy going back (RENDERED (LIVE)). Before this, Render with live FX on went back to the original and rendered the FX Type alone, so disintegration was lost. With live FX off, Render works as before.

@@ -73,39 +73,42 @@ DISCH:              ; LVCHK, after the effect: LVN words in LVBUF, clean offset 
     call DUNIT
     xor bx,bx
 .dc: loop .dl
-.h: mov bx,[DHA]            ; hiss
-    or bx,bx
-    jz .x
+.h: mov al,[DISH]            ; hiss. FZED41E: xorshift noise (7, 9, 8; no multiply) shifted down to the level, added to
+    dec al                  ; every other word only (white noise with every other value 0 is still white): about a
+                            ; third of FZED41D's clocks
+    js .x                   ; HISS 0: none
+    xor al,0x7f
+    shr al,4
+    add al,2
+    mov cl,al               ; noise >> (2 + (128 - HISS) / 16): about -15 dB at 113-127, 6 dB steps down to -57 dB at 1-16
+    mov bp,[LVN]
+    inc bp
+    shr bp,1                ; words 0, 2, 4 ... of the chunk
     mov si,LVBUF
-    mov cx,[LVN]
-.hl: mov ax,25173
-    mul word [DRN]
-    add ax,13849
-    mov [DRN],ax
-    imul bx
-    shl ax,1
-    rcl dx,1
-    mov ax,[si]
-    add ax,dx
+    mov di,[DRN]
+.hl: mov ax,di
+    mov bx,ax
+    shl bx,7
+    xor ax,bx
+    mov bx,ax
+    shr bx,9
+    xor ax,bx
+    xor ah,al
+    mov di,ax
+    sar ax,cl
+    add ax,[si]
     jno .w
     mov ax,0x7fff
     js .w
     inc ax
 .w: mov [si],ax
-    inc si
-    inc si
-    loop .hl
+    add si,4
+    dec bp
+    jnz .hl
+    mov [DRN],di
 .x: pop es
     popa
     ret
-DCOV:               ; FZED41D, live FX only: with EVEN AGEING on, CF=1 until the stage has had as many words as the clean
-    cmp byte [DIS4],0       ; copy holds (LVLEN) since the last ageing step, so the age moves on only once the live engine
-    jz .r                   ; has been round, and old and new pieces differ by one step at most (CF=0 from cmp)
-    mov ax,[DCNT]
-    mov dx,[DCNT+2]
-    sub ax,[LVLEN]
-    sbb dx,[LVLEN+2]
-.r: ret
 DTICK:              ; CF=1 until 4096 timer units (about 40 ms) since the last ageing step; then a step: DCNT from 0
     mov ax,[0x40a]
     mov dx,ax
