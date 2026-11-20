@@ -901,10 +901,10 @@ Real              Virtual           Name
             7F6F              7F6F  DISSET.m
             7F70              7F70  DISAGE
             7F77              7F77  DISAGE.t
-            7FA2              7FA2  DISAGE.r
-            7FA3              7FA3  DISPRM
-            7FF9              7FF9  DISPRM.r
-            7FFA              7FFA  LOWEND
+            7FA3              7FA3  DISAGE.r
+            7FA4              7FA4  DISPRM
+            7FFB              7FFB  DISPRM.r
+            7FFC              7FFC  LOWEND
             8400              8400  FXCC
             8419              8419  FXCC.r0
             8439              8439  FXCC.k95
@@ -1500,14 +1500,17 @@ Real              Virtual           Name
             B71E              B71E  CSYC
             B726              B726  DISCH
             B751              B751  DISCH.p
-            B75D              B75D  DISCH.l
-            B784              B784  DISCH.e
-            B796              B796  DISCH.z
-            B798              B798  DISCH.d2
-            B7AC              B7AC  DISCH.h
-            B7D3              B7D3  DISCH.w
-            B7DB              B7DB  DISCH.x
-            B7DE              B7DE  HIGHEND
+            B762              B762  DISCH.l
+            B78A              B78A  DISCH.dl
+            B79C              B79C  DISCH.e
+            B7AF              B7AF  DISCH.dw
+            B7B1              B7B1  DISCH.dn
+            B7C2              B7C2  DISCH.dc
+            B7C4              B7C4  DISCH.h
+            B7D3              B7D3  DISCH.hl
+            B7F2              B7F2  DISCH.w
+            B7F8              B7F8  DISCH.x
+            B7FB              B7FB  HIGHEND
             B7FE              B7FE  SIG
 
 ---- Section lv ---------------------------------------------------------------
@@ -2216,8 +2219,7 @@ Real              Virtual           Name
             F467              D467  EQONE
             F47B              D47B  EQRUN
             F49C              D49C  EQRUN.l
-            F4DF              D4DF  EQRUN.s
-            F4EF              D4EF  EQRUN.o
-            F502              D502  EQSAT
-            F516              D516  EQSAT.k
+            F4FA              D4FA  EQSHR
+            F50F              D50F  EQSAT
+            F523              D523  EQSAT.k
 

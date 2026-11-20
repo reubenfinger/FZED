@@ -92,21 +92,28 @@ EQRUN:              ; cx words at es:si
     imul word [EQG]
     add ax,cx
     adc dx,bx               ; dx:ax = sum, Q12, half scale
-    mov cx,11               ; -> full scale: >> 11 (32-bit)
-.s: sar dx,1
-    rcr ax,1
-    loop .s
+    mov cl,11               ; -> full scale: >> 11 (32-bit)
+    call EQSHR
     call EQSAT              ; ax = 16-bit, held at full scale
     imul word [EQG+6]       ; output level
-    mov cx,12
-.o: sar dx,1
-    rcr ax,1
-    loop .o
+    mov cl,12
+    call EQSHR
     call EQSAT
     mov [es:si],ax
     add si,2
     pop cx
     loop .l
+    ret
+EQSHR:              ; FZED41D: dx:ax >>= cl (signed, cl 9-15), with shifts by cl instead of a loop of single bits
+    shr ax,cl
+    mov bx,dx
+    neg cl
+    add cl,16
+    shl bx,cl
+    or ax,bx
+    sub cl,16
+    neg cl
+    sar dx,cl
     ret
 EQSAT:              ; dx:ax signed 32-bit -> ax held to -32768 .. 32767
     push bx

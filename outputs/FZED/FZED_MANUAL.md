@@ -495,18 +495,18 @@ EXT modules are extra effects and tools kept on the FZED disk rather than in mem
 
 ### Disintegration
 
-Disintegration ages the sample as it plays, in the spirit of William Basinski's *Disintegration Loops*: the longer it runs, the duller it sounds, and parts of it drop out. It is a stage after the live effect, so it needs live FX on (CC119) and works with any FX Type. To hear it on its own, choose an effect and turn its FX Mix (CC117) right down.
+Disintegration ages the sample as it plays, in the spirit of William Basinski's *Disintegration Loops*: the longer it runs, the duller it sounds, and parts of it drop out. It is a stage after the live effect, so it needs live FX on (CC119) and works with any FX Type. It acts on whatever the effect gives, so set FX Mix (CC117) wherever you like; turning it right down only lets you hear disintegration on its own.
 
 | Control | Send | Meaning |
 | --- | --- | --- |
-| HISS | FZED 20 | Noise added on top, rising with the square of the knob to about -24 dB. 0 is none |
-| DECAY | FZED 21 | How fast the sample ages. 127 takes it from new to fully aged in about 10 seconds, 16 in about 11 minutes, 8 in about 45 minutes. **0 makes it new again** |
+| HISS | FZED 20 | Noise added on top, rising with the square of the knob to about -12 dB. 0 is none |
+| DECAY | FZED 21 | How fast the sample ages. 127 takes it from new to fully aged in about 10 seconds, 64 in about 40 seconds, 32 in under 3 minutes, 16 in about 11 minutes, 8 in about 45 minutes. **0 makes it new again** |
 | DROPOUTS | FZED 22 | How many 57 ms stretches drop out as it ages. Each fades out and in over 3.5 ms. The same stretches go first and more join as it ages. At 127 and fully aged, nearly all of it is gone |
 
 Send FZED 20-22 as CC10 = 88, CC11 = 20 (or 21, 22), then CC10 = 89, CC11 = the value. The FZ's LCD doesn't show these values (there was no room); the Gills does.
 
 - The original stays safe. Live FX keep a clean copy, and disintegration works from it, so turning live FX off brings the sample back as it was. RENDERED (LIVE) keeps it as it sounds at that moment.
-- Dulling and dropouts follow the age; hiss doesn't. With DECAY at 0 the sample is new: only the hiss, if any, is added. While disintegration is on, the lowest bit of each word is 0.
+- Dulling follows the age steadily: at a quarter of the way the top end is going (about 5 kHz), at half way it is muffled (about 1.8 kHz), and at the end only a low rumble is left (about 135 Hz). These are for a 36 kHz voice; at 18 kHz they are half. Dropouts follow the age too; hiss doesn't. With DECAY at 0 the sample is new: only the hiss, if any, is added. While disintegration is on, the lowest bit of each word is 0.
 - The stretch timings are for a 36 kHz voice; at lower rates they are longer.
 - **In capture** (a take held until RECAPTURE suits it best), disintegration works on the take itself, 64 words at a time as it plays. Each pass builds on the last, as a real tape loop wears, rather than starting again from a clean copy. Hiss is left out in capture, because it would pile up pass after pass. Each new take starts new. Leaving capture keeps the take as it sounds then. The last few words of a take (fewer than 64) are left as they are.
 

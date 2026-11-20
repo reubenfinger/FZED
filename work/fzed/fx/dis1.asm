@@ -23,8 +23,8 @@ DISSET:             ; parameter 89 with STSEL 20-22: bl = 0-2, al = value (no LC
     mov [DAGE+2],ax
 .m: ret
 
-DISAGE:             ; LVRUN, every pass: live on, every 4096 timer units (about 40 ms) the age grows by 4 * decay^2
-    cmp byte [LVON],2       ; 65536ths of the way (DECAY 127: new to gone in about 10 s; 8: about 45 minutes)
+DISAGE:             ; LVRUN, every pass: live on, every 4096 timer units (about 40 ms) the age (high word) grows by
+    cmp byte [LVON],2       ; decay^2 / 64 (DECAY 127: new to gone in about 10 s; 32: 2.7 minutes; 8: about 45 minutes)
     jnz .r
 .t: mov ax,[0x40a]           ; (capture's driver enters here)
     mov dx,ax
@@ -34,31 +34,34 @@ DISAGE:             ; LVRUN, every pass: live on, every 4096 timer units (about 
     mov [DTM],dx
     mov al,[DISD]
     mul al
-    shl ax,2
+    mov cx,1024             ; FZED41D: decay^2 x 1024 (FZED41C added it 256 times too low: 43 minutes at 127)
+    mul cx
     add [DAGE],ax
-    adc word [DAGE+2],0
+    adc [DAGE+2],dx
     jnc .r
     mov word [DAGE+2],0xffff
 .r: ret
 
-DISPRM:             ; DISCH: the chunk's settings. ZF=1: new and no hiss, nothing to do. Else bp = k, dx:ax = LVPOS, DU / DQ / DDR set.
+DISPRM:             ; DISCH: the chunk's settings. ZF=1: new and no hiss, nothing to do. Else dx:ax = LVPOS, bp = dulling k, DHA / DTH / DU /
+                    ; DQ / DDR set.
     mov bl,[DAGE+3]         ; a
     mov al,[DISH]
     mul al
-    shr ax,3
+    shr ax,1                ; FZED41D: hiss HISS^2 / 2 (at most about -12 dB)
     mov [DHA],ax
     xor bh,bh
     or ax,bx
     jz .r
-    mov al,120
-    mul bl
-    not ax
-    xor ah,0x80
-    mov bp,ax               ; k = 32767 - 120a
     mov al,[DISP]
     mul bl
     shl ax,1
     mov [DTH],ax
+    mov al,bl               ; FZED41D: bp = dulling k = (256 - a)^2 / 2, with 300h ORed in as its floor (a = 0: unused)
+    neg al
+    mul al
+    shr ax,1
+    or ah,3
+    mov bp,ax
     mov ax,[LVPOS]          ; stretch and place from the clean offset
     mov dx,[LVPOS+2]
     push ax

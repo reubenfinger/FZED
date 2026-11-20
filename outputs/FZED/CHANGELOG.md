@@ -1,5 +1,14 @@
 # FZED Menu Revision
 
+## Disintegration And EQ Fixes After The First Hardware Test (next)
+
+- FZED: disintegration aged 256 times too slowly (DECAY 127 took about 43 minutes, not 10 seconds), which is why it sounded subtle. Fixed: DECAY 127 about 10 s, 64 about 40 s, 32 under 3 minutes, 8 about 45 minutes.
+- FZED: dulling now falls steadily with age (about 5 kHz a quarter of the way, 1.8 kHz half way, 135 Hz at the end, for a 36 kHz voice) instead of staying faint until the last quarter. Hiss goes up to about -12 dB (was -24 dB).
+- FZED: the stage runs as separate passes (dulling, dropouts, hiss), each only when it does something.
+- FZED: EXT EQ renders about 1.5 times faster (32-bit shifts by count instead of bit by bit). Every render works through the sample piece by piece; EQ was slow enough that you could hear it moving through.
+- Gills Core 117: on the FX EXT view, P2-P5 (CC113-116) are smooth 0-127 pots. In Core 116, P2 and P4 kept the FX view's steps, so EQ BASS bottomed out at 004.
+- Emulator: `dis41.py`, `capdis41.py` and `ext41.py` pass with the new model (the age grows by DECAY^2 x 1024 each 4096 timer units).
+
 ## Disintegration, EXT EQ And Room For Them (next)
 
 - FZED: disintegration, a live stage after the FX Type effect (FZED 20 HISS, FZED 21 DECAY, FZED 22 DROPOUTS). With live FX on, the sample ages with time: it gets duller (a one-pole low-pass down to about 380 Hz) and, with DROPOUTS, 57 ms stretches drop out, each faded over 3.5 ms; the same stretches go first and more join. DECAY sets the speed (127: about 10 s from new to fully aged; 8: about 45 minutes); DECAY 0 makes it new again. HISS adds noise on top. It works from live FX's clean copy, so turning live FX off brings the sample back. No LCD readout for the three values (no room). Source: `work/fzed/fx/dis1.asm`-`dis3.asm`.

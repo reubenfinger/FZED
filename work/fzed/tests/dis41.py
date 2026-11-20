@@ -3,7 +3,7 @@
 # Every call of the stage (DISCH) is checked against a model of it, word for word: the chunk it was given, the age,
 # the controls, the chunk's clean offset, the word before it in the voice and the noise state in, the chunk out.
 # Also: FZED 20-22 set the controls and DECAY 0 makes the sample new again; the age grows with the timer at
-# 4 decay^2 / 65536 of the way each 4096 units; with every control 0 the stage leaves the effect's words alone; live
+# decay^2 / 64 of the way (high word) each 4096 units; with every control 0 the stage leaves the effect's words alone; live
 # off brings back the clean sample; chase and sweep both go through it; capture still refuses live FX.
 import os, sys
 os.environ['FZTIMER'] = '1'
@@ -20,19 +20,20 @@ def dunit(u, thr):
     return h < thr
 
 def model(buf, a, hiss, drop, co, prev, rn):
-    ha = (hiss * hiss) >> 3
+    ha = (hiss * hiss) >> 1
     if a == 0 and ha == 0: return list(buf), rn
-    k = (32767 - 120 * a) & 0xffff
-    k = s16(k)
+    k = (((256 - a) ** 2) >> 1) | 0x300
     thr = (drop * a * 2) & 0xffff
     q = co & 2047; u = (co >> 11) & 0xffff
     dr = dunit(u, thr)
     yh = s16(prev) >> 1; out = []
     for w in buf:
-        d = s16((s16(w) >> 1) - yh)
-        dx = s16(((d * k) << 1) >> 16)
-        yh = s16(yh + dx)
-        v = s16(yh << 1)
+        if a:
+            d = s16((s16(w) >> 1) - yh)
+            dx = s16(((d * k) << 1) >> 16)
+            yh = s16(yh + dx)
+            v = s16(yh << 1)
+        else: v = s16(w)
         if dr:
             e = min(q, 2047 - q)
             if e >= 128: v = 0
@@ -150,8 +151,8 @@ fzed(21, 127); a0 = m32(M['DAGE']); ticks.clear()
 run_passes(400)
 a1 = m32(M['DAGE'])
 gaps = [(ticks[i] - ticks[i - 1]) & 0xffff for i in range(1, len(ticks))]
-check(a1 - a0 == len(ticks) * 4 * 127 * 127 and len(ticks) > 20 and min(gaps) >= 0x1000 and max(gaps) < 0x1400,
-      'DECAY 127: the age grew by 4 x 127^2 at each of %d steps, %s..%s timer units apart' % (len(ticks), min(gaps), max(gaps)))
+check(a1 - a0 == len(ticks) * 1024 * 127 * 127 and len(ticks) > 20 and min(gaps) >= 0x1000 and max(gaps) < 0x1400,
+      'DECAY 127: the age grew by 1024 x 127^2 at each of %d steps, %s..%s timer units apart (new to gone in %.1f s)' % (len(ticks), min(gaps), max(gaps), 65536 * 65536 / (1024 * 127 * 127) * 4096 / 104000))
 verify('chase, ageing')
 fzed(21, 0)
 check(m32(M['DAGE']) == 0, 'DECAY 0 again: new')
