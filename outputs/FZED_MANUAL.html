@@ -1167,7 +1167,7 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#e5eeea;padding:16px;
 <tr>
 <td>EVEN AGEING</td>
 <td>FZED 23</td>
-<td>0 = off. Above 0 = on: with live FX, the age only moves on once the live engine has been through as many words as the sample holds, so the pieces it has just written and the ones it wrote earlier are never more than one small step apart. This stops the tearing at fast DECAY rates; the price is that the age can only move as fast as the engine gets round the sample, so long samples at high rates age more slowly than the DECAY times above. Capture always ages by time</td>
+<td>0 = off: the age moves with time alone (fast, can tear). 1-127 = on: the age may only take 2^(value ÷ 16) steps each time the live engine has been round the sample: 1-15 one step a round (seamless, slowest), 16-31 two, 32-47 four, and so on up to 128 at 112-127 (close to time alone). The more steps a round, the faster it ages and the more the pieces at a join can differ, so set the balance by ear. With live FX the time per round depends on the sample's length and the effect; capture always ages by time</td>
 </tr>
 </tbody>
 </table>

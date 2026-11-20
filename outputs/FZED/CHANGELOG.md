@@ -1,5 +1,12 @@
 # FZED Menu Revision
 
+## EVEN AGEING Range (next)
+
+- FZED: EVEN AGEING (FZED 23) is a range: the age may take 2^(value / 16) steps each time the live engine has been round the sample (1-15 one, 16-31 two, ... 112-127 128); 0 is off. In the first version any value above 0 allowed one step a round, which was seamless but slow (several minutes for strong ageing on a 12 s sample).
+- FZED: the refused-module message is now `BAD MODULE` (was `EXT: BAD MODULE`), for room.
+- Gills Core 119: P9 sends the pot's value and shows OFF or 1/ROUND ... 128/ROUND.
+- Emulator: `dis41.py` checks EVEN AGEING 8, 40 and 127 (each step after at least the sample's length divided by 1, 4 and 128 words through the stage) and that more EVEN AGEING ages faster, the timer alone fastest.
+
 ## Cheaper Live Hiss (next)
 
 - FZED: hiss costs about 60% fewer clocks, so it is less likely to push the live engine behind the playhead (the tearing heard with HISS up). The noise is now a multiply-free xorshift, its level set by a shift, and it is added to every other word only (white noise with every other value 0 is still white). HISS now moves in 6 dB steps, every 16 on the knob, from about -57 dB to about -15 dB; 0 is none. Measured on the timing model, per 128 words: hiss about 7,000 clocks, against about 18,000 before.

@@ -2,7 +2,8 @@
 #   python3 dis41.py BUILD     (a build folder with fzedflat.bin, fzed.map, fzed.lst and tests/)
 # Every call of the stage (DISCH) is checked against a model of it, word for word: the chunk it was given, the age,
 # the controls, the chunk's clean offset, the word before it in the voice and the noise state in, the chunk out.
-# FZED41D: dropouts fade as the age passes them; EVEN AGEING (FZED 23) holds the age until the stage has been round;
+# FZED41D: dropouts fade as the age passes them; EVEN AGEING (FZED 23) holds the age until the stage has been round
+# (FZED41E: 2^(value / 16) steps a round);
 # Render with live FX on keeps what they give, in one sweep at one age.
 # Also: FZED 20-22 set the controls and DECAY 0 makes the sample new again; the age grows with the timer at
 # decay^2 / 64 of the way (high word) each 4096 units; with every control 0 the stage leaves the effect's words alone; live
@@ -62,7 +63,7 @@ h = lvh.H(B, signal=sig.signal(), timing=False); c = h.c; M = h.MAP; g = h.g
 EV = g['EV']; c.wr16(EV + 12, h.S + N - 1); h.E = h.S + N; h.fill(sig.signal())
 CLEAN = h.voice()
 lp = h.addr('MAIN', 'call L6372')
-passes = [0]; calls = []; pend = []; chase = [False]; ticks = []; tcnt = []
+passes = [0]; calls = []; pend = []; chase = [False]; ticks = []; tcnt = []; wc = [0]
 DIS = M['DISCH']
 TK = h.addr('DTICK', 'mov [DTM],dx')
 def m32(a): return h.M16(a) | (h.M16(a + 2) << 16)
@@ -72,9 +73,9 @@ def step():
         if chase[0]:
             ph = h.S + (passes[0] * 41) % N
             c.m[0x5420] = 1; c.wr16(0x5420 + 0xa, EV); h.u.mem = getattr(h.u, 'mem', {}); h.u.mem[2] = ph & 0xffff; h.u.mem[4] = ph >> 16
-    if c.ip == TK: ticks.append(c.r['dx']); tcnt.append(m32(M['DCNT']))
+    if c.ip == TK: ticks.append(c.r['dx']); tcnt.append(wc[0]); wc[0] = 0
     if c.ip == DIS:
-        n = h.M16(M['LVN']); pos = m32(M['LVPOS']); so = m32(M['LVSO']); sd = m32(M['LVSD'])
+        n = h.M16(M['LVN']); wc[0] += n; pos = m32(M['LVPOS']); so = m32(M['LVSO']); sd = m32(M['LVSD'])
         buf = [h.M16(M['LVBUF'] + 2 * i) for i in range(n)]
         if pos: prev = c.wave.get((sd + pos - 1) * 2, 0) | (c.wave.get((sd + pos - 1) * 2 + 1, 0) << 8)
         else: prev = buf[0]
@@ -169,15 +170,19 @@ check(h.voice() == CLEAN, 'live off: the clean sample is back, word for word')
 chase[0] = True
 ccp(119, 127, 4)
 check(until(lambda: c.m[M['LVON']] == 2 and c.m[M['LVDIRTY']] == 0, 8_000_000), 'live FX on again')
-fzed(23, 127); fzed(22, 100); fzed(21, 127); ticks.clear(); tcnt.clear(); calls.clear()
-run_passes(500)
-L = m32(M['LVLEN'])
-check(c.m[M['DIS4']] == 127 and ticks and all(n >= L for n in tcnt),
-      'EVEN AGEING: %d ageing steps, each after at least %d words through the stage (%s)' % (len(ticks), L, tcnt[:6]))
-n_even = len(ticks)
-verify('chase, even ageing, dropouts 100')
-fzed(23, 0); ticks.clear(); run_passes(500)
-check(len(ticks) > n_even, 'EVEN AGEING off: the timer alone again (%d steps in the same time, %d with it on)' % (len(ticks), n_even))
+fzed(22, 100); fzed(21, 127)
+L = m32(M['LVLEN']); steps = {}
+for val in (8, 40, 127, 0):
+    fzed(23, val); run_passes(10); ticks.clear(); tcnt.clear(); calls.clear()
+    run_passes(600)
+    steps[val] = len(ticks)
+    if val:
+        need = L >> (val >> 4)
+        check(c.m[M['DIS4']] == val and ticks and all(n >= need - 128 for n in tcnt[1:]),
+              'EVEN AGEING %d: %d ageing steps, each after at least %d words through the stage (L / %d; %s)' % (val, len(ticks), need, 1 << (val >> 4), tcnt[1:6]))
+    if val == 40: verify('chase, EVEN AGEING 40, dropouts 100')
+    else: calls.clear()
+check(steps[8] < steps[40] < steps[127] <= steps[0], 'more EVEN AGEING, faster ageing, the timer alone fastest (steps %r)' % steps)
 
 # 8. Render with live FX on: one sweep over every word at one age, then kept (live FX released, clean copy dropped)
 fzed(21, 0); wset(0xA0000000); fzed(22, 90); fzed(20, 30); chase[0] = False

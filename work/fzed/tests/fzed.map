@@ -890,18 +890,18 @@ Real              Virtual           Name
             7F20              7F20  EXTSTMP
             7F28              7F28  S_EXN
             7F2F              7F2F  S_EXB
-            7F3F              7F3F  DISH
-            7F40              7F40  DISD
-            7F41              7F41  DISP
-            7F42              7F42  DIS4
-            7F43              7F43  DTM
-            7F45              7F45  DAGE
-            7F49              7F49  DISSET
-            7F61              7F61  DISSET.m
-            7F62              7F62  DISAGE
-            7F6E              7F6E  DISAGE.t
-            7F8C              7F8C  DISAGE.r
-            7F8D              7F8D  DISPRM
+            7F3A              7F3A  DISH
+            7F3B              7F3B  DISD
+            7F3C              7F3C  DISP
+            7F3D              7F3D  DIS4
+            7F3E              7F3E  DTM
+            7F40              7F40  DAGE
+            7F44              7F44  DISSET
+            7F58              7F58  DISSET.m
+            7F59              7F59  DISAGE
+            7F65              7F65  DISAGE.t
+            7F83              7F83  DISAGE.r
+            7F84              7F84  DISPRM
             7FE7              7FE7  DISPRM.r
             7FE8              7FE8  DCOV
             7FFE              7FFE  DCOV.r

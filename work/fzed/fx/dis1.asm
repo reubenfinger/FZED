@@ -7,16 +7,15 @@
 DISH: db 0                  ; FZED 20 hiss 0-127 (DISH, DISD, DISP in this order)
 DISD: db 0                  ; FZED 21 decay rate
 DISP: db 0                  ; FZED 22 dropouts
-DIS4: db 0                  ; FZED 23 EVEN AGEING (FZED41D): not 0 = on
+DIS4: db 0                  ; FZED 23 EVEN AGEING (FZED41D): 0 off; FZED41E: 1-127, 2^(value / 16) steps a round
 DTM: dw 0                   ; timer at the last ageing step
 DAGE: dd 0                  ; age: high word 0 (new) .. FFFFh (gone), low word its fraction
 
-DISSET:             ; parameter 89 with STSEL 20-22: bl = 0-2, al = value (no LCD message: no room)
+DISSET:             ; parameter 89 with STSEL 20-23: bl = 0-3, al = value 0-127 (no LCD message: no room)
     xor bh,bh
-    and al,0x7f
     mov [bx+DISH],al
-    cmp bl,1
-    jnz .m
+    dec bx
+    jnz .m                  ; (DECAY)
     or al,al
     jnz .m
     cbw
@@ -43,7 +42,10 @@ DISAGE:             ; LVRUN, every pass: live on, every 4096 timer units (about 
 
 DISPRM:             ; DISCH: the chunk's settings. ZF=1: new and no hiss, nothing to do. Else dx:ax = LVPOS, bp = dulling k, DTH / DU / DQ /
                     ; DDR set.
-    mov ax,[LVN]            ; FZED41D: words through the stage, for EVEN AGEING
+    mov ax,[LVN]            ; FZED41D: words through the stage, for EVEN AGEING. FZED41E: counted 2^(EVEN AGEING / 16)
+    mov cl,[DIS4]           ; times over, so 1-15 allows one ageing step per time round the sample, 16-31 two, ... 112-127
+    shr cl,4                ; 128 (DISAGE's timer still limits it to one step each 40 ms)
+    shl ax,cl
     add [DCNT],ax
     adc word [DCNT+2],0
     mov bl,[DAGE+3]         ; a

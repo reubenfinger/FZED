@@ -65,4 +65,4 @@ EXTHDR:             ; module loaded: same ABI and build, then its init; CF=1 = n
     ret
 EXTSTMP: dw LOWEND,HIGHEND,LVEND,XTEND
 S_EXN: db 'EXT 00',0
-S_EXB: db 'EXT: BAD MODULE',0
+S_EXB: db 'BAD MODULE',0      ; (FZED41E: was EXT: BAD MODULE, for room)

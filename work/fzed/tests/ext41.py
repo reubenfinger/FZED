@@ -125,7 +125,7 @@ check(words(g) == before and lcds(g)[-1].rstrip() == 'TOOLS NOT LOADED', 'empty 
 def other(flat): o = (52 - 17) * 1024 + 4; flat[o] ^= 1
 g = boot(other); before = words(g)
 cc(g, 115, 64); fzed(g, 19, 8); render(g)
-check(words(g) == before and lcds(g)[-1].rstrip() == 'EXT: BAD MODULE', 'module from another build refused (%r), sample unchanged' % lcds(g)[-1])
+check(words(g) == before and lcds(g)[-1].rstrip() == 'BAD MODULE', 'module from another build refused (%r), sample unchanged' % lcds(g)[-1])
 
 # 7. a tool module (kind 2) in sector 54 (module 3): runs once with si = edit voice, shows its message, renders nothing
 def tool(flat):
