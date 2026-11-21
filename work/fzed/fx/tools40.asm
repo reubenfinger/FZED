@@ -233,6 +233,9 @@ CHPMV:              ; PERF40G CHPROP: copy 54h-ADh, or in per-slice mode 54h-75h
     mov cx,0xae-0xa5
     jmp MOVB
 
+CHSLO: push word CHSLICE    ; FZED41H: CHOP's slice loop (tools overlay 2, sector 47; replaces the bank choice's overlay)
+    push word 0x402F
+    jmp OVCALL
 CHBSELO: push word CHBSEL   ; PERF40J: choose the chop's bank (tools overlay 3)
     push word 0x4030
     jmp OVCALL

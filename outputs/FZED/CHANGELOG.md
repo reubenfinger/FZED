@@ -1,5 +1,10 @@
 # FZED Menu Revision
 
+## Room For What Comes Next (next)
+
+- FZED: CHOP's slice loop (cutting each slice into its own voice) moved out of resident memory into tools overlay 3 (disk sector 47), which CHOP already loads for its bank choice. About 320 bytes of resident low memory are free again for the next features (FZED to Gills recording messages, capture refire, LFO2 slow mode). CHOP works and reads as before; no other change.
+- Emulator: the chop tests and the full regression suite give the same results as the previous build; start-up unchanged.
+
 ## EXT BACKUP And EXT WAVETABLE (next)
 
 - FZED: EXT BACKUP (module 3, FZED 19 = 24-31, disk sector 54): copies the edit voice into the first empty voice with its own copy of the sample, as a one-step undo before a render. The edit voice stays the edit voice. Shows BACKUP IN Vnn, BACKUP: NO SLOT or BACKUP: NO MEMORY.
