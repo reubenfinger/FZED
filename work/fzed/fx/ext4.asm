@@ -6,8 +6,9 @@
 ; FZED 9 on rebuilds them on the frames.
 ;   CC113 TYPE:   0-31 SYNC (a sine hard-synced at 1 to 8 times), 32-63 PWM (pulse 50% down to 4%), 64-95 FOLD (a sine
 ;                 folded at 1 to 8 times gain), 96-127 MORPH (sine > triangle > saw > square)
-;   CC114 FRAMES: 8, 16, 32, 64     CC115 LENGTH: 164, 327, 655, 1309 words a cycle: A 220, 110, 55, 27.5 Hz at 36 kHz
-;                                   (original key A3, A2, A1, A0: in tune to a few cents)
+;   CC114 FRAMES: 8, 16, 32, 64     CC115 LENGTH (FZED41I: 5 bands of 26): 82, 164, 327, 655, 1309 words a cycle:
+;                                   A 440, 220, 110, 55, 27.5 Hz at 36 kHz (original key A4 ... A0: in tune to a few cents;
+;                                   the FZ plays 3 octaves either side of it, so 82 covers the whole keyboard)
 ;   CC116 SWEEP:  how far the last frame goes along the sweep (127 = all the way; 0 = every frame the same)
 ; An empty edit voice gets new memory, as a preset wave does; a voice with a sample uses its own memory if it holds the
 ; table (else TOO BIG: start from NEW VOICE). A voice sharing its memory lets go of it first.
@@ -32,8 +33,8 @@ WTI: dw 0                   ; word in the frame
 WTPH: dd 0                  ; phase (high word: 0-FFFFh a cycle)
 WTIN: dd 0                  ; phase step
 WTTOT: dd 0                 ; words in the table, guard words included
-WTLT: dw 164,327,655,1309
-WTKY: db 57,45,33,21
+WTLT: dw 82,164,327,655,1309
+WTKY: db 69,57,45,33,21
 S_WTB: db 'TOO BIG',0
 S_WTD: db 'TABLE READY',0
 
@@ -41,13 +42,14 @@ WTRUN:              ; si = the edit voice (raw CC values are 0-127)
     mov al,[FXREZ]          ; settings
     shr al,5
     mov [WTTY],al
+    mov al,[FXIN]           ; FZED41I: LENGTH in 5 bands of 26 (82 words added)
+    aam 26
+    mov bl,ah
     mov cl,[FXDF]
     shr cl,5
     mov ax,8
     shl ax,cl
     mov [WTNF],ax
-    mov bl,[FXIN]
-    shr bl,5
     xor bh,bh
     mov dl,[bx+WTKY]
     mov [WTKEY],dl

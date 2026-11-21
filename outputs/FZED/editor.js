@@ -419,7 +419,7 @@ function render(){
  if(state.group==='matrix'&&state.variants.matrix===1)$('subviews').append(node('p',{class:'fx-warning'},'Amount is bipolar: −64 to +64, with 0 at the center.'));
  if(state.group==='bank')$('subviews').append(bankGuide());
  if(!['user','bank','record','capture'].includes(state.group))$('subviews').append(presetBar());
- if(state.group==='lfo2')$('subviews').append(node('p',{class:'fx-warning'},'Mode selects Free, Note Retrigger or MIDI Clock. Rate / Division is a free rate index in Free and Note Retrigger modes, and a named clock division in MIDI Clock mode.'));
+ if(state.group==='lfo2')$('subviews').append(node('p',{class:'fx-warning'},'Mode selects Free, Free Slow, Note Retrigger, Retrigger Slow or MIDI Clock. The Slow modes run at a sixteenth of the speed. Rate / Division is a free rate index in the Free and Retrigger modes, and a named clock division in MIDI Clock mode.'));
  $('controls').replaceChildren();$('controls').classList.toggle('grouped',!!pageLayouts[state.group]);const pageTiles=[];
  for(const d of current()){
  const tile=node('article',{class:'control'+(isAction(d)?' action-control':''),'data-slot':d.slot});const head=node('div',{class:'control-head'});let label=state.group==='fx'&&d.slot===0?'FX TYPE':d.label;if(state.group==='fx'&&d.variant===2&&d.slot===6)label='LIVE: TAPEHACK ONLY';head.append(node('h3',{},label));

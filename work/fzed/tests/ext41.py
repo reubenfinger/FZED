@@ -254,13 +254,13 @@ def table(ty, nf, L, B):
         for i in range(L if k < nf else 8):
             v = s16(wtval(ph >> 16, ty, m)); out.append((((v * 26214) << 1) >> 16) & 0xffff); ph = (ph + inc) & 0xffffffff
     return out
-for ty, fr, ln, sw, label in ((0, 127, 40, 127, 'SYNC 64 x 327'), (1, 70, 0, 90, 'PWM 32 x 164'), (2, 40, 90, 127, 'FOLD 16 x 655'), (3, 10, 127, 127, 'MORPH 8 x 1309')):
+for ty, fr, ln, sw, label in ((0, 127, 60, 127, 'SYNC 64 x 327'), (1, 70, 30, 90, 'PWM 32 x 164'), (2, 40, 90, 127, 'FOLD 16 x 655'), (3, 10, 127, 127, 'MORPH 8 x 1309'), (1, 100, 0, 127, 'PWM 32 x 82')):
     g = boot(); c = g['c']; winread(c); EV = c.rd16(0xe04)
     c.wr16(EV + 0x10, 0)                    # an empty edit voice: new memory, as a preset wave
     for n, v in zip((113, 114, 115, 116), (ty * 32 + 8, fr, ln, sw)): cc(g, n, v)
     fzed(g, 0, 60)                          # Stretch: 5 segments (becomes 8)
     fzed(g, 19, 32); render(g)
-    nf = 8 << (fr >> 5); L = (164, 327, 655, 1309)[ln >> 5]; key = (57, 45, 33, 21)[ln >> 5]
+    nf = 8 << (fr >> 5); L = (82, 164, 327, 655, 1309)[ln // 26]; key = (69, 57, 45, 33, 21)[ln // 26]
     exp = table(ty, nf, L, sw)
     d32 = lambda a: c.rd16(a) | (c.rd16(a + 2) << 16)
     st = d32(EV + 8) & 0x1fffff
@@ -275,6 +275,7 @@ for ty, fr, ln, sw, label in ((0, 127, 40, 127, 'SYNC 64 x 327'), (1, 70, 0, 90,
           'the voice: loop 0 = frame 1, play range = the %d frames, key %d, Window Snap whole frames; Stretch 8 segments, Grain %d, Snap and crossfade off' % (nf, key, c.m[0x83FC]))
     if ty == 3:
         pos = []
+        cc(g, 10, 3); cc(g, 11, 96)         # FZED41I: WHOLE FRAMES (jumps; GLIDE, which WAVETABLE sets, is glide41.py's)
         for v in (0, 64, 127):
             cc(g, 10, 4); cc(g, 11, v); g['run'](c, g['u'], 400000)
             pos.append(((d32(EV + 0x14) & 0x1fffff) - st, (d32(EV + 0x34) & 0x1fffff) - (d32(EV + 0x14) & 0x1fffff)))

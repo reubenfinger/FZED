@@ -46,7 +46,7 @@ MXSAV equ MISC+0x113
 MXLU equ MISC+0x118         ; [8] record uses LFO 2 as a source
 MXUSE equ MISC+0x120        ; [8] words: destinations used on the last pass
 LFRAW equ MISC+0x130        ; [8] words: LFO 2 before its depth (matrix source)
-LWSNAP equ MISC+0x140       ; [8] loop window snap: 0-42 free, 43-85 zero-cross, 86-127 whole frames
+LWSNAP equ MISC+0x140       ; [8] loop window snap: 0-42 free, 43-85 zero-cross, 86-106 whole frames, 107-127 glide (FZED41I)
 LWL equ MISC+0x148          ; dword: window length
 LWS equ MISC+0x14C          ; dword: span / scratch
 MTX equ 0xD100
@@ -1067,6 +1067,7 @@ LOOPWIN:            ; al = position 0-127: slide the active loop through the sam
     adc dx,0
     mov cx,127
     div cx                  ; ax = frame index
+    call GLIDX              ; FZED41I: GLIDE: at most one frame from where the window is
     mov cx,ax
     mul word [LWL]          ; dx:ax = index * L lo
     push ax

@@ -370,7 +370,7 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#e5eeea;padding:16px;
 </tr>
 <tr>
 <td>Mode</td>
-<td>Free, note retrigger, or MIDI clock</td>
+<td>Free, free slow, note retrigger, retrigger slow, or MIDI clock. The slow modes run at a sixteenth of the speed, for drifts over many seconds (a cycle takes up to well over a minute)</td>
 </tr>
 <tr>
 <td>Delay</td>
@@ -390,7 +390,7 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#e5eeea;padding:16px;
 </tr>
 </tbody>
 </table>
-<p>When Mode is set to Free or Note Retrigger, Rate / Division sets the free-running speed. In MIDI Clock mode, it selects 4 bars, 2 bars, 1 bar, half, quarter, eighth or sixteenth. MIDI clock must actually reach the FZ. Enabling a clock label does not generate clock in the browser.</p>
+<p>When Mode is set to Free, Note Retrigger or either Slow mode, Rate / Division sets the free-running speed. In MIDI Clock mode, it selects 4 bars, 2 bars, 1 bar, half, quarter, eighth or sixteenth. MIDI clock must actually reach the FZ. Enabling a clock label does not generate clock in the browser.</p>
 <p><strong>Destination 2 reserves matrix route 10:</strong> it sets that route's source to LFO 2 and changes its destination. Editing route 10 directly changes the same routing. It is not an eleventh matrix slot. The browser shares the local state between these controls.</p>
 <h2 id="section-11">10. Key / Velocity</h2>
 <p>These controls change how a sound responds across the keyboard and to playing strength.</p>
@@ -635,7 +635,7 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#e5eeea;padding:16px;
 </tr>
 <tr>
 <td>Window Snap</td>
-<td>Free movement, zero-cross snapping, or whole frames</td>
+<td>Free movement, zero-cross snapping, whole frames, or frames glide. Whole frames jumps straight to the frame. Frames glide steps one frame at a time towards where the window is sent, at most one frame each cycle of the frame (at its original key), so a sweep from the knob, LFO 2, the matrix or a pattern plays every frame on the way and never skips one; it carries on until it gets there. EXT WAVETABLE sets frames glide</td>
 </tr>
 <tr>
 <td>Play Mode</td>
@@ -1142,7 +1142,7 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#e5eeea;padding:16px;
 </tr>
 <tr>
 <td>4 EXT WAVETABLE</td>
-<td>A tool: builds a wavetable in the edit voice: a row of single cycles, each a step further along a sweep, for the loop window or Stretch to play. <strong>CC113 TYPE:</strong> SYNC (a sine hard-synced at 1 to 8 times its pitch), PWM (pulse 50% narrowing to 4%), FOLD (a sine folded harder and harder), MORPH (sine &gt; triangle &gt; saw &gt; square). <strong>CC114 FRAMES:</strong> 8, 16, 32 or 64. <strong>CC115 LENGTH:</strong> 164, 327, 655 or 1309 words a cycle: A 220, 110, 55 or 27.5 Hz at 36 kHz, with the voice's original key set to match (in tune to a few cents). <strong>CC116 SWEEP:</strong> how far along the sweep the last frame goes (0: every frame the same). An empty edit voice (NEW VOICE first) gets new memory; a voice with a sample uses its memory if it holds the table, else TOO BIG. Afterwards: loop 1 is the first frame, Window Snap is WHOLE FRAMES (so Window Position, the matrix's LOOP WINDOW or LFO 2 Dest 2 scan the frames), and Stretch is set to match: Segments 2, 4 or 8 stay (others become 8), Grain so each loop is exactly one frame, Snap off, Crossfade 0; Stretch is switched off, as its loops were replaced, and Stretch On builds them on the frames. The FZ shows TABLE READY</td>
+<td>A tool: builds a wavetable in the edit voice: a row of single cycles, each a step further along a sweep, for the loop window or Stretch to play. <strong>CC113 TYPE:</strong> SYNC (a sine hard-synced at 1 to 8 times its pitch), PWM (pulse 50% narrowing to 4%), FOLD (a sine folded harder and harder), MORPH (sine &gt; triangle &gt; saw &gt; square). <strong>CC114 FRAMES:</strong> 8, 16, 32 or 64. <strong>CC115 LENGTH:</strong> 82, 164, 327, 655 or 1309 words a cycle: A 440, 220, 110, 55 or 27.5 Hz at 36 kHz, with the voice's original key set to match (in tune to a few cents). The FZ plays a sampled voice only 3 octaves either side of its original key, so the in-tune range on the keyboard (C2-C7) is: 82 all of it, 164 C2-A6, 327 C2-A5, 655 C2-A4, 1309 C2-A3; above that the top pitch repeats. <strong>CC116 SWEEP:</strong> how far along the sweep the last frame goes (0: every frame the same). An empty edit voice (NEW VOICE first) gets new memory; a voice with a sample uses its memory if it holds the table, else TOO BIG. Afterwards: loop 1 is the first frame, Window Snap is FRAMES GLIDE (so Window Position, the matrix's LOOP WINDOW or LFO 2 Dest 2 scan the frames), and Stretch is set to match: Segments 2, 4 or 8 stay (others become 8), Grain so each loop is exactly one frame, Snap off, Crossfade 0; Stretch is switched off, as its loops were replaced, and Stretch On builds them on the frames. The FZ shows TABLE READY</td>
 </tr>
 </tbody>
 </table>
@@ -1660,7 +1660,7 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#e5eeea;padding:16px;
 <tr>
 <td>LFO2 Mode</td>
 <td>CC93</td>
-<td>FREE 0-42; RETRIGGER 43-85; MIDI CLOCK 86-127</td>
+<td>FREE 0-25; FREE SLOW 26-51; RETRIGGER 52-76; RETRIGGER SLOW 77-102; MIDI CLOCK 103-127</td>
 </tr>
 <tr>
 <td>LFO2 Dest</td>
@@ -1863,7 +1863,7 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#e5eeea;padding:16px;
 <tr>
 <td>Window Snap</td>
 <td>P3</td>
-<td>FREE 0-42; ZERO-CROSS 43-85; WHOLE FRAMES 86-127</td>
+<td>FREE 0-42; ZERO-CROSS 43-85; WHOLE FRAMES 86-106; FRAMES GLIDE 107-127</td>
 </tr>
 <tr>
 <td>Loop Mode</td>

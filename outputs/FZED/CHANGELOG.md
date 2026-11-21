@@ -1,5 +1,13 @@
 # FZED Menu Revision
 
+## Frames Glide, LFO 2 Slow, An 82-Word Wavetable (next)
+
+- FZED: Window Snap has a fourth choice, FRAMES GLIDE (107-127; WHOLE FRAMES is now 86-106). On whole frames the loop window steps one frame at a time towards where it is sent, at most one frame each cycle of the frame at its original key, and carries on until it gets there. A sweep from the knob, LFO 2, the matrix or a pattern now plays every frame on the way instead of jumping several at once. EXT WAVETABLE sets it.
+- FZED: LFO 2 Mode has FREE SLOW and RETRIGGER SLOW, a sixteenth of the speed (with the remainder carried, so even the slowest rate keeps moving). CC93 is now five bands: FREE 0-25, FREE SLOW 26-51, RETRIGGER 52-76, RETRIGGER SLOW 77-102, MIDI CLOCK 103-127; the values the Gills and the editor sent for the old three modes still give those modes.
+- FZED: EXT WAVETABLE LENGTH has 82 words (A 440 Hz, original key A4) as the first of five choices (CC115 in bands of 26: 82, 164, 327, 655, 1309). The FZ plays a sampled voice only 3 octaves either side of its original key, so only 82 is in tune across the whole keyboard; the longer frames stop at A6, A5, A4 and A3.
+- Gills Core 121: WINDOW SNAP shows FRAMES GLIDE, LFO2 MODE the five modes (rate shows clock divisions from 103), WAVETABLE LENGTH the five lengths. The editor shows the new Window Snap and LFO 2 Mode choices.
+- Emulator: `glide41.py`: a 64-frame table glides 0 to 63 and back through every frame in turn, each step at least one frame cycle after the last; WHOLE FRAMES still jumps; the slow modes run at exactly a sixteenth; the old mode values keep their modes. `ext41.py` checks the 82-word table word for word. Full suite, live FX, wave, disintegration, capture and start-up tests unchanged.
+
 ## Room For What Comes Next (next)
 
 - FZED: CHOP's slice loop (cutting each slice into its own voice) moved out of resident memory into tools overlay 3 (disk sector 47), which CHOP already loads for its bank choice. About 320 bytes of resident low memory are free again for the next features (FZED to Gills recording messages, capture refire, LFO2 slow mode). CHOP works and reads as before; no other change.

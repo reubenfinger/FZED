@@ -164,13 +164,13 @@ LFO 2 is FZED's additional modulation source. It can drive one direct destinatio
 | Depth | Amount applied to the primary destination |
 | Shape | Triangle, sine, saw up, saw down, square, random sample-and-hold, one-shot ramp or warble |
 | Destination | Off, cutoff, pitch, LFO1 pitch depth, LFO1 amp depth, LFO1 filter depth, tremolo, or bend/Cue scrub |
-| Mode | Free, note retrigger, or MIDI clock |
+| Mode | Free, free slow, note retrigger, retrigger slow, or MIDI clock. The slow modes run at a sixteenth of the speed, for drifts over many seconds (a cycle takes up to well over a minute) |
 | Delay | Time after note-on before modulation starts |
 | Fade-in | Time for the modulation to grow |
 | Destination 2 | An additional destination implemented using matrix route 10 |
 | Depth 2 | Signed amount for route 10 |
 
-When Mode is set to Free or Note Retrigger, Rate / Division sets the free-running speed. In MIDI Clock mode, it selects 4 bars, 2 bars, 1 bar, half, quarter, eighth or sixteenth. MIDI clock must actually reach the FZ. Enabling a clock label does not generate clock in the browser.
+When Mode is set to Free, Note Retrigger or either Slow mode, Rate / Division sets the free-running speed. In MIDI Clock mode, it selects 4 bars, 2 bars, 1 bar, half, quarter, eighth or sixteenth. MIDI clock must actually reach the FZ. Enabling a clock label does not generate clock in the browser.
 
 **Destination 2 reserves matrix route 10:** it sets that route's source to LFO 2 and changes its destination. Editing route 10 directly changes the same routing. It is not an eleventh matrix slot. The browser shares the local state between these controls.
 
@@ -263,7 +263,7 @@ Capture length and rate are relatively slow destinations. Their updates now take
 | Loop Start / End | Requested loop bounds |
 | Loop Crossfade | The FZ sample crossfade setting, useful for changing loop/playback character; not the capture fade or an external audio crossfader |
 | Window Position | Move the loop window while retaining its window relationship |
-| Window Snap | Free movement, zero-cross snapping, or whole frames |
+| Window Snap | Free movement, zero-cross snapping, whole frames, or frames glide. Whole frames jumps straight to the frame. Frames glide steps one frame at a time towards where the window is sent, at most one frame each cycle of the frame (at its original key), so a sweep from the knob, LFO 2, the matrix or a pattern plays every frame on the way and never skips one; it carries on until it gets there. EXT WAVETABLE sets frames glide |
 | Play Mode | Original, Reverse or Cue; the FZ shows ORIGINAL, REVERSE or CUE. Cue enables the bend/Cue sample-position scrub path; it is not an extra sample slot |
 | Preset Wave | Select one of the seven original waveforms: Saw, Square, Pulse 25%, Pulse 12%, Triangle, Sine or Double Sine |
 | Load Selected Wave | Deliberately replace/generate the selected preset wave. FZED reads the wave generator from its disk when needed, so keep the FZED disk in the drive (on an HxC, keep FZED selected); otherwise the FZ shows TOOLS NOT LOADED |
@@ -493,7 +493,7 @@ EXT modules are extra effects and tools kept on the FZED disk rather than in mem
 | 1 EXT NOISE | Adds noise to the sample. Tape Input (CC115) is the noise level: 0 adds none, and the level rises with the square of the knob up to full scale. Tape Output (CC116) is the tone: 127 is white noise, lower values darker. The same render gives the same noise every time. Peaks that would go past full scale are held at full scale. The other FX controls are not used, and the editor still shows them with their FX Type names |
 | 2 EXT EQ | A three-band EQ: CC113 bass (below about 300 Hz), CC114 mid, CC115 treble (above about 3 kHz), CC116 output level. 0 removes the band, 64 leaves it unchanged, 127 is about +12 dB. The band edges are for a 36 kHz voice: an 18 kHz voice halves them, 9 kHz quarters them. With every control at 64 the sample comes back as it was, less its lowest bit. Peaks that would go past full scale are held at full scale |
 | 3 EXT BACKUP | A tool: copies the edit voice into the first empty voice **with its own copy of the sample** (Copy Voice shares the sample, so a render would change both). The edit voice stays the edit voice: render on it, and if you don't like the result, pick the backup with Voice Select. The FZ shows BACKUP IN V05 (the backup's number), or BACKUP: NO SLOT (no empty voice) / NO MEMORY. The copied range is the one Render works on (the start to the end as FZED took the voice); the backup's settings are the voice's as they are now. No controls |
-| 4 EXT WAVETABLE | A tool: builds a wavetable in the edit voice: a row of single cycles, each a step further along a sweep, for the loop window or Stretch to play. **CC113 TYPE:** SYNC (a sine hard-synced at 1 to 8 times its pitch), PWM (pulse 50% narrowing to 4%), FOLD (a sine folded harder and harder), MORPH (sine > triangle > saw > square). **CC114 FRAMES:** 8, 16, 32 or 64. **CC115 LENGTH:** 164, 327, 655 or 1309 words a cycle: A 220, 110, 55 or 27.5 Hz at 36 kHz, with the voice's original key set to match (in tune to a few cents). **CC116 SWEEP:** how far along the sweep the last frame goes (0: every frame the same). An empty edit voice (NEW VOICE first) gets new memory; a voice with a sample uses its memory if it holds the table, else TOO BIG. Afterwards: loop 1 is the first frame, Window Snap is WHOLE FRAMES (so Window Position, the matrix's LOOP WINDOW or LFO 2 Dest 2 scan the frames), and Stretch is set to match: Segments 2, 4 or 8 stay (others become 8), Grain so each loop is exactly one frame, Snap off, Crossfade 0; Stretch is switched off, as its loops were replaced, and Stretch On builds them on the frames. The FZ shows TABLE READY |
+| 4 EXT WAVETABLE | A tool: builds a wavetable in the edit voice: a row of single cycles, each a step further along a sweep, for the loop window or Stretch to play. **CC113 TYPE:** SYNC (a sine hard-synced at 1 to 8 times its pitch), PWM (pulse 50% narrowing to 4%), FOLD (a sine folded harder and harder), MORPH (sine > triangle > saw > square). **CC114 FRAMES:** 8, 16, 32 or 64. **CC115 LENGTH:** 82, 164, 327, 655 or 1309 words a cycle: A 440, 220, 110, 55 or 27.5 Hz at 36 kHz, with the voice's original key set to match (in tune to a few cents). The FZ plays a sampled voice only 3 octaves either side of its original key, so the in-tune range on the keyboard (C2-C7) is: 82 all of it, 164 C2-A6, 327 C2-A5, 655 C2-A4, 1309 C2-A3; above that the top pitch repeats. **CC116 SWEEP:** how far along the sweep the last frame goes (0: every frame the same). An empty edit voice (NEW VOICE first) gets new memory; a voice with a sample uses its memory if it holds the table, else TOO BIG. Afterwards: loop 1 is the first frame, Window Snap is FRAMES GLIDE (so Window Position, the matrix's LOOP WINDOW or LFO 2 Dest 2 scan the frames), and Stretch is set to match: Segments 2, 4 or 8 stay (others become 8), Grain so each loop is exactly one frame, Snap off, Crossfade 0; Stretch is switched off, as its loops were replaced, and Stretch On builds them on the frames. The FZ shows TABLE READY |
 
 ### Disintegration
 
@@ -697,7 +697,7 @@ The **Values** column gives the value FZED receives and what it means. Where a r
 | LFO2 Shape | CC91 | TRIANGLE 0-15; SINE 16-31; SAW UP 32-47; SAW DOWN 48-63; SQUARE 64-79; RANDOM S&H 80-95; ONE-SHOT RAMP 96-111; WARBLE 112-127 |
 | LFO2 Delay | P1 | 0-127 (0.00 S to 9.95 S) |
 | LFO2 Fade-in | P2 | 0-127 (0.00 S to 9.95 S) |
-| LFO2 Mode | CC93 | FREE 0-42; RETRIGGER 43-85; MIDI CLOCK 86-127 |
+| LFO2 Mode | CC93 | FREE 0-25; FREE SLOW 26-51; RETRIGGER 52-76; RETRIGGER SLOW 77-102; MIDI CLOCK 103-127 |
 | LFO2 Dest | CC92 | OFF 0-15; FILTER CUTOFF 16-31; PITCH +/-2 ST 32-47; LFO>PITCH 48-63; LFO>AMP 64-79; LFO>FILTER 80-95; TREMOLO 96-111; BEND (CUE SCRUB) 112-127 |
 | LFO2 Depth | CC90 | 0-127 |
 | LFO2 Dest 2 | P99 = 32, then P119 | OFF 0-7; CUTOFF 8-15; RESONANCE 16-23; LEVEL 24-31; PITCH 32-39; LFO1 > PITCH 40-47; LFO1 > AMP 48-55; LFO1 > FILTER 56-63; SAMPLE START 64-71; LOOP WINDOW 72-79; LOOP ST/CAP LEN 80-87; LOOP END/CAP RATE 88-95; LFO2 RATE 96-103; LFO2 DEPTH 104-111; FX MIX/RESO 112-119; FX PARAM/CUT 120-127 |
@@ -748,7 +748,7 @@ The **Values** column gives the value FZED receives and what it means. Where a r
 | Sample End | CC77 | 0-127 |
 | Play Mode | CC70 | ORIGINAL 0-31; REVERSE 32-63; CUE 64-127 |
 | Window Position | P4 | 0-127 (POSITION 000 to POSITION 127) |
-| Window Snap | P3 | FREE 0-42; ZERO-CROSS 43-85; WHOLE FRAMES 86-127 |
+| Window Snap | P3 | FREE 0-42; ZERO-CROSS 43-85; WHOLE FRAMES 86-106; FRAMES GLIDE 107-127 |
 | Loop Mode | CC86 | ONE-SHOT 0-42; ORIGINAL 43-84; LOOP 85-127 |
 | Loop Start | CC87 | 0-127 |
 | Loop End | CC88 | 0-127 |

@@ -9,8 +9,8 @@
   "sourceSHA256": {
     "Core110 patch": "2ca1ae62f3c24b28ed92b2b98960cd3090fcb4ae9acb88bbe0d0f38a236ae90b",
     "Core110 header": "fbd637351a3cdc1eb51a9f259051c4f48dd59d9a1ea2e5474f0b2e5cf9532c3c",
-    "FZED source": "ab392bf19baf507ffdf011e23f524f06ecf22faefbf564438595bbc3877e1832",
-    "FZED disk": "04b2ec3162e05e657dd271854c7afdebb288ee2316d4be98d7adca482cf2ef60"
+    "FZED source": "19d6895b963330cfeaecfdad65d82c3f29b05e828807d2e894047bf4a2271535",
+    "FZED disk": "0157a70d118af488a8c33df833738079cd5ec522271a802b990cbd55339428ff"
   },
   "sourceReview": [
     "PERF40N READMEs and current FZED mappings cross-checked with Core110 (fzCode, fzSendCode, potSteps / stepRaw)",

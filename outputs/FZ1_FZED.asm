@@ -58,6 +58,8 @@ LPREV equ 0x81B6
 LSHV equ 0x81B8
 LDONE equ 0x81B9
 LWARB equ 0x81BA
+LSLOW equ 0x81BB             ; FZED41I: LFO 2 SLOW (in the LFO block, so each voice record has its own)
+LACC equ 0x81BC              ; FZED41I: SLOW's carried remainder (word)
 RVP equ 0x81C0
 G6 equ 0x81C2
 NARM equ 0x81E0
@@ -213,6 +215,7 @@ MAIN:               ; FZED41A: the one-time start-up runs from sector 51 (fx/ov7
     call CAPTICK            ; PERF38M: capture mode, then LFOALL
     call MATRIX
     call RVPATCH
+    call GLSTEP             ; FZED41I: Window Snap GLIDE's next step (fx/glide.asm)
     call LVRUNX             ; PERF38H: paced LCD, curve steps, then live FX
     mov byte [CCN],4        ; review diff B1: up to 4 CCs a pass
     call RTSCAN             ; review diffs B2 / C1: realtime bytes and the backlog guard, then PARSE (falls through)
@@ -1440,8 +1443,12 @@ LFOCC:              ; CC89 rate/division, 90 depth, 91 shape, 92 destination, 93
     mov ax,[si+0x74]
     mov [LB74],ax
 .r: ret
-.c93: mov ah,3
-    call SCL
+.c93: mov ah,5               ; FZED41I: FREE, FREE SLOW, RETRIGGER, RETRIGGER SLOW, MIDI CLOCK (the old FREE / RETRIGGER /
+    call SCL                ; MIDI CLOCK values land on the same modes)
+    mov al,ah
+    and al,1
+    mov [LSLOW],al          ; bands 1 and 3: slow
+    shr ah,1
     mov [LMODE],ah
     ret
 SCL: mul ah             ; ah = al * ah / 128
@@ -1537,7 +1544,15 @@ LFO2:
     xor ch,ch
     mul cx
     shl ax,2
-    cmp byte [LSHAPE],7     ; warble: this cycle's random speed (Q8)
+    cmp byte [LSLOW],0      ; FZED41I: SLOW: a sixteenth of the speed (0.66 s to 80 s a cycle), the remainder carried
+    jz .fs
+    add ax,[LACC]
+    mov dx,ax
+    and dx,15
+    mov [LACC],dx
+    mov cl,4
+    shr ax,cl
+.fs: cmp byte [LSHAPE],7     ; warble: this cycle's random speed (Q8)
     jnz .fa
     mov cl,[LWARB]
     or cl,cl
@@ -2580,6 +2595,7 @@ L639D:
 %include "fx/tools40.asm"
 %include "fx/ext.asm"
 %include "fx/dis1.asm"
+%include "fx/glide.asm"
 LOWEND:             ; (EXT modules record the four area ends of the build they belong to: fx/ext.asm)
 %if ($-$$) > 0x2000
 %error low code would overlap variables at 8000h
