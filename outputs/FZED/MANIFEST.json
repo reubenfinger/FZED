@@ -7,8 +7,8 @@
   "controls": 400,
   "profileRawValueMappings": 51200,
   "sourceSHA256": {
-    "FZED source": "aa0d4e54b7f56154c4ca449fb6b55a3106a61e7d25a4a4677a21c715ec565013",
-    "FZED disk": "26a59e6c140761990f49153bf2df8fc0533407b7dd9ac9e316563c903ec52847"
+    "FZED source": "f450f7e69e38ca18afbdb30bfb863a7fb0a238db6bc4401729353e08e36dfab5",
+    "FZED disk": "4e5f1aa9557d83d34ae2ce1f6587c9079e8916ea1533bf6ab57c9d017b39acee"
   },
   "sourceReview": [
     "PERF40N READMEs and current FZED mappings cross-checked with Core110 (fzCode, fzSendCode, potSteps / stepRaw)",

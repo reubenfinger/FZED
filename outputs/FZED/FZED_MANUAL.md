@@ -480,18 +480,20 @@ Delete Unused and Normalise are separate FX-page commands, not parameters of the
 
 ### EXT Disk Modules
 
-EXT modules are extra effects and tools kept on the FZED disk rather than in memory, so new ones can be added without taking room from FZED. One is included so far: **EXT NOISE** (module 1).
+EXT modules are extra effects and tools kept on the FZED disk rather than in memory, so new ones can be added without taking room from FZED. Four are included: **EXT NOISE** (module 1), **EXT EQ** (2), **EXT BACKUP** (3) and **EXT WAVETABLE** (4). Effects (NOISE, EQ) change the sample; tools (BACKUP, WAVETABLE) do one job and render nothing.
 
-**Choosing a module.** Send FZED 19: CC10 = 88, CC11 = 19, then CC10 = 89, CC11 = the value. 0-7 is EXT OFF; then each block of 8 picks the next module: 8-15 module 1, 16-23 module 2 and so on up to module 15. Line 3 shows EXT OFF or EXT 01. Choosing a module reads nothing from the disk.
+**Choosing a module.** Send FZED 19: CC10 = 88, CC11 = 19, then CC10 = 89, CC11 = the value. 0-7 is EXT OFF; then each block of 8 picks the next module: 8-15 module 1, 16-23 module 2 and so on up to module 15. Line 3 shows EXT 00 (off) or EXT 01 and so on. Choosing a module reads nothing from the disk.
 
 **Running it.** Render (CC118) runs the chosen module instead of the FX Type effect. FZED loads the module from the disk, shows its name, then renders the edit voice and every chop slice, as an ordinary render does. Set FZED 19 back to 0-7 to render the FX Type effect again. Live FX are not affected: they always use FX Type.
 
-**The FZED disk must be in the drive** when you render with a module. If the module isn't on the disk, line 3 shows TOOLS NOT LOADED; if it belongs to a different FZED version, EXT: BAD MODULE. In both cases the sample is left as it was.
+**The FZED disk must be in the drive** when you render with a module. If the module isn't on the disk, line 3 shows TOOLS NOT LOADED; if it belongs to a different FZED version, BAD MODULE. In both cases the sample is left as it was.
 
 | Module | Controls |
 | --- | --- |
 | 1 EXT NOISE | Adds noise to the sample. Tape Input (CC115) is the noise level: 0 adds none, and the level rises with the square of the knob up to full scale. Tape Output (CC116) is the tone: 127 is white noise, lower values darker. The same render gives the same noise every time. Peaks that would go past full scale are held at full scale. The other FX controls are not used, and the editor still shows them with their FX Type names |
 | 2 EXT EQ | A three-band EQ: CC113 bass (below about 300 Hz), CC114 mid, CC115 treble (above about 3 kHz), CC116 output level. 0 removes the band, 64 leaves it unchanged, 127 is about +12 dB. The band edges are for a 36 kHz voice: an 18 kHz voice halves them, 9 kHz quarters them. With every control at 64 the sample comes back as it was, less its lowest bit. Peaks that would go past full scale are held at full scale |
+| 3 EXT BACKUP | A tool: copies the edit voice into the first empty voice **with its own copy of the sample** (Copy Voice shares the sample, so a render would change both). The edit voice stays the edit voice: render on it, and if you don't like the result, pick the backup with Voice Select. The FZ shows BACKUP IN V05 (the backup's number), or BACKUP: NO SLOT (no empty voice) / NO MEMORY. The copied range is the one Render works on (the start to the end as FZED took the voice); the backup's settings are the voice's as they are now. No controls |
+| 4 EXT WAVETABLE | A tool: builds a wavetable in the edit voice: a row of single cycles, each a step further along a sweep, for the loop window or Stretch to play. **CC113 TYPE:** SYNC (a sine hard-synced at 1 to 8 times its pitch), PWM (pulse 50% narrowing to 4%), FOLD (a sine folded harder and harder), MORPH (sine > triangle > saw > square). **CC114 FRAMES:** 8, 16, 32 or 64. **CC115 LENGTH:** 164, 327, 655 or 1309 words a cycle: A 220, 110, 55 or 27.5 Hz at 36 kHz, with the voice's original key set to match (in tune to a few cents). **CC116 SWEEP:** how far along the sweep the last frame goes (0: every frame the same). An empty edit voice (NEW VOICE first) gets new memory; a voice with a sample uses its memory if it holds the table, else TOO BIG. Afterwards: loop 1 is the first frame, Window Snap is WHOLE FRAMES (so Window Position, the matrix's LOOP WINDOW or LFO 2 Dest 2 scan the frames), and Stretch is set to match: Segments 2, 4 or 8 stay (others become 8), Grain so each loop is exactly one frame, Snap off, Crossfade 0; Stretch is switched off, as its loops were replaced, and Stretch On builds them on the frames. The FZ shows TABLE READY |
 
 ### Disintegration
 

@@ -1,5 +1,13 @@
 # FZED Menu Revision
 
+## EXT BACKUP And EXT WAVETABLE (next)
+
+- FZED: EXT BACKUP (module 3, FZED 19 = 24-31, disk sector 54): copies the edit voice into the first empty voice with its own copy of the sample, as a one-step undo before a render. The edit voice stays the edit voice. Shows BACKUP IN Vnn, BACKUP: NO SLOT or BACKUP: NO MEMORY.
+- FZED: EXT WAVETABLE (module 4, FZED 19 = 32-39, disk sector 55): builds 8-64 single-cycle frames of 164-1309 words (A 220 to 27.5 Hz at 36 kHz, original key set to match) along a SYNC, PWM, FOLD or MORPH sweep, then sets loop 1 to the first frame, Window Snap to WHOLE FRAMES and Stretch to match (2, 4 or 8 segments, each loop one frame, Snap and Crossfade off).
+- The program on disk is 39 KB (sectors 17-55). No change to FZED's code in memory.
+- Gills Core 120: FX EXT view names modules 3 and 4, and with WAVETABLE shows TYPE, FRAMES, LENGTH and SWEEP with their choices.
+- Emulator (`ext41.py`): BACKUP makes its own copy of every word, moves the start, end and loop addresses to it, leaves the edit voice and its sample untouched, and a render afterwards leaves the backup as it was; NO SLOT when every voice is taken. WAVETABLE matches a model word for word for each type (SYNC 64 x 327, PWM 32 x 164, FOLD 16 x 655, MORPH 8 x 1309); the voice, Window Snap and Stretch settings are as described; Window Position moves the loop by whole frames; Stretch On then gives 8 loops of exactly one frame, each at a segment's start; TOO BIG when the voice's memory is too small. Start-up and disintegration tests unchanged.
+
 ## A Different Dropout Pattern Each Run (next)
 
 - FZED: the dropout pattern is seeded from the timer while the sample is new, and the seed is fixed as soon as it starts ageing. Each run (DECAY up from 0, each new capture take) loses a different set of stretches in a different order; within a run they stay the same, so nothing tears over it. Before, every sample lost the same stretches every time.

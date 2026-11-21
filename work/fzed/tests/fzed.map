@@ -2226,3 +2226,79 @@ Real              Virtual           Name
             F50F              D50F  EQSAT
             F523              D523  EQSAT.k
 
+---- Section ov10 -------------------------------------------------------------
+
+Real              Virtual           Name
+            F826              D426  BKSRC
+            F828              D428  BKDST
+            F82A              D42A  BKG0
+            F82E              D42E  BKLEN
+            F832              D432  BKNEW
+            F836              D436  BKCP
+            F83A              D43A  S_BKE
+            F84B              D44B  S_BKF
+            F85B              D45B  S_BKM
+            F86D              D46D  S_BKD
+            F87B              D47B  BKRUN
+            F885              D485  BKRUN.m
+            F888              D488  BKRUN.h
+            F8B4              D4B4  BKRUN.ok
+            F8C8              D4C8  BKRUN.fv
+            F8DA              D4DA  BKRUN.got
+            F904              D504  BKRUN.al
+            F91C              D51C  BKRUN.cl
+            F938              D538  BKRUN.c
+            F96F              D56F  BKRUN.rec
+            F99B              D59B  BKRUN.lp
+            F9BA              D5BA  BKADJ
+            F9DD              D5DD  BKADJ.in
+            F9F2              D5F2  BKADJ.r
+
+---- Section ov11 -------------------------------------------------------------
+
+Real              Virtual           Name
+            FC26              D426  WTTY
+            FC27              D427  WTNF
+            FC29              D429  WTL
+            FC2B              D42B  WTB
+            FC2C              D42C  WTM
+            FC2E              D42E  WTK
+            FC30              D430  WTI
+            FC32              D432  WTPH
+            FC36              D436  WTIN
+            FC3A              D43A  WTTOT
+            FC3E              D43E  WTLT
+            FC46              D446  WTKY
+            FC4A              D44A  S_WTB
+            FC52              D452  S_WTD
+            FC5E              D45E  WTRUN
+            FCFB              D4FB  WTRUN.hv
+            FD2C              D52C  WTRUN.big
+            FD32              D532  WTRUN.ok
+            FD37              D537  WTRUN.fr
+            FD5B              D55B  WTRUN.gd
+            FDE6              D5E6  WTRUN.od
+            FDF3              D5F3  WTRUN.ms
+            FE1E              D61E  WTRUN.sn
+            FE3D              D63D  WTKEY
+            FE3E              D63E  WTL0
+            FE40              D640  WTFRM
+            FE4B              D64B  WTFRM.k
+            FE56              D656  WTFRM.ch
+            FE69              D669  WTFRM.c
+            FE6D              D66D  WTFRM.w
+            FEB9              D6B9  WTFRM.r
+            FEBA              D6BA  WTVAL
+            FEDA              D6DA  WTVAL.t1
+            FEF7              D6F7  WTVAL.r
+            FEF8              D6F8  WTVAL.t2
+            FF14              D714  WTVAL.fl
+            FF20              D720  WTVAL.f1
+            FF2C              D72C  WTVAL.f2
+            FF30              D730  WTVAL.mo
+            FF5D              D75D  WTSH
+            FF73              D773  WTSH.r
+            FF74              D774  WTSH.tr
+            FF7E              D77E  WTSH.t1
+            FF84              D784  WSIN
+
