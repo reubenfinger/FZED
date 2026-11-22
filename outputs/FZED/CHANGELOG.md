@@ -1,5 +1,13 @@
 # FZED Menu Revision
 
+## Stretch JOIN (next)
+
+- FZED: Stretch NEXT has JOIN (and JOIN, CUT LEAD-IN): the loops sit back to back, each starting where the last one ends, a grain apart instead of a segment apart, closer to an old sampler's time stretch. The 8 loops cover the first N x Grain of the play range; with Stretch on and JOIN, moving Sample Start builds them again from the new start (from the disk; not for matrix or LFO moves of Sample Start). TRACE and SKIP are unchanged, and WAVETABLE still uses TRACE.
+- FZED: NEXT is now six bands (value x 6 / 128): TRACE, JOIN, TRACE CUT LEAD-IN, SKIP, JOIN CUT LEAD-IN, SKIP CUT LEAD-IN. The Gills' and editor's band-centre values (16, 48, 80, 112) keep their old modes; a raw pot value of 22-42 (was TRACE) now gives JOIN, and 86-106 (was SKIP) JOIN, CUT LEAD-IN.
+- FZED: Stretch's scratch moved above the overlay's end signature (still below the deepest FZ-call frame) to make room.
+- Gills Core 122: NEXT / LEAD-IN shows the six choices. Editor: the six choices.
+- Emulator: `join41.py`: the six bands, old values, joined loops a grain apart, Sample Start rebuilding them with JOIN and leaving them with TRACE. `leadin40m.py` now sends the band centres (48, 112). Full suite, live FX, wave, glide, disintegration and capture tests unchanged.
+
 ## Frames Glide, LFO 2 Slow, An 82-Word Wavetable (next)
 
 - FZED: Window Snap has a fourth choice, FRAMES GLIDE (107-127; WHOLE FRAMES is now 86-106). On whole frames the loop window steps one frame at a time towards where it is sent, at most one frame each cycle of the frame at its original key, and carries on until it gets there. A sweep from the knob, LFO 2, the matrix or a pattern now plays every frame on the way instead of jumping several at once. EXT WAVETABLE sets it.

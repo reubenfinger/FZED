@@ -448,7 +448,16 @@ WRITE:
     adc dx,[GSAVE+2]
     mov [si+8],ax
     mov [si+10],dx
-    ret
+    test byte [STSU],0x80   ; FZED41J: Stretch on with JOIN: Sample Start says where the joined loops begin: build them
+    jz .r1                  ; again from here (tools overlay 4, from disk; not for matrix moves)
+    test byte [STNX],0x10
+    jz .r1
+    cmp byte [MXQ],0
+    jnz .r1
+    push word BUILD
+    push word 0x4031
+    jmp OVCALL
+.r1: ret
 .en:
     call INV            ; 127 = full length, lower = shorter
     call RNG

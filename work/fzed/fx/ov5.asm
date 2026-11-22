@@ -2,7 +2,7 @@
 ; overlay 2) with NEXT (trace / skip), ORDER and SKEW. Controls 6, 7 and 10 still live in tools overlay 2 (sector 47).
     dw 0x4031
 STNX equ 0x801A             ; PERF40L control 16: >= 64 the stretch loops SKIP (jump loop to loop), else TRACE; PERF40M: bit 5
-                            ; = LEAD-IN CUT (the note starts at the first loop, not at the voice's start)
+                            ; = LEAD-IN CUT (the note starts at the first loop, not at the voice's start); FZED41J: bit 4 = JOIN
 STOR equ 0x801B             ; control 17: segment order 0 forward, 1 reverse, 2 there and back, 3 shuffle (raw 0-127)
 STSK equ 0x801C             ; control 18: skew of the loop times, 64 = even, below = earlier ones longer, above = later
 STRETCH:            ; PERF parameter 89 with control [STSEL] (parameter 88): 0 segments, 1 stretch (loop time), 2 grain,
@@ -29,7 +29,16 @@ STRETCH:            ; PERF parameter 89 with control [STSEL] (parameter 88): 0 s
 .r0: ret
 .hi: cmp bl,18
     ja .r0
+    cmp bl,16
+    jnz .h1
+    mov ah,6                ; FZED41J: NEXT in 6 bands (v * 6 / 128), the old TRACE / CUT / SKIP / CUT values in their old
+    mul ah                  ; bands: TRACE, JOIN, TRACE CUT, SKIP, JOIN CUT, SKIP CUT; stored as the old flags (SKIP 40h,
+    shl ax,1                ; CUT LEAD-IN 20h) with JOIN 10h
+    mov bl,ah
     xor bh,bh
+    mov al,[cs:bx+STNXT]
+    mov bl,16
+.h1: xor bh,bh
     mov [bx+STNX-16],al
     jmp .chk
 .o2: push word STRET2        ; 6 CHOP INTO, 7 CAPTURE ON, 10 per slice (8 nothing): tools overlay 2
@@ -51,9 +60,18 @@ BUILD:
     shl ax,1
     add ah,2
     mov [STK],ah            ; (scratch: N)
-    call STOWN5             ; PERF40M: start moved by LEAD-IN CUT (and not touched since): work from the saved start
-    jnz .rs
-    mov cx,[STRS]
+    cmp byte [STMV],0       ; PERF40M: start moved by LEAD-IN CUT (and not touched since: it still equals loop 1's start):
+    jz .no                  ; work from the saved start (FZED41J: in line, was STOWN5)
+    mov ax,[si+8]
+    cmp ax,[si+0x14]
+    jnz .no
+    mov al,[si+0xa]
+    xor al,[si+0x16]
+    and al,0x1f
+    jz .own
+.no: mov byte [STMV],0
+    jmp short .rs
+.own: mov cx,[STRS]
     mov bl,[STRSH]
     xor bh,bh
     jmp short .rs1
@@ -111,6 +129,11 @@ BUILD:
     mov ax,32
 .gok: mov [STW],ax          ; (scratch: grain, dword)
     mov [STW+2],dx
+    test byte [STNX],0x10   ; FZED41J JOIN: the loops back to back, each starting where the last one ends (a grain apart,
+    jz .nj                  ; not a segment): 8 grains cover N x grain from the start; Sample Start moves where (fzed.asm)
+    mov [STL],ax
+    mov [STL+2],dx
+.nj:
     mov al,[STT]            ; loop time = 1 + T*T*1000/16384 (1-985), about 19.8 ms a step (hardware timing)
     mul al
     mov cx,1000
@@ -289,9 +312,14 @@ BUILD:
     or [si+0xa],al
     mov byte [STMV],1
     jmp short .lpd
-.lp0: cmp byte [STMV],0     ; (PLAY, or forward: the start goes back if STRETCH moved it)
+.lp0: cmp byte [STMV],0     ; (PLAY, or forward: the start goes back if STRETCH moved it; FZED41J: in line, was STRSB5)
     jz .lpd
-    call STRSB5
+    mov ax,[STRS]
+    mov [si+8],ax
+    mov al,[STRSH]
+    and byte [si+0xa],0xe0
+    or [si+0xa],al
+    mov byte [STMV],0
 .lpd:
     mov al,[STK]            ; 'ST8 T04.1 G01.41': segments, loop time (s), one grain pass at the original key (s)
     add al,'0'
@@ -338,41 +366,19 @@ BUILD:
     call ZCNEAR
 .ns: ret
 
-STOWN5:             ; PERF40M: ZF=1 if STRETCH moved this voice's start (it still equals loop 1's start), else STMV cleared
-    cmp byte [STMV],0
-    jz .no
-    mov ax,[si+8]
-    cmp ax,[si+0x14]
-    jnz .no
-    mov al,[si+0xa]
-    xor al,[si+0x16]
-    and al,0x1f
-    jz .r
-.no: mov byte [STMV],0
-    or sp,sp
-.r: ret
-STRSB5:             ; PERF40M: the saved start back into the voice
-    mov ax,[STRS]
-    mov [si+8],ax
-    mov al,[STRSH]
-    and byte [si+0xa],0xe0
-    or [si+0xa],al
-    mov byte [STMV],0
-    ret
-
-STK  equ 0xD7A0             ; scratch in this overlay's own area (below the end signature)
-STA  equ 0xD7A2
-STL  equ 0xD7A6
-STW  equ 0xD7AA
-STTV equ 0xD7AE
-STSD  equ 0xD7B0             ; skew step
-STB  equ 0xD7B2
-STO  equ 0xD7B4             ; 8 bytes: segment of each loop (to D7BBh)
+STK  equ 0xD7C0             ; scratch in this overlay's own area. FZED41J: above the end signature (D7BEh) and below the
+STA  equ 0xD7C2             ; deepest FZ-call frame (D7ECh: tests/stack40.py), so the code may run up to the signature
+STL  equ 0xD7C6
+STW  equ 0xD7CA
+STTV equ 0xD7CE
+STSD  equ 0xD7D0             ; skew step
+STB  equ 0xD7D2
+STO  equ 0xD7D4             ; 8 bytes: segment of each loop (to D7DBh)
 S_STR: db 'ST8 T00.0 G00.00',0
 S_STS: db 'TOO SHORT',0
 
-%if ($-$$) > 0x3A0
-%error tools overlay 4 reaches its scratch area (D7A0h)
+%if ($-$$) > 0x3BE
+%error tools overlay 4 reaches its end signature (D7BEh)
 %endif
     times 0x3BE-($-$$) db 0
     dw 0x4031

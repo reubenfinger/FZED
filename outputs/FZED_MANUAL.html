@@ -690,7 +690,7 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#e5eeea;padding:16px;
 </tr>
 <tr>
 <td>Next / Lead-In</td>
-<td>TRACE: after a loop's time, play on through the material to the next loop. SKIP: jump straight to it. A loop earlier in the sample is always a jump. CUT LEAD-IN: start the note at the first loop instead of the sample start</td>
+<td>TRACE: after a loop's time, play on through the material to the next loop. SKIP: jump straight to it. A loop earlier in the sample is always a jump. JOIN: the loops sit back to back, each starting where the last one ends (Grain apart, not a segment apart), so the sound moves on without gaps or jumps; it then plays on as TRACE. The 8 loops cover only the first N x Grain of the play range, and <strong>Sample Start sets where they begin</strong>: moving it builds the joined loops again from there (from the disk, so set it, then play; matrix and LFO moves of Sample Start don't rebuild them). Grain stays a share of the segment, so a later Sample Start (a shorter range) gives slightly shorter grains. On a wavetable, JOIN plays frames 1 to N in a row: the same as now on an 8-frame table, only the first 8 frames on bigger ones (TRACE, which WAVETABLE sets, sweeps them all). CUT LEAD-IN: start the note at the first loop instead of the sample start</td>
 </tr>
 <tr>
 <td>Order</td>
@@ -1935,7 +1935,7 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#e5eeea;padding:16px;
 <tr>
 <td>Next / Lead-in</td>
 <td>FZED 16</td>
-<td>TRACE 0-31; TRACE, CUT LEAD-IN 32-63; SKIP 64-95; SKIP, CUT LEAD-IN 96-127</td>
+<td>TRACE 0-21; JOIN 22-42; TRACE, CUT LEAD-IN 43-63; SKIP 64-85; JOIN, CUT LEAD-IN 86-106; SKIP, CUT LEAD-IN 107-127</td>
 </tr>
 <tr>
 <td>Order</td>
