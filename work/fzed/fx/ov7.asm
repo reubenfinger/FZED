@@ -215,6 +215,110 @@ PBGET:              ; PBSV = play-bank pointer; then play the edit voice directl
 S_TITLE: db 'FZED',0
 S_E: db 'EMPTY-REC READY',0
 
+; ---------- FZED41N: CC15's PERF bank placement (from fx/multi.asm, for room; called through BKADDO / OVCALL, any time
+; after start-up). Calls only resident code.
+BKADD:              ; CC15 0-31: put voice CC16 in the PERF bank on this MIDI channel; 32-95: re-arm; 96-127: clear
+    cmp al,32               ; this channel. Once per arm; nothing until the pot has been in the middle after start.
+    jb .hi
+    cmp al,96
+    jae .hi
+    mov byte [BKARM],0
+    stc
+    ret
+.hi: cmp byte [BKARM],0
+    jz .go
+    stc
+    ret
+.go: mov byte [BKARM],1
+    mov [BKTMP],al
+    call PBFIND
+    jnc .pb
+    mov bx,S_NBX
+    call NMSG
+    stc
+    ret
+.pb: mov al,[RAWCH]          ; area for this channel already?
+    mov cx,[bx]
+    xor di,di
+.s: cmp di,cx
+    jae .ns
+    cmp [bx+di+0x142],al
+    jz .fs
+    inc di
+    jmp .s
+.ns: mov di,0xffff
+.fs: cmp byte [BKTMP],96
+    jae .clr
+    push bx
+    call L61DB
+    pop bx
+    cmp word [si+0x10],0
+    jnz .ve
+    mov bx,S_VE
+    call NMSG
+    stc
+    ret
+.ve: cmp di,0xffff
+    jnz .put
+    mov di,[bx]
+    cmp di,64
+    jb .ap
+    stc
+    ret
+.ap: inc word [bx]
+.put: mov al,[si+0xae]
+    mov [bx+di+2],al
+    mov al,[si+0xaf]
+    mov [bx+di+0x42],al
+    mov al,[si+0xb0]
+    mov [bx+di+0x102],al
+    mov byte [bx+di+0x82],0x7f
+    mov byte [bx+di+0xc2],0
+    mov byte [bx+di+0x1c2],0
+    mov byte [bx+di+0x182],0xff
+    mov al,[RAWCH]
+    mov [bx+di+0x142],al
+    push di
+    shl di,1
+    mov [bx+di+0x202],si
+    pop di
+    mov bx,S_CVX
+    call NMSG
+    stc
+    ret
+.clr: cmp di,0xffff         ; remove this channel's area: shift the later ones down
+    jz .cm
+    mov cx,[bx]
+    dec cx
+    mov [bx],cx
+.sh: cmp di,cx
+    jae .cm
+    push bx
+    mov si,8
+    lea bp,[bx+2]
+.t: mov al,[ds:bp+di+1]
+    mov [ds:bp+di],al
+    add bp,0x40
+    dec si
+    jnz .t
+    pop bx
+    push di
+    shl di,1
+    mov ax,[bx+di+0x204]
+    mov [bx+di+0x202],ax
+    pop di
+    inc di
+    jmp .sh
+.cm: mov al,[RAWCH]
+    inc al
+    mov di,S_CC+2
+    call DEC2
+    mov bx,S_CC
+    call NMSG
+    stc
+    ret
+S_CVX: db 'VOICE ADDED',0
+S_CC: db 'CH00 CLEARED',0
 %if ($-$$) > 0x3A0
 %error start-up overlay reaches the top of its sector (keep D7A0h-D7BDh clear for the FZ-call stack margin)
 %endif

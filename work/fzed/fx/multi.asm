@@ -93,7 +93,7 @@ MROUTE:             ; after a CC is parsed (al = value): bank CCs 14-16; in bank
     jmp BKSEL
 .m15: cmp bl,15
     jnz .m16
-    jmp BKADD
+    jmp BKADDO
 .m16: cmp bl,16
     jnz .m0
     jmp BKVOI
@@ -301,106 +301,9 @@ PBFIND:             ; bx = selected target, existing FZED bank, or new bank. CF=
 .y: mov [BKBANK],bx
     clc
     ret
-BKADD:              ; CC15 0-31: put voice CC16 in the PERF bank on this MIDI channel; 32-95: re-arm; 96-127: clear
-    cmp al,32               ; this channel. Once per arm; nothing until the pot has been in the middle after start.
-    jb .hi
-    cmp al,96
-    jae .hi
-    mov byte [BKARM],0
-    stc
-    ret
-.hi: cmp byte [BKARM],0
-    jz .go
-    stc
-    ret
-.go: mov byte [BKARM],1
-    mov [BKTMP],al
-    call PBFIND
-    jnc .pb
-    mov bx,S_NBX
-    call NMSG
-    stc
-    ret
-.pb: mov al,[RAWCH]          ; area for this channel already?
-    mov cx,[bx]
-    xor di,di
-.s: cmp di,cx
-    jae .ns
-    cmp [bx+di+0x142],al
-    jz .fs
-    inc di
-    jmp .s
-.ns: mov di,0xffff
-.fs: cmp byte [BKTMP],96
-    jae .clr
-    push bx
-    call L61DB
-    pop bx
-    cmp word [si+0x10],0
-    jnz .ve
-    mov bx,S_VE
-    call NMSG
-    stc
-    ret
-.ve: cmp di,0xffff
-    jnz .put
-    mov di,[bx]
-    cmp di,64
-    jb .ap
-    stc
-    ret
-.ap: inc word [bx]
-.put: mov al,[si+0xae]
-    mov [bx+di+2],al
-    mov al,[si+0xaf]
-    mov [bx+di+0x42],al
-    mov al,[si+0xb0]
-    mov [bx+di+0x102],al
-    mov byte [bx+di+0x82],0x7f
-    mov byte [bx+di+0xc2],0
-    mov byte [bx+di+0x1c2],0
-    mov byte [bx+di+0x182],0xff
-    mov al,[RAWCH]
-    mov [bx+di+0x142],al
-    push di
-    shl di,1
-    mov [bx+di+0x202],si
-    pop di
-    mov bx,S_CVX
-    call NMSG
-    stc
-    ret
-.clr: cmp di,0xffff         ; remove this channel's area: shift the later ones down
-    jz .cm
-    mov cx,[bx]
-    dec cx
-    mov [bx],cx
-.sh: cmp di,cx
-    jae .cm
-    push bx
-    mov si,8
-    lea bp,[bx+2]
-.t: mov al,[ds:bp+di+1]
-    mov [ds:bp+di],al
-    add bp,0x40
-    dec si
-    jnz .t
-    pop bx
-    push di
-    shl di,1
-    mov ax,[bx+di+0x204]
-    mov [bx+di+0x202],ax
-    pop di
-    inc di
-    jmp .sh
-.cm: mov al,[RAWCH]
-    inc al
-    mov di,S_CC+2
-    call DEC2
-    mov bx,S_CC
-    call NMSG
-    stc
-    ret
+BKADDO: push word BKADD      ; FZED41N: CC15's bank placement runs from the start-up overlay (disk sector 51; fx/ov7.asm)
+    push word 0x4033        ; for room: loaded when needed (live FX are released for it, as for CHOP; refused while capturing)
+    jmp OVCALL
 BKKEY:              ; bank mode: CC66 highest, CC67 lowest, CC68 original key of this voice's area (3 octaves, as for voices)
     mov bx,[0xdfe]
     cmp bx,0xe08
@@ -598,8 +501,6 @@ MRESTORE:           ; ESC / ENTER: the other touched voices back too (al = 0 ENT
 S_BE: db 'BANK 0 EMPTY',0
 S_NARM: db 'NOT ARMED',0     ; PERF40N: (moved from the low code for room)
 S_NEVF: db 'NO EMPTY VOICE',0
-S_CVX: db 'VOICE ADDED',0
-S_CC: db 'CH00 CLEARED',0
 S_NV: db 'NO VOICE CH00',0
 S_TM: db 'TOO MANY VOICES',0
 S_NBX: db 'NO FREE BANK',0

@@ -10,7 +10,7 @@
     "Core110 patch": "2ca1ae62f3c24b28ed92b2b98960cd3090fcb4ae9acb88bbe0d0f38a236ae90b",
     "Core110 header": "fbd637351a3cdc1eb51a9f259051c4f48dd59d9a1ea2e5474f0b2e5cf9532c3c",
     "FZED source": "9d0775948bc3c34fbd6a83e871729f5f0012c648b72a74757a7a8b175cc223bb",
-    "FZED disk": "8a4315cef2ef056433c29c09eda8c69f1eb1b17ca081d6c847f02e8a4a72fec0"
+    "FZED disk": "7ea635667a676393fcfea71c39da63eafc5fb1952f0e4dae0e6a786eed6f1ac2"
   },
   "sourceReview": [
     "PERF40N READMEs and current FZED mappings cross-checked with Core110 (fzCode, fzSendCode, potSteps / stepRaw)",

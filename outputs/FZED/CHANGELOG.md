@@ -1,5 +1,10 @@
 # FZED Menu Revision
 
+## Room For Messages And Bend Range (next)
+
+- FZED: CC15's PERF bank placement (put the voice in the bank, re-arm, clear) moved out of resident memory into the start-up overlay (disk sector 51), loaded when CC15 is used. It works and reads as before; loading it releases live FX (as CHOP does) and it is refused while capturing. 261 bytes of resident code room are free again, for FZ messages on the Gills and a bend range control.
+- Emulator: bank placement, new voice and wave bank tests, the full suite, live FX and wave tests unchanged.
+
 ## Capture Lengths To 10 Seconds (next)
 
 - FZED: capture's 16 lengths are now 10, 16, 25, 40, 63, 100, 160, 250, 400, 630 ms, 1, 1.6, 2.5, 4, 6.3 and 10 s (was 10 ms to 4 s): each step about 1.585 times the last (the R5 series), so the pot feels even. The top step is 9990 ms, so the FZ's four-digit LCD shows it. Same CC103 bands; the capture overlay table only, no resident memory.
