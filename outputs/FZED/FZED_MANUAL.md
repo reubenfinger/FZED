@@ -375,7 +375,7 @@ The Capture page groups recording settings, playback hold, chord arrangement and
 | Capture On/Off | Enter with the ordinary recorder idle, or explicitly leave capture |
 | Recapture | End the current hold and request the next take, subject to sync |
 
-Lengths: **10, 20, 30, 50, 75, 100, 150, 200, 300, 500, 750 ms, 1, 1.5, 2, 3, 4 seconds**.
+Lengths: **10, 16, 25, 40, 63, 100, 160, 250, 400, 630 ms, 1, 1.6, 2.5, 4, 6.3, 10 seconds**: each step about 1.6 times the last, so the pot feels even end to end. Below about 20 ms the loop is heard as a pitch (10 ms repeats at 100 Hz). 10 s at 36k needs about 720 KB free; at 18k half that.
 
 Hold: **1, 2, 4 or 8 passes; 2, 4 or 8 seconds; until recapture**. Sync: free, 1/16, 1/8, 1/4, 1/2, 1 bar, 2 bars or 4 bars.
 
@@ -800,7 +800,7 @@ The **Values** column gives the value FZED receives and what it means. Where a r
 | Recapture | CC109 | INACTIVE 0-63; CAPTURE NOW 64-127 |
 | Sync | CC33 | FREE 0-15; 1/16 CLOCK 16-31; 1/8 CLOCK 32-47; 1/4 CLOCK 48-63; 1/2 CLOCK 64-79; 1 BAR CLOCK 80-95; 2 BARS CLOCK 96-111; 4 BARS CLOCK 112-127 |
 | Capture Rate | CC102 | RATE 36K 0-31; RATE 18K 32-63; RATE 9K 64-95; RATE 4.5K 96-127 |
-| Capture Length | CC103 | 10 MS 0-7; 20 MS 8-15; 30 MS 16-23; 50 MS 24-31; 75 MS 32-39; 100 MS 40-47; 150 MS 48-55; 200 MS 56-63; 300 MS 64-71; 500 MS 72-79; 750 MS 80-87; 1.0 S 88-95; 1.5 S 96-103; 2.0 S 104-111; 3.0 S 112-119; 4.0 S 120-127 |
+| Capture Length | CC103 | 10 MS 0-7; 16 MS 8-15; 25 MS 16-23; 40 MS 24-31; 63 MS 32-39; 100 MS 40-47; 160 MS 48-55; 250 MS 56-63; 400 MS 64-71; 630 MS 72-79; 1.0 S 80-87; 1.6 S 88-95; 2.5 S 96-103; 4.0 S 104-111; 6.3 S 112-119; 10 S 120-127 (FZED41M: each step x1.585; 10 S fits more easily at 18k or with memory free) |
 | Input Gain | CC104 | GAIN 0 DB 0-63; GAIN -20 DB 64-127 |
 | Hold | CC105 | 1 PASS 0-15; 2 PASSES 16-31; 4 PASSES 32-47; 8 PASSES 48-63; 2 SECONDS 64-79; 4 SECONDS 80-95; 8 SECONDS 96-111; UNTIL RECAPTURE 112-127 |
 | Transpose | CC23 | 0-127 (-24 SEMITONES to +24 SEMITONES) |

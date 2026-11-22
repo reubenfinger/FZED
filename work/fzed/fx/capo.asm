@@ -6,7 +6,7 @@
 ; pre-record, start / end snapped to zero crossings, the take looped, outputs switched straight back on.
 ; RECORD page while capturing (Gills Core 63 CAPTURE view):
 ;   P1 RATE (102)          record rate (applied at the next capture)
-;   P2 LENGTH (103)        capture length, 16 steps: 10 ms .. 4 s
+;   P2 LENGTH (103)        capture length, 16 steps: 10 ms .. 10 s (FZED41M: x1.585 a step)
 ;   P3 GAIN (104)          input gain (applied at the next capture)
 ;   P4 AUTO TRIG (105)     hold: 1 / 2 / 4 / 8 passes, 2 / 4 / 8 s, until RECAPTURE
 ;   P5 ARM (106)           transpose -24..+24 semitones (centre = 0)
@@ -788,7 +788,8 @@ CSHOWF: call CFDU           ; 'FADE 0000MS'
     mov bx,S_CF
     jmp CSMS
 
-CMST: dw 10,20,30,50,75,100,150,200,300,500,750,1000,1500,2000,3000,4000   ; capture ms
+CMST: dw 10,16,25,40,63,100,160,250,400,630,1000,1600,2500,4000,6300,9990   ; capture ms. FZED41M: x1.585 a step (the R5
+                            ; series), 10 ms to 10 s (9990: four digits on the LCD); was 10 ms to 4 s
 CHMC: db 'x1x2x4x82s4s8sRC' ; hold: passes, seconds, until RECAPTURE
 CSGT: db 0,1,2,3,4,6,8,10,15,20,25,30,40,60,90,120   ; PERF38T: stagger / 20 ms: 0 .. 2.4 s
 CHT: db 0,0x80,0x80,0x80    ; original           (intervals in semitones, 80h = none)

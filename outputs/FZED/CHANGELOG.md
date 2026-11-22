@@ -1,5 +1,10 @@
 # FZED Menu Revision
 
+## Capture Lengths To 10 Seconds (next)
+
+- FZED: capture's 16 lengths are now 10, 16, 25, 40, 63, 100, 160, 250, 400, 630 ms, 1, 1.6, 2.5, 4, 6.3 and 10 s (was 10 ms to 4 s): each step about 1.585 times the last (the R5 series), so the pot feels even. The top step is 9990 ms, so the FZ's four-digit LCD shows it. Same CC103 bands; the capture overlay table only, no resident memory.
+- Gills Core 127: CAPTURE LENGTH labels to match.
+
 ## Status Out While Recording (next)
 
 - FZED: STATUS OUT now reaches the Gills while armed, waiting and recording. In those states the FZ's MIDI interrupts are off (FZED reads the MIDI port itself), so messages left in the ROM's queue were held back until afterwards; they now go straight to the MIDI port (8251, waiting for it to be ready, with a time limit). Idle, done and the other states still go through the ROM's MIDI call.
