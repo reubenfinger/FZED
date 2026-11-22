@@ -57,6 +57,41 @@ GLDUE:              ; CF=1 if less than one cycle of the frame (3 x LWL timer un
     pop cx
     pop ax
     ret
+; ---------- FZED41K STATUS OUT (FZED 24 >= 64; off at start-up): the record state (0 idle, 1 armed, 2 waiting, 3
+; recording, 4 done, 5 used, 6 no memory), the record rate (16 + 0-3: 36k, 18k, 9k, 4.5k) and the slice count (64 +
+; 0-63) to MIDI OUT as CC3 on channel 16 (the ROM's MIDI call ORs in the basic channel: 16 stays 16), each only when it
+; changes. For the Gills (Core 123): its RECORD page shows them. The ROM's internal copy of the message is taken back
+; out of its queue (write pointer 0BE0h put back), so only MIDI OUT sends it and the FZ itself never acts on it.
+SOL: db 0xff,0xff,0xff      ; last sent: state, rate, slices (FFh: send)
+STSTAT:             ; main loop, then on into GLSTEP
+    cmp byte [STOUT],64
+    jb GLSTEP
+    mov bx,SOL
+    mov al,[RST]
+    call .s
+    mov al,[0x4d9]
+    and al,3
+    or al,16
+    call .s
+    mov al,[NBND]
+    and al,63
+    or al,64
+    call .s
+    jmp short GLSTEP
+.s: cmp al,[bx]
+    jz .n
+    mov [bx],al
+    push bx
+    push word [0xbe0]
+    xor ah,ah
+    push ax
+    push word 3
+    push word 0xbf
+    APIC 0x33,6
+    pop word [0xbe0]
+    pop bx
+.n: inc bx
+    ret
 GLSTEP:             ; main loop: the window still on its way: the next step when due, as the knob does it
     mov ax,[GLC]
     cmp ax,[GLT]

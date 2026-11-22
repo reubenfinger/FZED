@@ -129,8 +129,13 @@ STRP:               ; PERF40F parameters 88 (STRETCH control 0-9) and 89 (its va
     jmp EXTSEL
 .s20: sub bl,20             ; FZED41C: 20-22 disintegration (fx/dis1.asm)
     cmp bl,4                ; (FZED41D: 23 EVEN AGEING)
-    jae .s10
-    jmp DISSET
+    jb .dis
+    jnz .s10
+    mov [STOUT],al          ; FZED41K: 24 STATUS OUT (fx/glide.asm); everything sent again
+    mov word [SOL],0xffff
+    mov byte [SOL+2],0xff
+    ret
+.dis: jmp DISSET
 .s10: cmp byte [STSEL],11     ; PERF40H: 11 voice pick, 12 voice select, 13 exit: tools overlay 3
     jb .s
     cmp byte [STSEL],16     ; PERF40L: 16-18 (next, order, skew) are STRETCH too

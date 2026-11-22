@@ -312,6 +312,12 @@ Record contains ordinary recording controls. The next page, Capture, contains th
 
 Ordinary length uses `(raw + 1) x 0.1 seconds`, doubled for each halving of the recording rate. This is different from Capture's fixed 16-duration menu.
 
+### Status Out: Recording State To The Gills
+
+With **Status Out** on (FZED 24 = 64-127), FZED sends the recording state on the FZ's MIDI OUT whenever it changes, for a controller such as the Gills to show: the record state (idle, armed, waiting for the level, recording, done, used, no memory), the record rate and the slice count. Each is one CC3 message on MIDI channel 16, whatever the FZ's own channel, sent only when it changes. The FZ itself never acts on them, and a device listening on channel 1 (the FZ, an Akai) ignores them.
+
+It is off whenever FZED loads. On the Gills (Core 123), press the encoder on the RECORD page after moving any of P1-P9 to turn it on or off (P10 keeps its press for Exit FZED); while it is on, the Gills sends it again each time its RECORD page opens, shows the state on line 1 of that page (`ARMED 36K SL 08`), and pops up FZ RECORD and the new state on any FZ page. If anything else on your MIDI chain reacts to CC3 on channel 16, turn it off.
+
 ### Norm Filter: Recording-Input Anti-Aliasing
 
 The FZ's normal recording setup **bypasses the switchable anti-aliasing filter at 36 kHz** and **applies it at both 18 kHz and 9 kHz**. **18 kHz has been checked explicitly:** its record-start ROM path enables the filter and programs its cutoff; it is not treated like the 36 kHz bypass path. This describes the switchable recording filter, not an assertion that the analogue input has no other bandwidth limits.
@@ -783,6 +789,7 @@ The **Values** column gives the value FZED receives and what it means. Where a r
 | Record Start | CC107 | INACTIVE 0-63; TRIGGER 64-127 |
 | Record Auto | CC108 | INACTIVE 0-63; TRIGGER 64-127 |
 | Record Stop | CC109 | INACTIVE 0-63; TRIGGER 64-127 |
+| Status Out | FZED 24 | OFF 0-63; ON 64-127 (sends CC3 on channel 16: 0-6 record state IDLE, ARMED, WAIT, REC, DONE, USED, NO MEMORY; 16-19 rate 36K, 18K, 9K, 4.5K; 64 + slice count) |
 | Exit FZED | FZED 14, then FZED 13 | FZED 13 = 0-63 leaves as ESC (edits put back). To leave as ENTER, first set FZED 14 to what is kept (0-42 the sound edits, 43-85 all of the edit voice, 86-127 everything, bank voices too), then FZED 13 = 64-127 |
 
 ### A.12 Capture

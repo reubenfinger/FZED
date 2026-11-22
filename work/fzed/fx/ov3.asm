@@ -103,8 +103,7 @@ CHSLICE:            ; FZED41H (from CHOP in fzed.asm, for room): 4. each slice; 
     mov bx,[CHBANK]         ; PERF40J: a bank holds 64 places
     cmp word [bx],64
     jb .s0
-.sld: xor bx,bx
-    ret
+.sld: jmp CHFIN.done        ; FZED41K: on into the finish (from CHOP, for room)
 .s0: call L61DB
     mov di,0x2288           ; free voice slot
     mov cx,64
@@ -115,7 +114,7 @@ CHSLICE:            ; FZED41H (from CHOP in fzed.asm, for room): 4. each slice; 
 .fn: add di,0xc0
     loop .fv
     mov bx,S_CV
-    ret
+    jmp CHFIN.err
 .got: mov bl,[CHI]           ; length = SBND[i+1] - SBND[i]
     xor bh,bh
     shl bx,2
@@ -135,7 +134,7 @@ CHSLICE:            ; FZED41H (from CHOP in fzed.asm, for room): 4. each slice; 
     or bx,bx
     jz .al
     mov bx,S_CM
-    ret
+    jmp CHFIN.err
 .al: call L61DB
     push si                 ; copy all settings except addresses
     push di
@@ -211,6 +210,28 @@ CHSLICE:            ; FZED41H (from CHOP in fzed.asm, for room): 4. each slice; 
     mov [CHCNT],al
     jmp .sl
 
+CHFIN:              ; FZED41K (from CHOP in fzed.asm, for room): 5. after the slices: .err with bx = why it stopped,
+.err: mov [CHWHY],bx
+    call NMSG
+    cmp byte [CHCNT],0
+    jz .r
+    jmp .dz
+.done: mov word [CHWHY],0
+.dz: call L61DB
+    mov [CHOWN],si
+    mov ax,si               ; bank name 'CHOP Vnn' = source voice number
+    sub ax,0x2288
+    mov cl,0xc0
+    div cl
+    inc al
+    call CHNMD              ; PERF40J: (a chop into a target bank leaves the bank's name alone)
+    mov byte [di+0x287],'V'
+    add di,0x288
+    call DEC2
+    call CHPROP
+    call CHON
+    jmp CHOPMSG             ; (the message: resident, fzed.asm)
+.r: ret
 STRET2:             ; PERF40L: STRETCH-style controls kept in this overlay (from tools overlay 4): 6 CHOP INTO, 7 CAPTURE ON,
     mov bl,[STSEL]          ; 10 slices' filter / envelopes / LFO 1
     cmp bl,10
@@ -286,8 +307,8 @@ S_PSO: db 'SLICES: OWN F/E',0
 S_CI0: db 'CHOP INTO: OWN  ',0
 S_CI1: db 'CHOP INTO TARGET',0
 S_PSS: db 'SLICES: SHARED ',0
-%if ($-$$) > 0x3A0
-%error tools overlay 2 reaches its scratch area (D7A0h)
+%if ($-$$) > 0x3BE
+%error tools overlay 2 reaches its end signature (D7BEh) (FZED41K: it keeps no scratch at D7A0h, so the code may go on to it)
 %endif
     times 0x3BE-($-$$) db 0
     dw 0x402F

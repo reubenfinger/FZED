@@ -60,6 +60,7 @@ LDONE equ 0x81B9
 LWARB equ 0x81BA
 LSLOW equ 0x81BB             ; FZED41I: LFO 2 SLOW (in the LFO block, so each voice record has its own)
 LACC equ 0x81BC              ; FZED41I: SLOW's carried remainder (word)
+STOUT equ 0x81BE             ; FZED41K: FZED 24 STATUS OUT (>= 64 on; cleared at start-up)
 RVP equ 0x81C0
 G6 equ 0x81C2
 NARM equ 0x81E0
@@ -215,7 +216,7 @@ MAIN:               ; FZED41A: the one-time start-up runs from sector 51 (fx/ov7
     call CAPTICK            ; PERF38M: capture mode, then LFOALL
     call MATRIX
     call RVPATCH
-    call GLSTEP             ; FZED41I: Window Snap GLIDE's next step (fx/glide.asm)
+    call STSTAT             ; FZED41K: STATUS OUT, then (FZED41I) Window Snap GLIDE's next step (fx/glide.asm)
     call LVRUNX             ; PERF38H: paced LCD, curve steps, then live FX
     mov byte [CCN],4        ; review diff B1: up to 4 CCs a pass
     call RTSCAN             ; review diffs B2 / C1: realtime bytes and the backlog guard, then PARSE (falls through)
@@ -2222,28 +2223,12 @@ CHOP:
     call CHBSELO            ; 3. bank (PERF40J): this chop's again, else its own new CHOP bank or (CHOP INTO TARGET) the
     jnc .bok                ; bank being built, after its places, on Gills' channel
     ret
-.bok: call CHSLO             ; FZED41H: 4. each slice, in tools overlay 2 (sector 47):
-    or bx,bx                ; bx = 0 all done, else the message
-    jz .done
-.err: mov [CHWHY],bx
-    call NMSG
-    cmp byte [CHCNT],0
-    jz .r
-    jmp .dz
-.done: mov word [CHWHY],0
-.dz: call L61DB
-    mov [CHOWN],si
-    mov ax,si               ; bank name 'CHOP Vnn' = source voice number
-    sub ax,0x2288
-    mov cl,0xc0
-    div cl
-    inc al
-    call CHNMD              ; PERF40J: (a chop into a target bank leaves the bank's name alone)
-    mov byte [di+0x287],'V'
-    add di,0x288
-    call DEC2
-    call CHPROP
-    call CHON
+.bok: jmp CHSLO              ; FZED41H: 4. each slice, and (FZED41K) 5. the bank's name, the slices' properties and
+                            ; the message: tools overlay 2 (sector 47; fx/ov3.asm CHSLICE, CHFIN)
+.short: mov bx,S_CS
+    jmp NMSG
+.r: ret
+CHOPMSG:            ; FZED41K: CHOP's last step after tools overlay 2's finish: 'CHOP nn/nn ...' and live FX back on
     mov al,[CHCNT]
     mov di,S_CO+5
     call DEC2
@@ -2278,8 +2263,6 @@ CHOP:
     mov byte [LVWAS],0
     mov al,127
     jmp LVCC
-.short: mov bx,S_CS
-    jmp NMSG
 .r: ret
 DEC2:               ; al (0-99) -> two decimal digits at [di]
     aam

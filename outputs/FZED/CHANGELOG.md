@@ -1,5 +1,12 @@
 # FZED Menu Revision
 
+## Status Out To The Gills (next)
+
+- FZED: STATUS OUT (FZED 24, off whenever FZED loads): the record state (idle, armed, waiting, recording, done, used, no memory), the record rate and the slice count go to MIDI OUT as CC3 on channel 16, each only when it changes. Channel 16 whatever the FZ's basic channel; the ROM's own copy of each message is taken back out of its internal queue, so the FZ never acts on it.
+- FZED: CHOP's finishing steps (the bank's name, the slices' properties, playing the bank) moved into tools overlay 2 with its slice loop, for room; its message stays resident. Tools overlay 2 may now run up to its end signature (it keeps no scratch there).
+- Gills Core 123: on the RECORD page the encoder press (after P1-P9; P10 keeps Exit) turns FZ STATUS OUT on / off, with a pop-up; while on, the Gills sends it again whenever RECORD opens, shows `ARMED 36K SL 08` on the page's line 1, and pops up FZ RECORD and the new state on any FZ page.
+- Emulator: `status41.py`: off at start-up; on sends state, rate and slices once each as CC3 channel 16; nothing more without a change; each change one message; off sends nothing; on again sends all three again. Chop tests and the full suite unchanged.
+
 ## Stretch JOIN (next)
 
 - FZED: Stretch NEXT has JOIN (and JOIN, CUT LEAD-IN): the loops sit back to back, each starting where the last one ends, a grain apart instead of a segment apart, closer to an old sampler's time stretch. The 8 loops cover the first N x Grain of the play range; with Stretch on and JOIN, moving Sample Start builds them again from the new start (from the disk; not for matrix or LFO moves of Sample Start). TRACE and SKIP are unchanged, and WAVETABLE still uses TRACE.
