@@ -78,9 +78,14 @@ STSTAT:             ; main loop, then on into GLSTEP
     or al,64
     call .s
     jmp short GLSTEP
-.s: cmp al,[bx]
-    jz .n
-    mov [bx],al
+.s: inc bx
+    cmp al,[bx-1]
+    jz .r1
+    mov [bx-1],al
+    mov ah,[RST]            ; FZED41L: armed, waiting or recording: the FZ's MIDI interrupts are off (FZED polls the UART
+    dec ah                  ; itself), so the ROM's queue would hold it until afterwards: sent straight to the UART
+    cmp ah,3
+    jb .u
     push bx
     push word [0xbe0]
     xor ah,ah
@@ -90,7 +95,20 @@ STSTAT:             ; main loop, then on into GLSTEP
     APIC 0x33,6
     pop word [0xbe0]
     pop bx
-.n: inc bx
+.r1: ret
+.u: push ax
+    mov al,0xbf
+    call .tx
+    mov al,3
+    call .tx
+    pop ax
+.tx: mov ah,al              ; one byte to the 8251 when it is ready (TxRDY), or after about 64K tries
+    xor cx,cx
+.t1: in al,0xd2
+    test al,1
+    loopz .t1
+    mov al,ah
+    out 0xd0,al
     ret
 GLSTEP:             ; main loop: the window still on its way: the next step when due, as the knob does it
     mov ax,[GLC]

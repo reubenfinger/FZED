@@ -918,10 +918,13 @@ Real              Virtual           Name
             7F50              7F50  SOL
             7F53              7F53  STSTAT
             7F79              7F79  STSTAT.s
-            7F99              7F99  STSTAT.n
-            7F9B              7F9B  GLSTEP
-            7FD6              7FD6  GLSTEP.r
-            7FD7              7FD7  LOWEND
+            7FA7              7FA7  STSTAT.r1
+            7FA8              7FA8  STSTAT.u
+            7FB4              7FB4  STSTAT.tx
+            7FB8              7FB8  STSTAT.t1
+            7FC3              7FC3  GLSTEP
+            7FFE              7FFE  GLSTEP.r
+            7FFF              7FFF  LOWEND
             8400              8400  FXCC
             8419              8419  FXCC.r0
             8439              8439  FXCC.k95

@@ -1,5 +1,10 @@
 # FZED Menu Revision
 
+## Status Out While Recording (next)
+
+- FZED: STATUS OUT now reaches the Gills while armed, waiting and recording. In those states the FZ's MIDI interrupts are off (FZED reads the MIDI port itself), so messages left in the ROM's queue were held back until afterwards; they now go straight to the MIDI port (8251, waiting for it to be ready, with a time limit). Idle, done and the other states still go through the ROM's MIDI call.
+- Emulator: `status41.py` checks ARMED, WAIT and RECORDING go straight to the port and IDLE through the ROM again; `emu.py` learned LOOPZ / LOOPNZ.
+
 ## Gills Core 124: The Pots Reach The New Choices (next)
 
 - Gills Core 124: Cores 121-123 labelled the new choices but left the pots' step counts as they were, so STRETCH NEXT / LEAD-IN could not reach JOIN, LFO2 MODE could not reach the SLOW modes and WINDOW SNAP could not reach FRAMES GLIDE. Now 6, 5 and 4 steps, each in the middle of FZED's band. Editor: LFO 2 Mode and Window Snap now offer the new choices too. No FZED change.

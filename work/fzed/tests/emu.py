@@ -205,6 +205,11 @@ class CPU:
         if op==0xcc: s.int3(); return
         if op in(0xc6,0xc7):
             w=op&1; mod,reg,rm,a=s.modrm(); v=s.fetch16() if w else s.fetch8(); s.setrm(w,mod,rm,a,v); return
+        if op in (0xe0,0xe1):       # LOOPNZ / LOOPZ (FZED41L)
+            d=s.fetch8(); d=d-256 if d>127 else d; s.r['cx']=(s.r['cx']-1)&0xffff
+            z=s.cond(4)
+            if s.r['cx'] and (z if op==0xe1 else not z): s.ip=(s.ip+d)&0xffff
+            return
         if op==0xe2:
             d=s.fetch8(); d=d-256 if d>127 else d; s.r['cx']=(s.r['cx']-1)&0xffff
             if s.r['cx']: s.ip=(s.ip+d)&0xffff
