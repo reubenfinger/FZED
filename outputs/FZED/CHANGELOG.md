@@ -1,5 +1,9 @@
 # FZED Menu Revision
 
+## Gills Core 124: The Pots Reach The New Choices (next)
+
+- Gills Core 124: Cores 121-123 labelled the new choices but left the pots' step counts as they were, so STRETCH NEXT / LEAD-IN could not reach JOIN, LFO2 MODE could not reach the SLOW modes and WINDOW SNAP could not reach FRAMES GLIDE. Now 6, 5 and 4 steps, each in the middle of FZED's band. Editor: LFO 2 Mode and Window Snap now offer the new choices too. No FZED change.
+
 ## Status Out To The Gills (next)
 
 - FZED: STATUS OUT (FZED 24, off whenever FZED loads): the record state (idle, armed, waiting, recording, done, used, no memory), the record rate and the slice count go to MIDI OUT as CC3 on channel 16, each only when it changes. Channel 16 whatever the FZ's basic channel; the ROM's own copy of each message is taken back out of its internal queue, so the FZ never acts on it.
