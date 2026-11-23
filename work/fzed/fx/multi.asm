@@ -365,50 +365,29 @@ SOTEXT:             ; STSTAT: the waiting message, when a quarter second has pas
 .z: pop ax
     pop si
     ret
-; ---------- FZED41S capture RHYTHM (FZED 27): while a capture holds, on each step of the pattern (its rate: free ms or
-; MIDI clock division; the matrix's pattern source runs all the time) ARP plays the chord's notes one at a time (up,
-; down or random), and STRIKE plays the whole chord again on the steps the pattern sets (level 64 or more). The hold, the
-; release and the fade go on as before (every note started is released at the end).
-CRMODE: db 0                ; 0 off, 1 arp up, 2 arp down, 3 arp random, 4 strike
-CRSTEP: db 0xff             ; the step last seen
-CRCNT: db 0                 ; ARP's note count
-CRHY:               ; CAPRUN, holding (capture overlay), each pass; then DISCP0 as before
-    mov al,[CRMODE]
-    or al,al
-    jz .x
-    mov ah,[PSTEP]
-    cmp ah,[CRSTEP]
-    jz .x
-    mov [CRSTEP],ah
-    xor bx,bx
-    cmp al,4
-    jb .ar
-    cmp byte [PV],64        ; STRIKE: off and on again, the whole chord
-    jb .x
-.s1: call CROFF
-    mov ah,0x90
-    call CRNT
-    inc bx
-    cmp bl,[CNN]
-    jb .s1
-    jmp short .x
-.ar: call CROFF              ; ARP: every note off, then one
-    inc bx
-    cmp bl,[CNN]
-    jb .ar
-    inc byte [CRCNT]        ; (a count of its own: every note in turn, at any step rate and chord size)
-    mov al,[CRCNT]
-    cmp byte [CRMODE],2
-    jb .up
-    jz .dn
-    mov al,[0x40a]
-.dn: not al
-.up: xor ah,ah
-    div byte [CNN]
-    mov bl,ah               ; (bh is 0: bx counted the notes)
-    mov ah,0x90
-    call CRNT
-.x: jmp DISCP0
+CHSET:              ; FZED41R / RH2 (from CHOPCC in fzed.asm; in the high area again, no disk load): CC96 sensitivity, CC97 chop mode, CC99 slices
+    cmp bl,96
+    jnz .c97
+    mov [TSENS],al
+    ret
+.c97: cmp bl,97
+    jnz .c99
+    mov ah,3
+    call SCL
+    mov [ZCM],ah
+    mov al,ah
+    mov ah,16
+    mul ah
+    add ax,S_ZM
+    mov bx,ax
+    jmp NMSG
+.c99:     shr al,5
+    mov cl,al
+    mov al,4
+    shl al,cl
+    mov [CHN],al            ; (RH2: no LCD message for the slice count, for room; the Gills shows it)
+    ret
+S_ZM: db 'CHOP EVEN      ',0,'CHOP EVEN+ZERO ',0,'CHOP TRANSIENT ',0
 BKADDO: push word BKADD      ; FZED41N: CC15's bank placement runs from the start-up overlay (disk sector 51; fx/ov7.asm)
     push word 0x4033        ; for room: loaded when needed (live FX are released for it, as for CHOP; refused while capturing)
     jmp OVCALL

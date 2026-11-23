@@ -8,6 +8,7 @@ def m(*b): midi(c, *b); run(c, u, 250000)
 def par(n, v, ch=0): m(0xb0 | ch, 10, n); m(0xb0 | ch, 11, v)
 EVp = lambda: c.rd16(0xe04)
 ok = True
+lpok = lambda x: x[0] == 0x0800 and x[1] == x[2] and x[3] == x[4] - 8 and x[5] == 0 and x[6] == 1022   # RH2: loop end 8 words before the play end, held
 def res(name, k, info=''):
     global ok
     print(('PASS ' if k else 'FAIL ') + name, info); ok = ok and k
@@ -30,7 +31,7 @@ try:
         vs = [c.rd16(MAP['CHV'] + 2 * i) for i in range(n)]
         keys = [(c.m[v + 0xaf], c.m[v + 0xae], c.m[v + 0xb0]) for v in vs]
         bk = [(c.m[A + 0x42 + i], c.m[A + 2 + i], c.m[A + 0x102 + i]) for i in range(n)]
-        lp = [(c.rd16(v + 0x12), d32(v + 0x14) & 0x1fffff, d32(v + 8) & 0x1fffff) for v in vs]
+        lp = [(c.rd16(v + 0x12), d32(v + 0x14) & 0x1fffff, d32(v + 8) & 0x1fffff, d32(v + 0x34) & 0x1fffff, d32(v + 0xc) & 0x1fffff, c.rd16(v + 0x54), c.rd16(v + 0x64)) for v in vs]
         return n, keys, bk, lp
     n, k, bk, lp = chop(0, 40)
     res('ONE KEY: C2 up, one key each, bank the same', k == [(36 + i,) * 3 for i in range(n)] and bk == k, str(k[:3]))
@@ -39,11 +40,11 @@ try:
     res('SPREAD %d slices: %d keys each, own pitch in the middle' % (n, w), k == [(36 + i * w, 36 + i * w + w - 1, 36 + i * w + w // 2) for i in range(n)] and bk == k, str(k))
     res('SPREAD: no loops (source one-shot)', all(x[0] == 0x0808 for x in lp))
     n, k, bk, lp = chop(80, 20)
-    res('SPREAD LOOP: every slice a sustain loop over the whole slice', all(x[0] == 0x0800 and x[1] == x[2] for x in lp), str([hex(x[0]) for x in lp]))
+    res('SPREAD LOOP: every slice a held sustain loop over the whole slice, ending 8 words before the play end', all(lpok(x) for x in lp), str([hex(x[0]) for x in lp]))
     n, k, bk, lp = chop(127, 40)
     last = 36 + (n - 1) + 12
     res('LAST WIDE: others one key each, the last an octave either side', k[:-1] == [(36 + i,) * 3 for i in range(n - 1)] and k[-1] == (last - 12, last + 12, last) and bk == k, str(k[-2:]))
-    res('LAST WIDE: only the last looped', all(x[0] == 0x0808 for x in lp[:-1]) and lp[-1][0] == 0x0800 and lp[-1][1] == lp[-1][2], str([hex(x[0]) for x in lp]))
+    res('LAST WIDE: only the last looped', all(x[0] == 0x0808 for x in lp[:-1]) and lpok(lp[-1]), str([hex(x[0]) for x in lp]))
 except Exception:
     import traceback; traceback.print_exc(); ok = False
 print('ALL PASS' if ok else 'SOME FAIL')

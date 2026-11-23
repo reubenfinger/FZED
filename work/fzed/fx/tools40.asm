@@ -131,11 +131,6 @@ STRP:               ; PERF40F parameters 88 (STRETCH control 0-9) and 89 (its va
     cmp bl,4                ; (FZED41D: 23 EVEN AGEING)
     jb .dis
     jz .so
-    cmp bl,7                ; FZED41S: 27 RHYTHM (capture holds): 0-25 OFF, 26-51 ARP UP, 52-77 ARP DOWN, 78-103 ARP
-    jnz .ly                 ; RANDOM, 104-127 STRIKE
-    aam 26
-    mov [CRMODE],ah
-    ret
 .ly: cmp bl,6                ; FZED41R: 26 LAYOUT (the next CHOP's keys): 0-31 ONE KEY, 32-63 SPREAD, 64-95 SPREAD LOOP,
     jnz .bn                 ; 96-127 LAST WIDE (looped)
     shr al,5

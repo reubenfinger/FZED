@@ -929,35 +929,6 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#e5eeea;padding:16px;
 <p>Fade: cut, <strong>50, 100, 200, 400, 800 ms, 1.2 or 1.6 s</strong>. It uses safe alias CC34, not the destructive ordinary Chop action. Fade provides release time before recording; it is not simultaneous crossfading of recorded input and playing output.</p>
 <p>Capture widens the voice key range before playing a chord, reducing silent notes caused by a narrow preset range. The FZ's own generator limits still apply. Capture reuses allocations where possible and explicitly stops shorter takes within a larger allocation; timing still has polling overhead. Many normal FX, wave-load and loop operations are refused during capture.</p>
 <p>For PASSES holds, FZED rounds the transpose to the nearest octave when calculating hold duration. This does not change pitch; octave transposes retain the same hold behaviour as before. Other transposes can make a pass hold slightly shorter or longer than an exact whole number of sample loops.</p>
-<h3>Rhythm</h3>
-<p><strong>Rhythm</strong> (FZED 27) plays the held chord in time with the pattern engine (Chop / Pattern: the Pattern Rate's free speed or MIDI-clock division), instead of letting every note sustain:</p>
-<table>
-<thead>
-<tr>
-<th>Choice</th>
-<th>What happens on each pattern step</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>OFF</td>
-<td>The chord sustains as before</td>
-</tr>
-<tr>
-<td>ARP UP / ARP DOWN</td>
-<td>Only one chord note sounds, the next one up (or down) each step, wrapping round</td>
-</tr>
-<tr>
-<td>ARP RANDOM</td>
-<td>One chord note, picked at random each step</td>
-</tr>
-<tr>
-<td>STRIKE</td>
-<td>Steps where the pattern is high (64 or more) strike the whole chord again; low steps let it ring</td>
-</tr>
-</tbody>
-</table>
-<p>Set Intervals to a chord with several notes for the arpeggios; with ORIGINAL ONLY they repeat one note. Rhythm only acts while a take is held, so takes still record cleanly. On the Gills (Core 129) it is ENV STEPS P10.</p>
 <p>Leave capture explicitly before returning to ordinary recording or sample-processing operations. A selected page is not a recording-state indicator.</p>
 <h2 id="section-18">17. Chop / Pattern</h2>
 <table>
@@ -1052,7 +1023,7 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#e5eeea;padding:16px;
 </tr>
 </tbody>
 </table>
-<p>On the Gills (Core 129) it is ENV STEPS P5. Chop's Sensitivity, Mode and Slice Count (CC96, CC97, CC99) are now handled by an overlay loaded from disk (the wave overlay), for room, so changing them takes a moment and releases live FX, as CHOP itself does.</p>
+<p>On the Gills (Core 129) it is ENV STEPS P5. SPREAD LOOP and LAST WIDE loop each looped slice while its key is held (a sustain loop ending just before the slice's end, no crossfade); on release the slice plays out to its end. Changing Slice Count (CC99) no longer shows CHOP nn SLICES on the FZ's LCD; the Gills shows the count.</p>
 <p>The browser confirms destructive actions and rearms slice creation before repeating it. Samples and voices need enough available memory and valid bounds. A normalised sample is not recovered merely by lowering the volume afterwards.</p>
 <h2 id="section-19">18. Slices</h2>
 <p>Slices edits the result of the last chop.</p>
@@ -2171,11 +2142,6 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#e5eeea;padding:16px;
 <td>Release</td>
 <td>CC41</td>
 <td>TOGETHER 0-63; TOP FIRST 64-127</td>
-</tr>
-<tr>
-<td>Rhythm</td>
-<td>FZED 27</td>
-<td>OFF 0-25; ARP UP 26-51; ARP DOWN 52-77; ARP RANDOM 78-103; STRIKE 104-127</td>
 </tr>
 </tbody>
 </table>

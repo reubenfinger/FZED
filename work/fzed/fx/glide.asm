@@ -152,10 +152,3 @@ NEWTK:              ; FZED41O: a finished recording (si = the voice): mode NORMA
     and byte [STSU],0x7f
     mov byte [STMV],0
     ret
-CROFF: mov ah,0x80          ; FZED41S (low area, for room): CRHY's note bx of the capture chord off, or with CRNT status ah
-CRNT: push bx
-    mov al,[bx+CNK]
-    mov cl,[bx+CNV]
-    call CPNOTE
-    pop bx
-    ret

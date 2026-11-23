@@ -409,19 +409,6 @@ Capture widens the voice key range before playing a chord, reducing silent notes
 
 For PASSES holds, FZED rounds the transpose to the nearest octave when calculating hold duration. This does not change pitch; octave transposes retain the same hold behaviour as before. Other transposes can make a pass hold slightly shorter or longer than an exact whole number of sample loops.
 
-### Rhythm
-
-**Rhythm** (FZED 27) plays the held chord in time with the pattern engine (Chop / Pattern: the Pattern Rate's free speed or MIDI-clock division), instead of letting every note sustain:
-
-| Choice | What happens on each pattern step |
-| --- | --- |
-| OFF | The chord sustains as before |
-| ARP UP / ARP DOWN | Only one chord note sounds, the next one up (or down) each step, wrapping round |
-| ARP RANDOM | One chord note, picked at random each step |
-| STRIKE | Steps where the pattern is high (64 or more) strike the whole chord again; low steps let it ring |
-
-Set Intervals to a chord with several notes for the arpeggios; with ORIGINAL ONLY they repeat one note. Rhythm only acts while a take is held, so takes still record cleanly. On the Gills (Core 129) it is ENV STEPS P10.
-
 Leave capture explicitly before returning to ordinary recording or sample-processing operations. A selected page is not a recording-state indicator.
 
 ## 17. Chop / Pattern
@@ -457,7 +444,7 @@ The pattern signal can feed the modulation matrix; selecting a pattern alone is 
 | SPREAD LOOP | As SPREAD, and each slice loops over its whole length while held |
 | LAST WIDE | One key a slice, but the last slice takes two octaves above the others with its original pitch in the middle, so it plays an octave either side; it loops |
 
-On the Gills (Core 129) it is ENV STEPS P5. Chop's Sensitivity, Mode and Slice Count (CC96, CC97, CC99) are now handled by an overlay loaded from disk (the wave overlay), for room, so changing them takes a moment and releases live FX, as CHOP itself does.
+On the Gills (Core 129) it is ENV STEPS P5. SPREAD LOOP and LAST WIDE loop each looped slice while its key is held (a sustain loop ending just before the slice's end, no crossfade); on release the slice plays out to its end. Changing Slice Count (CC99) no longer shows CHOP nn SLICES on the FZ's LCD; the Gills shows the count.
 
 The browser confirms destructive actions and rearms slice creation before repeating it. Samples and voices need enough available memory and valid bounds. A normalised sample is not recovered merely by lowering the volume afterwards.
 
@@ -840,7 +827,6 @@ The **Values** column gives the value FZED receives and what it means. Where a r
 | Stagger | CC99 | TOGETHER 0-7; 20 MS APART 8-15; 40 MS APART 16-23; 60 MS APART 24-31; 80 MS APART 32-39; 120 MS APART 40-47; 160 MS APART 48-55; 200 MS APART 56-63; 300 MS APART 64-71; 400 MS APART 72-79; 500 MS APART 80-87; 600 MS APART 88-95; 800 MS APART 96-103; 1.2 S APART 104-111; 1.8 S APART 112-119; 2.4 S APART 120-127 |
 | Fade | CC34 | OFF (CUT) 0-15; 50 MS FADE 16-31; 100 MS FADE 32-47; 200 MS FADE 48-63; 400 MS FADE 64-79; 800 MS FADE 80-95; 1.2 S FADE 96-111; 1.6 S FADE 112-127 |
 | Release | CC41 | TOGETHER 0-63; TOP FIRST 64-127 |
-| Rhythm | FZED 27 | OFF 0-25; ARP UP 26-51; ARP DOWN 52-77; ARP RANDOM 78-103; STRIKE 104-127 |
 
 ### A.13 Chop / Pattern
 

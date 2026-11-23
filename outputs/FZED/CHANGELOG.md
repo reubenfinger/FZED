@@ -1,5 +1,13 @@
 # FZED Menu Revision
 
+## RH2: Chop Fixes, Rhythm Out (next)
+
+- FZED: **SPREAD LOOP and LAST WIDE now loop.** The slice's loop ended exactly at its play end, so the FZ's generator stopped before it could loop (capture learnt this in PERF38S), and CHOP leaves every loop's repeat count at 0. The loop now ends 8 words before the play end, with no crossfade and held (1022), as capture's loop.
+- FZED: **turning chop type no longer makes a sound.** RH1 moved CC96 / CC97 / CC99 into the wave overlay, so each turn read the disk, and on the FZ that sounded what capture had left. They are resident again, with no disk load; CC99 no longer shows CHOP nn SLICES on the LCD (for room; the Gills shows the count). CC97 still shows the chop mode.
+- FZED: **capture RHYTHM (FZED 27) taken out.** It stepped on every pattern step and sounded far too busy; its room went to the two fixes above. Capture holds as before (RH1 with RHYTHM OFF already did).
+- Gills Core 130: the RHYTHM pot (ENV STEPS P10) is gone again.
+- Emulator: `layout41.py` checks the loop end, crossfade and repeat; chop type changes make no disk load (as RM1); `rhythm41.py` removed.
+
 ## Second Takes, FZ Messages, Bend Range, Chop Layouts, Capture Rhythm (next, RH1)
 
 - FZED: **a second recording no longer plays silent or very quiet.** A finished take now sets the voice back to NORMAL with the sustain and end loops off and all 8 loops on the new take's start and end, and forgets Stretch's saved state. After Stretch or CHOP the voice's old loop addresses still pointed into the last sample's memory (on a shared wave the delete only cleared part of them), so a new take into the same voice could loop over silence.

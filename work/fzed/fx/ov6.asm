@@ -239,33 +239,6 @@ S_CK: db ' OK '
 S_CKM: db ' MEM'
 S_CKH: db ' HIT'
 S_CKV: db ' VOI'
-CHSET:              ; FZED41R (from CHOPCC in fzed.asm, for room): CC96 sensitivity, CC97 chop mode, CC99 slices
-    cmp bl,96
-    jnz .c97
-    mov [TSENS],al
-    ret
-.c97: cmp bl,97
-    jnz .c99
-    mov ah,3
-    call SCL
-    mov [ZCM],ah
-    mov al,ah
-    mov ah,16
-    mul ah
-    add ax,S_ZM
-    mov bx,ax
-    jmp NMSG
-.c99:     shr al,5
-    mov cl,al
-    mov al,4
-    shl al,cl
-    mov [CHN],al
-    mov di,S_CN+5
-    call DEC2
-    mov bx,S_CN
-    jmp NMSG
-S_CN: db 'CHOP 00 SLICES',0
-S_ZM: db 'CHOP EVEN      ',0,'CHOP EVEN+ZERO ',0,'CHOP TRANSIENT ',0
 %if ($-$$) > 0x3A0
 %error wave overlay reaches the top of its sector (keep D7A0h-D7BDh clear for the FZ-call stack margin)
 %endif

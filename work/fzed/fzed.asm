@@ -2001,10 +2001,15 @@ CHLOOP:             ; slices follow the source's loop mode; loop points map to t
     and dx,0x1f
     mov [di+0x14],ax
     mov [di+0x16],dx
+    sub word [di+0x34],8    ; RH2: the loop end 8 words before the play end (as capture: with them equal the generator
+    sbb word [di+0x36],0    ; stops first and never loops), no crossfade, and the loop held (1022: CHSLICE set 0, no repeats)
+    mov word [di+0x54],0
+    mov word [di+0x64],1022
 .nx: pop bx
     pop cx
     add bx,2
-    loop .l
+    dec cx
+    jnz .l
     ret
 CHLAY: db 0                 ; FZED41R: FZED 26 LAYOUT: 0 ONE KEY, 1 SPREAD, 2 SPREAD LOOP, 3 LAST WIDE (LOOPED)
 CHKEY:              ; FZED41R: slice CHI of NBND: the voice's keys (di+AEh highest, AFh lowest, B0h original) by LAYOUT
@@ -2154,9 +2159,7 @@ CHOPCC:             ; CC96 sensitivity, CC97 chop mode/zero-cross, CC98 chop, CC
     jz .c98
     cmp bl,100
     jz .c100
-    push word CHSET         ; FZED41R: 96, 97 and 99 set from the wave overlay (sector 50; fx/ov6.asm), for room
-    push word 0x4032
-    jmp OVCALL
+    jmp CHSET               ; 96, 97 and 99 (fx/multi.asm; RH2: resident again, so no disk load)
 .c100: push word DELUN         ; PERF40G: DELETE UNUSED is in tools overlay 2
     push word 0x402F
     jmp OVCALL
