@@ -164,11 +164,7 @@ CHSLICE:            ; FZED41H (from CHOP in fzed.asm, for room): 4. each slice; 
     inc bx
     cmp bx,16
     jb .lt
-    mov al,[CHI]            ; key = C2 + slice
-    add al,36
-    mov [di+0xae],al
-    mov [di+0xaf],al
-    mov [di+0xb0],al
+    call CHKEY              ; FZED41R: keys by LAYOUT (fzed.asm; ONE KEY: C2 + slice)
     push di                 ; wave data: SBND[i] -> slice start, CHL words
     mov bl,[CHI]
     xor bh,bh
@@ -185,10 +181,11 @@ CHSLICE:            ; FZED41H (from CHOP in fzed.asm, for room): 4. each slice; 
     mov si,ax
     add bx,si
     add bx,[CHBASE]         ; PERF40J: after the places already in the bank
-    mov al,[CHI]
-    add al,36
+    mov al,[di+0xae]        ; FZED41R: the bank area's keys as the slice's
     mov [bx+2],al
+    mov al,[di+0xaf]
     mov [bx+0x42],al
+    mov al,[di+0xb0]
     mov [bx+0x102],al
     mov byte [bx+0x82],0x7f
     mov byte [bx+0xc2],0
@@ -230,7 +227,9 @@ CHFIN:              ; FZED41K (from CHOP in fzed.asm, for room): 5. after the sl
     call DEC2
     call CHPROP
     call CHON
-    jmp CHOPMSG             ; (the message: resident, fzed.asm)
+    push word CHOPMSG       ; FZED41P: the message from the wave overlay (sector 50; fx/ov6.asm), for room
+    push word 0x4032
+    jmp OVCALL
 .r: ret
 STRET2:             ; PERF40L: STRETCH-style controls kept in this overlay (from tools overlay 4): 6 CHOP INTO, 7 CAPTURE ON,
     mov bl,[STSEL]          ; 10 slices' filter / envelopes / LFO 1

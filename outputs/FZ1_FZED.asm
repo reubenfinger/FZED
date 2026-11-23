@@ -790,7 +790,7 @@ ENDCHK:
     jnz .r
     call STOP
     mov si,[0xe04]
-    mov word [si+0x10],0x1d7
+    call NEWTK              ; FZED41O: mode NORMAL, and nothing kept from the voice's last sample (fx/multi.asm)
     mov byte [RST],4
     call AFTER
     call SHOWR
@@ -967,7 +967,7 @@ RWRITE:
 .keep:
     call STOP
     mov si,[0xe04]
-    mov word [si+0x10],0x1d7
+    call NEWTK              ; FZED41O (as above)
     mov byte [RST],4
     jmp AFTER
 SHOWR:              ; PERF40H, plain values. Line 5 'REC 36K  012.8S' (rate, length), line 6 'ARMED -20DB T127' (state,
@@ -1855,7 +1855,7 @@ NMSG:
     cmp byte [MXQ],0        ; matrix-made changes stay quiet
     jz .m
     ret
-.m: call L7CHK              ; PERF40H: 'EMPTY-REC READY' goes once the voice has sound
+.m: call MSGTAP             ; FZED41P: kept for STATUS OUT; then (PERF40H) 'EMPTY-REC READY' goes once the voice has sound
     mov word [LCDP],0       ; (a paced FX value message waiting is older than this one)
     push ds
     pop es
@@ -1985,10 +1985,69 @@ CHLOOP:             ; slices follow the source's loop mode; loop points map to t
     add bx,4
     cmp bx,32
     jb .p
+    cmp byte [CHLAY],2      ; FZED41R: LAYOUT SPREAD LOOP (every slice) / LAST WIDE (the last): a sustain loop over the
+    jb .nx                  ; whole slice, when the source has no loops of its own
+    pop bx
+    push bx
+    jz .sl
+    mov al,bl
+    shr al,1
+    inc al
+    cmp al,[CHCNT]
+    jnz .nx
+.sl: mov byte [di+0x12],0
+    mov ax,[di+8]
+    mov dx,[di+0xa]
+    and dx,0x1f
+    mov [di+0x14],ax
+    mov [di+0x16],dx
 .nx: pop bx
     pop cx
     add bx,2
     loop .l
+    ret
+CHLAY: db 0                 ; FZED41R: FZED 26 LAYOUT: 0 ONE KEY, 1 SPREAD, 2 SPREAD LOOP, 3 LAST WIDE (LOOPED)
+CHKEY:              ; FZED41R: slice CHI of NBND: the voice's keys (di+AEh highest, AFh lowest, B0h original) by LAYOUT
+    mov al,[CHI]
+    mov cl,[CHLAY]
+    cmp cl,3
+    jb .s
+    mov ah,[NBND]           ; LAST WIDE: the others one key each; the last an octave either side, above them
+    dec ah
+    cmp al,ah
+    jb .one
+    add al,36+12
+    mov dl,al
+    mov ah,al
+    sub ah,12
+    add al,12
+    jmp short .set
+.s: cmp cl,1
+    jb .one
+    push ax                 ; SPREAD: the keyboard's 61 keys shared out, each slice's own pitch in the middle of its
+    mov al,61               ; zone (at most an octave either side)
+    xor ah,ah
+    div byte [NBND]
+    cmp al,25
+    jbe .w
+    mov al,25
+.w: mov cl,al
+    pop ax
+    mul cl
+    add al,36
+    mov ah,al
+    mov dl,cl
+    shr dl,1
+    add dl,al
+    add al,cl
+    dec al
+    jmp short .set
+.one: add al,36
+    mov ah,al
+    mov dl,al
+.set: mov [di+0xae],al
+    mov [di+0xaf],ah
+    mov [di+0xb0],dl
     ret
 CHPT:               ; slice point [di+bx] = slice start + slice length * (source point - GSAVE) / (AE - GSAVE)
     push bx
@@ -2091,35 +2150,14 @@ CHFINDO: push word CHFIND  ; PERF40H: (start-up only) in tools overlay 3
     jmp OVCALL
 CHOPCC:             ; CC96 sensitivity, CC97 chop mode/zero-cross, CC98 chop, CC99 slices, CC100 delete unused
     mov bl,[cs:LASTCC]
-    cmp bl,96
-    jnz .c97
-    mov [TSENS],al
-    ret
-.c97: cmp bl,97
-    jnz .c99
-    mov ah,3
-    call SCL
-    mov [ZCM],ah
-    mov al,ah
-    mov ah,16
-    mul ah
-    add ax,S_ZM
-    mov bx,ax
-    jmp NMSG
-.c99: cmp bl,99
-    jnz .c100
-    shr al,5
-    mov cl,al
-    mov al,4
-    shl al,cl
-    mov [CHN],al
-    mov di,S_CN+5
-    call DEC2
-    mov bx,S_CN
-    jmp NMSG
-.c100: cmp bl,100
-    jnz .c98
-    push word DELUN         ; PERF40G: DELETE UNUSED is in tools overlay 2
+    cmp bl,98
+    jz .c98
+    cmp bl,100
+    jz .c100
+    push word CHSET         ; FZED41R: 96, 97 and 99 set from the wave overlay (sector 50; fx/ov6.asm), for room
+    push word 0x4032
+    jmp OVCALL
+.c100: push word DELUN         ; PERF40G: DELETE UNUSED is in tools overlay 2
     push word 0x402F
     jmp OVCALL
 .c98: cmp al,64
@@ -2227,42 +2265,6 @@ CHOP:
                             ; the message: tools overlay 2 (sector 47; fx/ov3.asm CHSLICE, CHFIN)
 .short: mov bx,S_CS
     jmp NMSG
-.r: ret
-CHOPMSG:            ; FZED41K: CHOP's last step after tools overlay 2's finish: 'CHOP nn/nn ...' and live FX back on
-    mov al,[CHCNT]
-    mov di,S_CO+5
-    call DEC2
-    mov al,[CHN]
-    mov di,S_CO+8
-    call DEC2
-    mov si,S_CK             ; reason when fewer slices than asked for
-    mov al,[CHCNT]
-    cmp al,[CHN]
-    jae .w0
-    mov si,S_CKH            ; (transient mode found fewer hits)
-.w0: mov bx,[CHWHY]
-    cmp bx,S_CM
-    jnz .w1
-    mov si,S_CKM
-.w1: cmp bx,S_CV
-    jnz .w2
-    mov si,S_CKV
-.w2: mov ax,[si]
-    mov [S_CO+11],ax
-    mov ax,[si+2]
-    mov [S_CO+13],ax
-    mov byte [CHSBV],1      ; slices know where they came from (live FX on slices)
-    mov ax,[GSAVE]
-    mov [CHG0],ax
-    mov ax,[GSAVE+2]
-    mov [CHG0+2],ax
-    mov bx,S_CO
-    call NMSG
-    cmp byte [LVWAS],0
-    jz .r
-    mov byte [LVWAS],0
-    mov al,127
-    jmp LVCC
 .r: ret
 DEC2:               ; al (0-99) -> two decimal digits at [di]
     aam
@@ -2482,19 +2484,12 @@ S_USD: db 'USED:ARM 120+',0
 S_ST: db 'IDLE ',0,'ARMED',0,'WAIT ',0,'REC  ',0,'DONE ',0,'USED ',0,'NOMEM',0
 
 S_C: db 'C=000 000',0
-S_CN: db 'CHOP 00 SLICES',0
 S_CW: db 'CHOPPING...',0
-S_CO: db 'CHOP 00/00 OK  ',0   ; (+10..+13 are written: keep the length)
 S_MCU: db 'CUE',0                ; FZED: play mode name (the others are in fx5bk.asm / fx4m.asm)
-S_CK: db ' OK '
-S_CKM: db ' MEM'
-S_CKH: db ' HIT'
-S_CKV: db ' VOI'
 S_CB: db 'CHOP: NO BANK',0  ; (no trailing spaces: NMSG blanks the line first)
 S_CV: db 'CHOP: NO VOICE',0
 S_CM: db 'CHOP: NO MEMORY',0
 S_CS: db 'CHOP: TOO SHORT',0
-S_ZM: db 'CHOP EVEN      ',0,'CHOP EVEN+ZERO ',0,'CHOP TRANSIENT ',0
 L61DB:
     mov si,[CURV]           ; the voice the CCs are editing (bank mode: the CC's channel)
     or si,si

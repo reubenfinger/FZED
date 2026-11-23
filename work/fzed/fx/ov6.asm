@@ -196,6 +196,76 @@ SIN:                ; ax = phase -> ax = sine (Q15), interpolated (keeps si di b
 
 S_WV: db 'WAVE 00 LOADED  ',0
 
+; ---------- FZED41P: CHOP's message, from fzed.asm (for room): tools overlay 2's finish loads this overlay (OVCALL) and
+; jumps here; no FZ calls of its own (live FX back on through LVCC, a tail jump).
+CHOPMSG:            ; FZED41K / 41P: CHOP's last step after tools overlay 2's finish: 'CHOP nn/nn ...' and live FX back on
+    mov al,[CHCNT]
+    mov di,S_CO+5
+    call DEC2
+    mov al,[CHN]
+    mov di,S_CO+8
+    call DEC2
+    mov si,S_CK             ; reason when fewer slices than asked for
+    mov al,[CHCNT]
+    cmp al,[CHN]
+    jae .w0
+    mov si,S_CKH            ; (transient mode found fewer hits)
+.w0: mov bx,[CHWHY]
+    cmp bx,S_CM
+    jnz .w1
+    mov si,S_CKM
+.w1: cmp bx,S_CV
+    jnz .w2
+    mov si,S_CKV
+.w2: mov ax,[si]
+    mov [S_CO+11],ax
+    mov ax,[si+2]
+    mov [S_CO+13],ax
+    mov byte [CHSBV],1      ; slices know where they came from (live FX on slices)
+    mov ax,[GSAVE]
+    mov [CHG0],ax
+    mov ax,[GSAVE+2]
+    mov [CHG0+2],ax
+    mov bx,S_CO
+    call NMSG
+    cmp byte [LVWAS],0
+    jz .r
+    mov byte [LVWAS],0
+    mov al,127
+    jmp LVCC
+.r: ret
+S_CO: db 'CHOP 00/00 OK  ',0   ; (+10..+13 are written: keep the length)
+S_CK: db ' OK '
+S_CKM: db ' MEM'
+S_CKH: db ' HIT'
+S_CKV: db ' VOI'
+CHSET:              ; FZED41R (from CHOPCC in fzed.asm, for room): CC96 sensitivity, CC97 chop mode, CC99 slices
+    cmp bl,96
+    jnz .c97
+    mov [TSENS],al
+    ret
+.c97: cmp bl,97
+    jnz .c99
+    mov ah,3
+    call SCL
+    mov [ZCM],ah
+    mov al,ah
+    mov ah,16
+    mul ah
+    add ax,S_ZM
+    mov bx,ax
+    jmp NMSG
+.c99:     shr al,5
+    mov cl,al
+    mov al,4
+    shl al,cl
+    mov [CHN],al
+    mov di,S_CN+5
+    call DEC2
+    mov bx,S_CN
+    jmp NMSG
+S_CN: db 'CHOP 00 SLICES',0
+S_ZM: db 'CHOP EVEN      ',0,'CHOP EVEN+ZERO ',0,'CHOP TRANSIENT ',0
 %if ($-$$) > 0x3A0
 %error wave overlay reaches the top of its sector (keep D7A0h-D7BDh clear for the FZ-call stack margin)
 %endif

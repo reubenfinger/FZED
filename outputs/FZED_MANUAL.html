@@ -485,7 +485,8 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#e5eeea;padding:16px;
 </tr>
 </tbody>
 </table>
-<p>Glide uses the FZ bend path. FZED temporarily expands the bend range for it and scales the player's bend contribution. It is not independent polyphonic portamento. Voice INIT can replace useful voice settings; save first and use its confirmation.</p>
+<p>Glide uses the FZ bend path. FZED temporarily expands the bend range for it and scales the player's bend contribution. It is not independent polyphonic portamento, and it does not widen the pitch wheel's own range: use Bend Range for that.</p>
+<p><strong>Bend Range</strong> (FZED 25, 0-127) sets the FZ's pitch bend depth directly; 127 is about 16 semitones. It reaches capture too, so the pitch wheel can bend a held capture further. With glide on, it sets the depth glide gives back when glide goes off. On the Gills (Core 129) it is KEY VELOCITY P10. Voice INIT can replace useful voice settings; save first and use its confirmation.</p>
 <h2 id="section-13">12. Mod Matrix: Source, Destination, Amount</h2>
 <p>There are ten routes. In the FZED browser editor, select Source, then Destination, then Amount. Each view presents the same ten numbered routes: the control for route 1 always edits route 1, through route 10.</p>
 <h3>Sources</h3>
@@ -763,6 +764,7 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#e5eeea;padding:16px;
 <h3>Status Out: Recording State To The Gills</h3>
 <p>With <strong>Status Out</strong> on (FZED 24 = 64-127), FZED sends the recording state on the FZ's MIDI OUT whenever it changes, for a controller such as the Gills to show: the record state (idle, armed, waiting for the level, recording, done, used, no memory), the record rate and the slice count. Each is one CC3 message on MIDI channel 16, whatever the FZ's own channel, sent only when it changes. The FZ itself never acts on them, and a device listening on channel 1 (the FZ, an Akai) ignores them.</p>
 <p>It is off whenever FZED loads. On the Gills (Core 123), press the encoder on the RECORD page after moving any of P1-P9 to turn it on or off (P10 keeps its press for Exit FZED); while it is on, the Gills sends it again each time its RECORD page opens, shows the state on line 1 of that page (<code>ARMED 36K SL 08</code>), and pops up FZ RECORD and the new state on any FZ page. If anything else on your MIDI chain reacts to CC3 on channel 16, turn it off.</p>
+<p>While Status Out is on, FZED also sends each message it puts on the FZ's LCD (TABLE READY, WAVE 03 LOADED, CHOP 08/08 OK, RENDERED (LIVE) ...) as CC9 messages on channel 16, one character each, then 0; at most four a second, the latest one winning. The Gills (Core 129) pops it up as FZED and the message. Messages caused by matrix moves stay quiet. If anything else reacts to CC9 on channel 16, turn Status Out off.</p>
 <h3>Norm Filter: Recording-Input Anti-Aliasing</h3>
 <p>The FZ's normal recording setup <strong>bypasses the switchable anti-aliasing filter at 36 kHz</strong> and <strong>applies it at both 18 kHz and 9 kHz</strong>. <strong>18 kHz has been checked explicitly:</strong> its record-start ROM path enables the filter and programs its cutoff; it is not treated like the 36 kHz bypass path. This describes the switchable recording filter, not an assertion that the analogue input has no other bandwidth limits.</p>
 <table>
@@ -927,6 +929,35 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#e5eeea;padding:16px;
 <p>Fade: cut, <strong>50, 100, 200, 400, 800 ms, 1.2 or 1.6 s</strong>. It uses safe alias CC34, not the destructive ordinary Chop action. Fade provides release time before recording; it is not simultaneous crossfading of recorded input and playing output.</p>
 <p>Capture widens the voice key range before playing a chord, reducing silent notes caused by a narrow preset range. The FZ's own generator limits still apply. Capture reuses allocations where possible and explicitly stops shorter takes within a larger allocation; timing still has polling overhead. Many normal FX, wave-load and loop operations are refused during capture.</p>
 <p>For PASSES holds, FZED rounds the transpose to the nearest octave when calculating hold duration. This does not change pitch; octave transposes retain the same hold behaviour as before. Other transposes can make a pass hold slightly shorter or longer than an exact whole number of sample loops.</p>
+<h3>Rhythm</h3>
+<p><strong>Rhythm</strong> (FZED 27) plays the held chord in time with the pattern engine (Chop / Pattern: the Pattern Rate's free speed or MIDI-clock division), instead of letting every note sustain:</p>
+<table>
+<thead>
+<tr>
+<th>Choice</th>
+<th>What happens on each pattern step</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OFF</td>
+<td>The chord sustains as before</td>
+</tr>
+<tr>
+<td>ARP UP / ARP DOWN</td>
+<td>Only one chord note sounds, the next one up (or down) each step, wrapping round</td>
+</tr>
+<tr>
+<td>ARP RANDOM</td>
+<td>One chord note, picked at random each step</td>
+</tr>
+<tr>
+<td>STRIKE</td>
+<td>Steps where the pattern is high (64 or more) strike the whole chord again; low steps let it ring</td>
+</tr>
+</tbody>
+</table>
+<p>Set Intervals to a chord with several notes for the arpeggios; with ORIGINAL ONLY they repeat one note. Rhythm only acts while a take is held, so takes still record cleanly. On the Gills (Core 129) it is ENV STEPS P10.</p>
 <p>Leave capture explicitly before returning to ordinary recording or sample-processing operations. A selected page is not a recording-state indicator.</p>
 <h2 id="section-18">17. Chop / Pattern</h2>
 <table>
@@ -994,6 +1025,34 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#e5eeea;padding:16px;
 <p>Patterns: Open/No Gate, Eighths, Sixteenth Pulse, Quarters, 3-3-2, Offbeats, Trance, Gallop, Half Bar, Stutter End, Syncopated, Build, Sparse, Broken, Ramp Up and Ramp Down.</p>
 <p>Pattern is a rhythmic sequence of steps that can trigger or modulate sound; select a pattern, set its rate (free milliseconds per step or a MIDI-clock division), and route it where wanted in the Mod Matrix. Pattern Rate uses raw 0-63 for free speed and raw 64-127 for MIDI-clock divisions: 1/32, 1/16 triplet, 1/16, 1/8 triplet, 1/8, 1/4 triplet, 1/4 or 1/2.</p>
 <p>The pattern signal can feed the modulation matrix; selecting a pattern alone is not a guarantee of an audible amplitude gate without the relevant route. MIDI-clock timing requires clock to reach the FZ.</p>
+<p><strong>Layout</strong> (FZED 26) sets how the next chop lays its slices on the keyboard:</p>
+<table>
+<thead>
+<tr>
+<th>Choice</th>
+<th>Keys</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ONE KEY</td>
+<td>One key a slice from C2 up, as before</td>
+</tr>
+<tr>
+<td>SPREAD</td>
+<td>Each slice gets its own band of keys (61 keys shared out, up to 25 each), its original pitch in the middle, so a slice can be played up and down</td>
+</tr>
+<tr>
+<td>SPREAD LOOP</td>
+<td>As SPREAD, and each slice loops over its whole length while held</td>
+</tr>
+<tr>
+<td>LAST WIDE</td>
+<td>One key a slice, but the last slice takes two octaves above the others with its original pitch in the middle, so it plays an octave either side; it loops</td>
+</tr>
+</tbody>
+</table>
+<p>On the Gills (Core 129) it is ENV STEPS P5. Chop's Sensitivity, Mode and Slice Count (CC96, CC97, CC99) are now handled by an overlay loaded from disk (the wave overlay), for room, so changing them takes a moment and releases live FX, as CHOP itself does.</p>
 <p>The browser confirms destructive actions and rearms slice creation before repeating it. Samples and voices need enough available memory and valid bounds. A normalised sample is not recovered merely by lowering the volume afterwards.</p>
 <h2 id="section-19">18. Slices</h2>
 <p>Slices edits the result of the last chop.</p>
@@ -1408,6 +1467,10 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#e5eeea;padding:16px;
 <td>Try a shorter sample or a lower rate; short high-rate samples may work. Render is more reliable, but destructive: use a saved copy</td>
 </tr>
 <tr>
+<td>A second take plays silent or very quiet</td>
+<td>Fixed in RH1: a new recording now resets the voice's loops to the new take. On older builds, use a new voice for each take after Stretch or CHOP</td>
+</tr>
+<tr>
 <td>Need to recover a valuable sample</td>
 <td>Reload a backup; processing and recording do not provide guaranteed undo</td>
 </tr>
@@ -1804,6 +1867,11 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#e5eeea;padding:16px;
 <td>P6</td>
 <td>GLIDE OFF 0-42; LEGATO 43-85; ALWAYS 86-127</td>
 </tr>
+<tr>
+<td>Bend Range</td>
+<td>FZED 25</td>
+<td>0-127 (the FZ's bend depth; 127 about 16 semitones)</td>
+</tr>
 </tbody>
 </table>
 <h3>A.8 Mod matrix</h3>
@@ -2104,6 +2172,11 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#e5eeea;padding:16px;
 <td>CC41</td>
 <td>TOGETHER 0-63; TOP FIRST 64-127</td>
 </tr>
+<tr>
+<td>Rhythm</td>
+<td>FZED 27</td>
+<td>OFF 0-25; ARP UP 26-51; ARP DOWN 52-77; ARP RANDOM 78-103; STRIKE 104-127</td>
+</tr>
 </tbody>
 </table>
 <h3>A.13 Chop / Pattern</h3>
@@ -2165,6 +2238,11 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#e5eeea;padding:16px;
 <td>Freeze Chop</td>
 <td>FZED 15</td>
 <td>64-127 lets go of the current chop; its slices stay in the bank as plain voices</td>
+</tr>
+<tr>
+<td>Layout</td>
+<td>FZED 26</td>
+<td>ONE KEY 0-31; SPREAD 32-63; SPREAD LOOP 64-95; LAST WIDE 96-127</td>
 </tr>
 <tr>
 <td>DCF Cutoff</td>

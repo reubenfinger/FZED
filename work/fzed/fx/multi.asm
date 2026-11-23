@@ -301,6 +301,114 @@ PBFIND:             ; bx = selected target, existing FZED bank, or new bank. CF=
 .y: mov [BKBANK],bx
     clc
     ret
+; ---------- FZED41P STATUS OUT, messages: with STATUS OUT on, the FZ's messages (TABLE READY, WAVE LOADED, BACKUP IN
+; V05, CHOP 08/08 OK ...) also go to MIDI OUT as text: CC9 on channel 16, one character a message (32-126), then 0 to end.
+; At most one message each quarter second (the latest: knob echoes can't flood MIDI OUT); the Gills (Core 129) pops it
+; up. Copied when shown, as the text can change or leave memory (an overlay's) before it is sent.
+SOMSG: times 17 db 0
+SOPND: db 0                 ; a message waiting
+SOTM: dw 0                  ; timer when the last was sent
+MSGTAP:             ; NMSG: the message at bx
+    cmp byte [STOUT],64
+    jb .x
+    pusha
+    mov si,bx
+    mov di,SOMSG
+    mov cx,16
+.c: lodsb
+    mov [di],al
+    inc di
+    or al,al
+    loopnz .c
+    mov byte [di],0
+    mov byte [SOPND],1
+    popa
+.x: jmp L7CHK
+SOTEXT:             ; STSTAT: the waiting message, when a quarter second has passed since the last
+    cmp byte [SOPND],0
+    jz .g
+    mov ax,[0x40a]
+    mov dx,ax
+    sub ax,[SOTM]
+    cmp ax,26000
+    jb .g
+    mov [SOTM],dx
+    mov byte [SOPND],0
+    mov si,SOMSG
+.n: lodsb
+    and al,0x7f
+    call .snd
+    or al,al
+    jnz .n
+.g: jmp GLSTEP
+.snd: push si               ; CC9 channel 16 = al: as STSTAT's own (straight to the UART while armed / waiting /
+    push ax                 ; recording, else the ROM's MIDI call with its internal copy taken back out)
+    mov ah,[RST]
+    dec ah
+    cmp ah,3
+    jb .u
+    push word [0xbe0]
+    xor ah,ah
+    push ax
+    push word 9
+    push word 0xbf
+    APIC 0x33,6
+    pop word [0xbe0]
+    jmp short .z
+.u: mov al,0xbf
+    call STSTAT.tx
+    mov al,9
+    call STSTAT.tx
+    pop ax
+    push ax
+    call STSTAT.tx
+.z: pop ax
+    pop si
+    ret
+; ---------- FZED41S capture RHYTHM (FZED 27): while a capture holds, on each step of the pattern (its rate: free ms or
+; MIDI clock division; the matrix's pattern source runs all the time) ARP plays the chord's notes one at a time (up,
+; down or random), and STRIKE plays the whole chord again on the steps the pattern sets (level 64 or more). The hold, the
+; release and the fade go on as before (every note started is released at the end).
+CRMODE: db 0                ; 0 off, 1 arp up, 2 arp down, 3 arp random, 4 strike
+CRSTEP: db 0xff             ; the step last seen
+CRCNT: db 0                 ; ARP's note count
+CRHY:               ; CAPRUN, holding (capture overlay), each pass; then DISCP0 as before
+    mov al,[CRMODE]
+    or al,al
+    jz .x
+    mov ah,[PSTEP]
+    cmp ah,[CRSTEP]
+    jz .x
+    mov [CRSTEP],ah
+    xor bx,bx
+    cmp al,4
+    jb .ar
+    cmp byte [PV],64        ; STRIKE: off and on again, the whole chord
+    jb .x
+.s1: call CROFF
+    mov ah,0x90
+    call CRNT
+    inc bx
+    cmp bl,[CNN]
+    jb .s1
+    jmp short .x
+.ar: call CROFF              ; ARP: every note off, then one
+    inc bx
+    cmp bl,[CNN]
+    jb .ar
+    inc byte [CRCNT]        ; (a count of its own: every note in turn, at any step rate and chord size)
+    mov al,[CRCNT]
+    cmp byte [CRMODE],2
+    jb .up
+    jz .dn
+    mov al,[0x40a]
+.dn: not al
+.up: xor ah,ah
+    div byte [CNN]
+    mov bl,ah               ; (bh is 0: bx counted the notes)
+    mov ah,0x90
+    call CRNT
+.x: jmp DISCP0
 BKADDO: push word BKADD      ; FZED41N: CC15's bank placement runs from the start-up overlay (disk sector 51; fx/ov7.asm)
     push word 0x4033        ; for room: loaded when needed (live FX are released for it, as for CHOP; refused while capturing)
     jmp OVCALL

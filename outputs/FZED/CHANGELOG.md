@@ -1,5 +1,16 @@
 # FZED Menu Revision
 
+## Second Takes, FZ Messages, Bend Range, Chop Layouts, Capture Rhythm (next, RH1)
+
+- FZED: **a second recording no longer plays silent or very quiet.** A finished take now sets the voice back to NORMAL with the sustain and end loops off and all 8 loops on the new take's start and end, and forgets Stretch's saved state. After Stretch or CHOP the voice's old loop addresses still pointed into the last sample's memory (on a shared wave the delete only cleared part of them), so a new take into the same voice could loop over silence.
+- FZED: **FZ messages to the Gills.** With STATUS OUT on, each message FZED puts on the FZ's LCD also goes to MIDI OUT as CC9 on channel 16, one character a message, then 0; at most four a second, the latest winning. Matrix-caused messages stay quiet, as on the LCD.
+- FZED: **BEND RANGE** (FZED 25, 0-127): the FZ's pitch bend depth (127 about 16 semitones), so the wheel can bend further, captures included. With glide on it sets the depth glide gives back.
+- FZED: **CHOP LAYOUT** (FZED 26): ONE KEY (as before), SPREAD (each slice its own band of keys, up to 25, original pitch in the middle), SPREAD LOOP (as SPREAD, each slice looping over its whole length), LAST WIDE (one key a slice, the last one an octave either side and looping).
+- FZED: **CAPTURE RHYTHM** (FZED 27): OFF, ARP UP, ARP DOWN, ARP RANDOM (one chord note at a time, a step each pattern step) and STRIKE (the whole chord struck again on high pattern steps), while a take is held.
+- FZED, for room: CC96 / CC97 / CC99 (chop sensitivity, mode, slice count) and CHOP's finishing message moved into the wave overlay (disk sector 50), so changing them loads from disk and releases live FX, as CHOP does; CC98 and CC100 are unchanged. Both resident areas are now full (1 byte free each).
+- Gills Core 129: KEY VELOCITY P10 BEND RANGE, ENV STEPS P5 CHOP LAYOUT (4 steps), ENV STEPS P10 CAPTURE RHYTHM (5 steps); FZ messages pop up as FZED and the message (held off while a pot moves).
+- Emulator: `newtk41.py` (a second take after Stretch and after CHOP gets fresh loops), `status41.py` (messages as CC9 text), `bend41.py`, `layout41.py` (each layout's keys and loops), `rhythm41.py` (each arpeggio's note order and STRIKE on high steps only). Chop, capture, full suite, live FX and wave tests unchanged.
+
 ## Room For Messages And Bend Range (next)
 
 - FZED: CC15's PERF bank placement (put the voice in the bank, re-arm, clear) moved out of resident memory into the start-up overlay (disk sector 51), loaded when CC15 is used. It works and reads as before; loading it releases live FX (as CHOP does) and it is refused while capturing. 261 bytes of resident code room are free again, for FZ messages on the Gills and a bend range control.

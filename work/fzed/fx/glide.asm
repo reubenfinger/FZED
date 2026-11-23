@@ -77,7 +77,7 @@ STSTAT:             ; main loop, then on into GLSTEP
     and al,63
     or al,64
     call .s
-    jmp short GLSTEP
+    jmp SOTEXT              ; FZED41P: then the FZ's last message as text (fx/multi.asm), then GLSTEP
 .s: inc bx
     cmp al,[bx-1]
     jz .r1
@@ -131,3 +131,31 @@ GLSTEP:             ; main loop: the window still on its way: the next step when
     pop ax
     mov [cs:LASTCC],al
 .r: ret
+; ---------- FZED41O (in the low area for room)
+NEWTK:              ; FZED41O: a finished recording (si = the voice): mode NORMAL, the sustain / end loops off and all 8
+    mov word [si+0x10],0x1d7    ; loops on the new take's start .. end, so nothing from the voice's last sample remains:
+    mov word [si+0x12],0x0808   ; after Stretch or CHOP the old loop addresses pointed into the old sample's memory and
+    push si                     ; a new take could play silent or very quiet. Stretch's saved state goes too.
+    lea di,[si+0x14]
+    mov cx,8
+.l: mov ax,[si+8]
+    mov dx,[si+0xa]
+    mov [di],ax
+    mov [di+2],dx
+    mov ax,[si+0xc]
+    mov dx,[si+0xe]
+    mov [di+0x20],ax
+    mov [di+0x22],dx
+    add di,4
+    loop .l
+    pop si
+    and byte [STSU],0x7f
+    mov byte [STMV],0
+    ret
+CROFF: mov ah,0x80          ; FZED41S (low area, for room): CRHY's note bx of the capture chord off, or with CRNT status ah
+CRNT: push bx
+    mov al,[bx+CNK]
+    mov cl,[bx+CNV]
+    call CPNOTE
+    pop bx
+    ret

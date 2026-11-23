@@ -1,6 +1,7 @@
 # FZED41K STATUS OUT (FZED 24): record state, rate and slice count to MIDI OUT as CC3 on channel 16, each on a change.
 #   python3 status41.py BUILD   (a folder holding fzedflat.bin and fzed.map)
 import os, sys
+os.environ['FZTIMER'] = '1'
 T = os.path.dirname(os.path.abspath(__file__))
 sys.argv = [sys.argv[0], sys.argv[1]]
 exec(open(os.path.join(T, 'ext41.py')).read().split('ok = True')[0])
@@ -31,4 +32,15 @@ c.api.clear(); fzed(g, 24, 0); c.m[0x8010] = 4; g['run'](c, g['u'], 600000)
 check(sent() == [], 'off: a change sends nothing (%s)' % sent())
 c.api.clear(); fzed(g, 24, 100); g['run'](c, g['u'], 300000)
 check(sent() == [(0xbf, 3, 4), (0xbf, 3, 16 + rate), (0xbf, 3, 73)], 'on again: everything sent again (%s)' % sent())
+text = lambda: ''.join(chr(a[2]) if a[2] else '|' for f, a in c.api if f == 0x33 and a[1] == 9)
+c.ports[0xd2] = 1; c.m[0x8010] = 0; g['run'](c, g['u'], 300000)
+c.api.clear(); fzed(g, 19, 0); g['run'](c, g['u'], 3000000)
+check(text().startswith('EXT 00|'), 'a message goes out as text, CC9 channel 16: %r' % text())
+c.api.clear()
+for k, v in ((10, 88), (11, 19), (10, 89)): g['midi'](c, 0xb0, k, v); g['run'](c, g['u'], 5000)
+for v in range(8, 40, 8): g['midi'](c, 0xb0, 11, v); g['run'](c, g['u'], 20000)
+g['run'](c, g['u'], 3000000)
+t = text(); check(1 <= t.count('|') <= 3, 'several in quick succession: at most one a quarter second, the latest kept: %r' % t)
+c.api.clear(); fzed(g, 24, 0); fzed(g, 19, 0); g['run'](c, g['u'], 3000000)
+check(text() == '', 'STATUS OUT off: no text (%r)' % text())
 print('ALL PASS' if ok else 'SOME FAIL')

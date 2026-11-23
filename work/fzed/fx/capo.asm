@@ -269,7 +269,7 @@ CAPRUN:             ; one main-loop pass
     call CPNOTE
     inc byte [CNS]
     jmp .pl
-.h: call DISCP0             ; FZED41C
+.h: call CRHY               ; FZED41S: the rhythm on the pattern's steps (fx/glide.asm), then (FZED41C) DISCP0
     cmp byte [CRQ],0        ; recapture asked for: now
     jnz .end
     cmp byte [CHM],7        ; until RECAPTURE (turning P4 away ends it at the next check)
