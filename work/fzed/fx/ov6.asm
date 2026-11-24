@@ -133,7 +133,11 @@ WVLOAD:
     inc al
     mov di,S_WV+5
     call DEC2
-    mov bx,S_WV
+    cmp byte [CHPLAY],0     ; RH3: after a chop the keys still played the chop's slices: let them go
+    jz .wd
+    mov byte [CHPLAY],0
+    call VDIRECT
+.wd: mov bx,S_WV
     jmp NMSG
 
 WVF:                ; ax = phase -> ax = sample of wave WSEL (keeps bp)

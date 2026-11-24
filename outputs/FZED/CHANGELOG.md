@@ -1,5 +1,13 @@
 # FZED Menu Revision
 
+## Chops Let Go, Messages Kept (next, RH3)
+
+- FZED: **a wavetable or preset wave made after a chop now plays from the keys.** The chop's slices stayed on the keys (the chop bank kept playing), so a new TABLE READY played the old chop. In voice mode, a finished wavetable or preset wave now lets the chop go and plays the edit voice, as Voice Select does. Bank mode is left alone.
+- FZED: **Voice Pick and Voice Select reach the Gills.** With STATUS OUT on, the pick preview (`>05 NAME`) and the new edit voice (`V05 NAME`) go out as messages too; they were written to the FZ's line 2 only.
+- Gills Core 131: **messages are no longer lost while a pot moves.** Core 129-130 dropped a message that arrived while the pot that caused it was still held, so instant answers (WAVE: REFUSED, BACKUP IN V05, the pick preview) never showed. Now it waits until the pot has been still for about 0.4 s.
+- Note: WAVE: REFUSED is a real refusal: a preset wave needs a voice whose sample is at least 1808 words (an empty voice is given that); a short slice or a short wavetable is too small.
+- Emulator: `rh3.py` (wavetable and preset wave after a chop, bank mode untouched, pick and select text).
+
 ## RH2: Chop Fixes, Rhythm Out (next)
 
 - FZED: **SPREAD LOOP and LAST WIDE now loop.** The slice's loop ended exactly at its play end, so the FZ's generator stopped before it could loop (capture learnt this in PERF38S), and CHOP leaves every loop's repeat count at 0. The loop now ends 8 words before the play end, with no crossfade and held (1022), as capture's loop.

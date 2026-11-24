@@ -558,7 +558,7 @@ Bank Builder gathers the controls for building a bank of sounds without leaving 
 
 | Function | Meaning |
 | --- | --- |
-| Voice Pick | Preview a voice (the FZ shows it); Voice Select makes it the edit voice |
+| Voice Pick | Preview a voice (the FZ shows it on line 2, and the Gills with STATUS OUT on); Voice Select makes it the edit voice (and lets a playing chop go). Voice Select is refused in bank mode, while recording and in capture |
 | New Voice | Move editing to the first empty voice, so voices already in a bank are kept |
 | Copy Voice | Copy the edit voice into the first empty voice (sharing its sample memory) |
 | Bank Select | Voice mode, or play bank 1-8. The bank chosen is also the target for adds |

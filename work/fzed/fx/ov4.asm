@@ -56,7 +56,9 @@ VTOOL:              ; STRETCH-style controls 11 VOICE PICK (preview on line 2), 
 .r: ret
 .got: mov [VPICK],bl
     mov al,'>'              ; '>05 TST A' until selected
-    jmp VLINE
+    call VLINE
+.tap: mov bx,S_L2        ; RH3: and to the Gills (STATUS OUT), as the FZ's other messages
+    jmp MSGTAP
 .sel: cmp al,64
     jb .r
     cmp byte [BKON],0       ; voice mode only, not while recording or capturing
@@ -94,7 +96,8 @@ VTOOL:              ; STRETCH-style controls 11 VOICE PICK (preview on line 2), 
     call PSETUP
     mov byte [RETN],0
     mov byte [VPICK],0xff
-    jmp STAT2
+    call STAT2
+    jmp .tap
 
 NORMCC:             ; CC101 >= 120: normalise the voice between its start and end points (peak -0.5 dB)
     cmp al,64

@@ -126,7 +126,9 @@ WTRUN:              ; si = the edit voice (raw CC values are 0-127)
 .gd: mov word [WTL],8       ; the 8 guard words after the last frame: its cycle again (WTM is still its place)
     call WTFRM
     mov si,[WTV]            ; the voice: loop 0 = frame 1, sustain / end loop 0, play range = the frames
-    mov word [si+0x12],0
+    xor bx,bx
+    mov [si+0x12],bx
+    mov [si+0x54],bx
     mov ax,[WST]
     mov cx,[WST+2]
     mov dx,[si+0xa]
@@ -152,7 +154,6 @@ WTRUN:              ; si = the edit voice (raw CC values are 0-127)
     or dx,cx
     mov [si+0xc],ax         ; play end = start + frames x length (Stretch's segments fall on frames)
     mov [si+0xe],dx
-    mov word [si+0x54],0
     mov word [si+0x64],1022
     mov word [si+0xae],0x155d       ; highest key 93, lowest 21
     mov al,[WTKEY]
@@ -160,13 +161,15 @@ WTRUN:              ; si = the edit voice (raw CC values are 0-127)
     mov [si+0xb0],ax                ; original key, rate 36k
     cmp byte [BKON],0
     jnz .ms
+    mov byte [CHPLAY],0     ; RH3: voice mode: after a chop the keys still played the chop's slices: let them go
+    call VDIRECT            ; (as VOICE SELECT does), so the keys play the new table
     cmp byte [WNEW],0
     jz .od
     call AFTER
     jmp short .ms
-.od: mov byte [RETN],1
+.od: inc byte [RETN]       ; (RETN is 0 here: 1 keeps the sound)
     call PSETUP
-    mov byte [RETN],0
+    dec byte [RETN]
 .ms: mov bl,[ACTIVE]        ; Window Snap: whole frames (this voice)
     xor bh,bh
     mov byte [bx+LWSNAP],127
@@ -258,7 +261,7 @@ WTVAL:              ; ax = phase -> ax = sample (Q15) of type WTTY at place m = 
     mov al,ah
     mov ah,dl
     jmp WSIN
-.t1: cmp bl,1
+.t1: dec bl               ; (1 PWM)
     jnz .t2
     mov bx,cx               ; PWM: high while phase < 8000h - 120m
     shl bx,7
@@ -271,7 +274,7 @@ WTVAL:              ; ax = phase -> ax = sample (Q15) of type WTTY at place m = 
     jb .r
     neg ax
 .r: ret
-.t2: cmp bl,2
+.t2: dec bl               ; (2 FOLD)
     jnz .mo
     call WSIN                ; FOLD: sine x (1 + 7m / 256) folded back inside full scale (worked in Q12)
     sar ax,3
