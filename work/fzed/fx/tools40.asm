@@ -118,7 +118,7 @@ PTOOL:              ; parameters 121-127 (CC10 chooses, CC11 sets): 121 output o
 STRP:               ; PERF40F parameters 88 (STRETCH control 0-9) and 89 (its value, in tools overlay 2)
     cmp bl,88
     jnz .s9
-    and al,31
+    and al,63               ; (RH4: 0-63, for FZED 30-33; was 0-31)
     mov [STSEL],al
     ret
 .s9: cmp bl,89
@@ -137,7 +137,7 @@ STRP:               ; PERF40F parameters 88 (STRETCH control 0-9) and 89 (its va
     mov [CHLAY],al
     ret
 .bn: cmp bl,5                ; FZED41Q: 25 BEND RANGE: the FZ's bend depth (5288h, 0-127; 127 is about 16 semitones);
-    jnz .s10                ; with glide on, the depth glide gives back when it goes off (and bends are scaled to)
+    jnz .ad                 ; with glide on, the depth glide gives back when it goes off (and bends are scaled to)
     mov bx,0x5288
     cmp byte [PBON],0
     jz .bw
@@ -145,10 +145,14 @@ STRP:               ; PERF40F parameters 88 (STRETCH control 0-9) and 89 (its va
 .bw: mov [bx],al
     ret
 .so: mov [STOUT],al          ; FZED41K: 24 STATUS OUT (fx/glide.asm); everything sent again
-    mov word [SOL],0xffff
-    mov byte [SOL+2],0xff
+    or word [SOL],byte -1
+    or byte [SOL+2],-1
     ret
 .dis: jmp DISSET
+.ad: cmp bl,14               ; RH4: 30-33 EXT ADDITIVE P6-P9: DISSET keeps them at ADP (DISH + 10-13)
+    jae .s10
+    cmp bl,10
+    jae .dis
 .s10: cmp byte [STSEL],11     ; PERF40H: 11 voice pick, 12 voice select, 13 exit: tools overlay 3
     jb .s
     cmp byte [STSEL],16     ; PERF40L: 16-18 (next, order, skew) are STRETCH too

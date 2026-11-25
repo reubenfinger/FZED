@@ -341,28 +341,16 @@ SOTEXT:             ; STSTAT: the waiting message, when a quarter second has pas
     or al,al
     jnz .n
 .g: jmp GLSTEP
-.snd: push si               ; CC9 channel 16 = al: as STSTAT's own (straight to the UART while armed / waiting /
-    push ax                 ; recording, else the ROM's MIDI call with its internal copy taken back out)
-    mov ah,[RST]
-    dec ah
-    cmp ah,3
-    jb .u
-    push word [0xbe0]
-    xor ah,ah
-    push ax
-    push word 9
-    push word 0xbf
-    APIC 0x33,6
-    pop word [0xbe0]
-    jmp short .z
-.u: mov al,0xbf
+.snd: push si               ; CC9 channel 16 = al: as STSTAT's own, straight to the UART (RH4: never the ROM's MIDI
+    push ax                 ; call, which sounded the voice)
+    mov al,0xbf
     call STSTAT.tx
     mov al,9
     call STSTAT.tx
     pop ax
     push ax
     call STSTAT.tx
-.z: pop ax
+    pop ax
     pop si
     ret
 CHSET:              ; FZED41R / RH2 (from CHOPCC in fzed.asm; in the high area again, no disk load): CC96 sensitivity, CC97 chop mode, CC99 slices

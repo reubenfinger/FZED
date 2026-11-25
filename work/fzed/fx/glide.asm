@@ -82,22 +82,8 @@ STSTAT:             ; main loop, then on into GLSTEP
     cmp al,[bx-1]
     jz .r1
     mov [bx-1],al
-    mov ah,[RST]            ; FZED41L: armed, waiting or recording: the FZ's MIDI interrupts are off (FZED polls the UART
-    dec ah                  ; itself), so the ROM's queue would hold it until afterwards: sent straight to the UART
-    cmp ah,3
-    jb .u
-    push bx
-    push word [0xbe0]
-    xor ah,ah
-    push ax
-    push word 3
-    push word 0xbf
-    APIC 0x33,6
-    pop word [0xbe0]
-    pop bx
-.r1: ret
-.u: push ax
-    mov al,0xbf
+    push ax                 ; RH4: always straight to the UART (FZED41L did it only while armed, waiting or recording):
+    mov al,0xbf             ; the ROM's MIDI call also acted on the messages inside the FZ, sounding the voice
     call .tx
     mov al,3
     call .tx
@@ -109,7 +95,7 @@ STSTAT:             ; main loop, then on into GLSTEP
     loopz .t1
     mov al,ah
     out 0xd0,al
-    ret
+.r1: ret
 GLSTEP:             ; main loop: the window still on its way: the next step when due, as the knob does it
     mov ax,[GLC]
     cmp ax,[GLT]

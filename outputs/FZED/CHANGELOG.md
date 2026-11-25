@@ -1,5 +1,13 @@
 # FZED Menu Revision
 
+## EXT ADDITIVE (next, RH4)
+
+- FZED: **STATUS OUT no longer sounds the voice.** Its CC3 status and CC9 text went through the ROM's own MIDI-out call outside recording, and that call also acted on them inside the FZ, sounding the edit voice briefly on every LCD message (and retriggering captures). Everything Status Out sends now goes straight to the MIDI port, as it already did while recording. If the FZ is sending its own MIDI at that moment (keys, thru), the two can garble briefly.
+- FZED: **EXT module 5, ADDITIVE**: a wavetable from up to 96 harmonics (8-64 frames of 327 words). Shape SINE / SAW / SQUARE / **PANEL** (the FZ's own SIN SYNTHESIS levels, read from its memory), Brightness, Odd / Even, Formant, Width, Comb, Frames, Sweep. EXT WAVETABLE builds the table first and loads ADDITIVE back when it is done, so the table's set-up is the same as WAVETABLE's.
+- FZED: FZED 30-33 (ADDITIVE's Width, Comb, Frames, Sweep) kept with the disintegration settings. The program grows to 40 KB: disk sector 56 holds module 5. The low resident area is now full.
+- Gills Core 132: with module 5 chosen, the FX EXT page becomes ADDITIVE's (P2-P5 CC113-116, P6-P9 FZED 30-33 in place of disintegration).
+- Emulator: `ad5.py` (each control checked by the harmonic content of the frames it writes).
+
 ## Chops Let Go, Messages Kept (next, RH3)
 
 - FZED: **a wavetable or preset wave made after a chop now plays from the keys.** The chop's slices stayed on the keys (the chop bank kept playing), so a new TABLE READY played the old chop. In voice mode, a finished wavetable or preset wave now lets the chop go and plays the edit voice, as Voice Select does. Bank mode is left alone.

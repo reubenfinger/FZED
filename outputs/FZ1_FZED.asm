@@ -2716,3 +2716,5 @@ section ov10 follows=ov9 vstart=0xD400
 %include "fx/ext3.asm"
 section ov11 follows=ov10 vstart=0xD400
 %include "fx/ext4.asm"
+section ov12 follows=ov11 vstart=0xD400
+%include "fx/ext5.asm"

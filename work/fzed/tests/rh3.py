@@ -36,9 +36,14 @@ lcd = [x[2] for x in c2.log if x[0] == 'lcd'][-1:]
 check(c2.m[CHPLAY] == 0 and c2.rd16(0xdfe) == 0xffff, 'preset WAVE after a chop: the chop let go (CHPLAY %d, DFE %04X) %r' % (c2.m[CHPLAY], c2.rd16(0xdfe), lcd))
 c.ports[0xd2] = 1
 fzed(g, 24, 127); g['run'](c, g['u'], 3_000_000)
-text = lambda: ''.join(chr(a[2]) if a[2] else '|' for f, a in c.api if f == 0x33 and a[1] == 9)
-c.api.clear(); fzed(g, 11, 127); g['run'](c, g['u'], 3_000_000)
+def text():                      # RH4: straight to the UART
+    b = [x[2] for x in c.log if x[0] == 'out' and x[1] == 0xd0]; s = ''; i = 0
+    while i + 2 < len(b):
+        if b[i] == 0xbf and b[i + 1] == 9: s += chr(b[i + 2]) if b[i + 2] else '|'; i += 3
+        else: i += 1
+    return s
+c.api.clear(); c.log.clear(); fzed(g, 11, 127); g['run'](c, g['u'], 12_000_000)
 check(text().startswith('>') and text().endswith('|'), 'VOICE PICK: the preview goes to the Gills as text: %r' % text())
-c.api.clear(); fzed(g, 12, 127); g['run'](c, g['u'], 3_000_000)
+c.api.clear(); c.log.clear(); fzed(g, 12, 127); g['run'](c, g['u'], 12_000_000)
 check(text().startswith('V'), 'VOICE SELECT: the new edit voice line goes too: %r' % text())
 print('ALL PASS' if ok else 'SOME FAIL')

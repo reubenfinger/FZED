@@ -1,5 +1,5 @@
 ; ---------- EXT disk modules (FZED41B). FZED 19 (CC10 = 88, CC11 = 19, then CC10 = 89, CC11 = value) picks module n:
-; 0-7 off, then 8-step bands for modules 1-15 (module n = disk sector 51+n). Render (CC118) then runs the module
+; 0-7 off, then 8-step bands for modules 1-15 (module n = disk sector 51+n; RH4: 5 = ADDITIVE, sector 56). Render (CC118) then runs the module
 ; instead of the CC112 effect. Modules are loaded only by Render, never by a knob, so FZED 19 itself reads no disk.
 ;
 ; Module sector, ABI 1 (built with the program, fx/ext1.asm and on; loaded into D400h by OVCALL):

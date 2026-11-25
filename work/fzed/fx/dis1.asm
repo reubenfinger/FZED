@@ -10,6 +10,10 @@ DISP: db 0                  ; FZED 22 dropouts
 DIS4: db 0                  ; FZED 23 EVEN AGEING (FZED41D): 0 off; FZED41E: 1-127, 2^(value / 16) steps a round
 DTM: dw 0                   ; timer at the last ageing step
 DAGE: dd 0                  ; age: high word 0 (new) .. FFFFh (gone), low word its fraction
+ADP: db 32,0,0,64           ; RH4: FZED 30-33, EXT ADDITIVE P6-P9: width, comb, frames, sweep (DISSET stores them at
+%if ADP-DISH != 10          ; DISH + 10-13)
+%error ADP must be DISH + 10
+%endif
 
 DISSET:             ; parameter 89 with STSEL 20-23: bl = 0-3, al = value 0-127 (no LCD message: no room)
     xor bh,bh
