@@ -26,7 +26,7 @@ def run(shape, bright=64, oe=64, form=0, width=32, comb=0, frames=0, sweep=64, p
     for n, v in zip((113, 114, 115, 116), (shape, bright, oe, form)): cc(g, n, v)
     for k, v in zip((30, 31, 32, 33), (width, comb, frames, sweep)): fzed(g, k, v)
     s0 = c.steps; render(g); g['run'](c, g['u'], 60_000_000)
-    lcd = [x[2] for x in c.log if x[0] == 'lcd'][-3:]
+    lcd = [x[2] for x in c.log if x[0] == 'lcd']
     d32 = lambda a: c.rd16(a) | (c.rd16(a + 2) << 16)
     st = d32(EV + 0x14) & 0x1fffff
     nf = 8 << (frames >> 5)
@@ -43,7 +43,8 @@ def spec(w, n=12):
     return out
 g, c, lcd, frame, nf, steps, EV = run(shape=40)            # SAW
 f0 = frame(0); sp = spec(f0)
-check(any('ADDITIVE OK' in x for x in lcd), 'SAW: ADDITIVE OK on the LCD %s (%d emulated steps)' % (lcd, steps))
+prog = [x.strip() for x in lcd if x.startswith('ADDITIVE ')]
+check(prog == ['ADDITIVE %02d' % k for k in range(1, 9)] + ['ADDITIVE OK'], 'SAW: progress ADDITIVE 01 .. 08 on the LCD, then ADDITIVE OK: %s' % prog)
 check(28000 <= max(abs(x) for x in f0) <= 30000, 'every frame scaled to a 30000 peak: %d' % max(abs(x) for x in f0))
 r = [sp[h - 1] / sp[0] for h in (2, 3, 4, 8)]
 check(all(abs(x * h - 1) < 0.2 for x, h in zip(r, (2, 3, 4, 8))), 'SAW: harmonic h at about 1/h of the fundamental: %s' % ['%.3f' % x for x in r])

@@ -42,7 +42,7 @@ ADPK: dw 0                  ; the frame's peak
 ADBE: dw 0                  ; this frame's brightness and formant place
 ADPE: dw 0
 ADMX: dw 0                  ; the loudest level
-S_ADD: db 'ADDITIVE OK',0
+S_ADD: db 'ADDITIVE 00',0   ; the frame being written (RH5), then ADDITIVE OK
 
 ADRUN:              ; si = the edit voice: WAVETABLE makes the table first, then ADPT2 (the controls kept on the stack)
     push word [FXREZ]
@@ -89,13 +89,21 @@ ADPT2:              ; WAVETABLE done (or refused, with its message)
     mul bx
     div cx
     mov [ADM],ax
+    mov ax,[ADK]            ; RH5: progress, on the FZ and (STATUS OUT) the Gills: the main loop does not run meanwhile
+    inc ax
+    mov di,S_ADD+9
+    call DEC2
+    mov bx,S_ADD
+    call NMSG
+    call STSTAT
     call ADSPEC
     mov word [ADPK],1
     mov word [ADCNT],ADLEN
     call ADFRM
     inc word [ADK]
     jmp .fr
-.gd: mov bx,S_ADD
+.gd: mov word [S_ADD+9],'OK'
+    mov bx,S_ADD
     jmp NMSG
 
 ADADD:              ; ax + bl -> 0-127
@@ -201,10 +209,8 @@ ADLEV:              ; cx = harmonic h -> ax = its level, log2 Q8 (ADNEG: off); k
     jz .off
     call ADLOG
     jmp short .b
-.si: cmp cx,1               ; the fundamental only
+.si: cmp cx,1               ; the fundamental only (its -log2 1 is 0; 1 is odd: on through .sq)
     jnz .off
-    xor ax,ax
-    jmp short .b
 .sq: test cl,1              ; odd harmonics only
     jz .off
 .b: push ax                 ; brightness: + (b - 64) / 32 x log2 h
@@ -344,8 +350,6 @@ ADFRM:              ; ADCNT words of frame ADK at WST + k x 327: made, then agai
     jmp short .wr
 .rd: call ADADR
     call LVRD
-    push ds
-    pop es
     pop cx
     push cx
     mov si,LVBUF

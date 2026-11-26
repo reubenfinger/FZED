@@ -1,5 +1,10 @@
 # FZED Menu Revision
 
+## Additive Progress (next, RH5)
+
+- FZED: **EXT ADDITIVE shows its progress**: ADDITIVE 01, 02 ... as each frame is written (on the FZ, and on the Gills with STATUS OUT on), then ADDITIVE OK. A render takes about 0.6 s a frame on the FZ (roughly 7 s for 8 frames, 38 s for 64, timed on hardware); the FZ does nothing else meanwhile, so controls sent during it only act once it is done. TABLE READY (WAVETABLE's part) is now only on the FZ's LCD, briefly.
+- Note: PANEL with no levels set on the FZ's SIN SYNTHESIS page makes a silent table.
+
 ## EXT ADDITIVE (next, RH4)
 
 - FZED: **STATUS OUT no longer sounds the voice.** Its CC3 status and CC9 text went through the ROM's own MIDI-out call outside recording, and that call also acted on them inside the FZ, sounding the edit voice briefly on every LCD message (and retriggering captures). Everything Status Out sends now goes straight to the MIDI port, as it already did while recording. If the FZ is sending its own MIDI at that moment (keys, thru), the two can garble briefly.
