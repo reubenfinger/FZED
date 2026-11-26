@@ -1,8 +1,8 @@
 # FZED41B EXT disk modules: FZED 19 picks a module, Render (CC118) runs it.
 #   python3 ext41.py BUILD     (a folder holding fzedflat.bin and fzed.map)
-# Checks: module 1 (NOISE) gives exactly the words of a model of its code, on the edit voice; level 0 leaves the
-# sample alone; FZED 19 = 0 renders the CC112 effect as before; an empty module slot and a module from another
-# build are refused with the sample untouched; a tool module (kind 2) runs once and nothing is rendered after it.
+# Checks (RH6 numbering: 1 EQ, 2 BACKUP, 3 WAVETABLE, 4 WAVETABLE 2, 5 ADDITIVE; NOISE is gone): FZED 19 = 0 renders the
+# CC112 effect as before; an empty module slot and a module from another build are refused with the sample untouched;
+# a tool module (kind 2) runs once and nothing is rendered after it; EQ, BACKUP and WAVETABLE against their models.
 import os, sys, re
 T = os.path.dirname(os.path.abspath(__file__))
 BUILD = sys.argv[1]
@@ -75,39 +75,6 @@ def check(c, msg):
     global ok
     print(('PASS ' if c else 'FAIL ') + msg); ok &= bool(c)
 
-# 1. module 1, level 64, white
-g = boot(); before = words(g)
-cc(g, 115, 64); cc(g, 116, 127); fzed(g, 19, 12)
-check(lcds(g)[-1].rstrip() == 'EXT 01', 'FZED 19 = 12 shows EXT 01 (%r), no disk read' % lcds(g)[-1])
-render(g); after = words(g)
-L = lcds(g)
-check('EXT NOISE' in [x.rstrip() for x in L], 'Render shows the module name (%r)' % L[-3:])
-exp = noise_model(before, 64, 127)
-diff = [i for i, (a, b) in enumerate(zip(after, exp)) if a != b]
-check(not diff, 'NOISE: every word matches the model (%d words, %d differ%s)' % (len(after), len(diff),
-      (' first at %d: got %04X want %04X' % (diff[0], after[diff[0]], exp[diff[0]])) if diff else ''))
-check(sum(1 for a, b in zip(after, before) if a != b) > len(before) // 2, 'NOISE: the sample really changed')
-check(g['c'].rd16(0xD400) == 0x4034 and g['c'].rd16(0xD7BE) == 0x4034, 'the module is still whole in D400h after the render')
-
-# 2. loud samples, full level: peaks clip; then a dark tone
-g = boot()
-for w in range(g['S'], g['E']):
-    v = 0x7800 if w & 1 else 0x8800; g['c'].wave[w * 2] = v & 0xff; g['c'].wave[w * 2 + 1] = v >> 8
-before = words(g)
-cc(g, 115, 127); cc(g, 116, 127); fzed(g, 19, 8); render(g); after = words(g)
-exp = noise_model(before, 127, 127)
-check(after == exp and sum(1 for w in exp if w in (0x7fff, 0x8000)) > 100,
-      'NOISE level 127 on loud samples: matches the model, full-scale peaks held (%d clipped)' % sum(1 for w in exp if w in (0x7fff, 0x8000)))
-g = boot(); before = words(g)
-cc(g, 115, 127); cc(g, 116, 10); fzed(g, 19, 8); render(g); after = words(g)
-exp = noise_model(before, 127, 10)
-check(after == exp, 'NOISE level 127, tone 10: matches the model')
-
-# 3. level 0: unchanged
-g = boot(); before = words(g)
-cc(g, 115, 0); fzed(g, 19, 8); render(g)
-check(words(g) == before, 'NOISE level 0 leaves the sample unchanged')
-
 # 4. FZED 19 back to 0: CC112's effect renders as before (bit mangle vs a run with no FZED 19 at all)
 def plain(sel):
     g = boot(); cc(g, 112, 127); cc(g, 113, 40); cc(g, 117, 127)
@@ -116,9 +83,9 @@ def plain(sel):
 a, la = plain(False); b, lb = plain(True)
 check(a == b and la == lb, 'FZED 19 = 0 again: the CC112 effect renders the same words as without EXT (%r)' % lb)
 
-# 5. empty slot (module 5 = sector 56, past the program): refused, unchanged
+# 5. empty slot (module 6 = sector 57, past the program): refused, unchanged
 g = boot(); before = words(g)
-cc(g, 115, 64); fzed(g, 19, 40); render(g)
+cc(g, 115, 64); fzed(g, 19, 48); render(g)
 check(words(g) == before and lcds(g)[-1].rstrip() == 'TOOLS NOT LOADED', 'empty module slot refused (%r), sample unchanged' % lcds(g)[-1])
 
 # 6. a module from another build: refused, unchanged
@@ -151,10 +118,10 @@ c = g['c']
 check(c.m[0xD542] == 1 and c.rd16(0xD540) == ev, 'tool module ran once with si = the edit voice (%d, %04X)' % (c.m[0xD542], c.rd16(0xD540)))
 check(lcds(g)[-1].rstrip() == 'TOOL RAN' and words(g) == before, 'tool: its message shows (%r) and nothing was rendered' % lcds(g)[-1])
 
-# 8. EQ (module 2): unity gains give the original less its lowest bit; then a real EQ against the model
+# 8. EQ (module 1): unity gains give the original less its lowest bit; then a real EQ against the model
 g = boot(); before = words(g)
 for n, v in ((113, 64), (114, 64), (115, 64), (116, 64)): cc(g, n, v)
-fzed(g, 19, 20); render(g); after = words(g)
+fzed(g, 19, 12); render(g); after = words(g)
 check(after == [((((w ^ 0x8000) - 0x8000) >> 1) << 1) & 0xffff for w in before] and 'EXT EQ' in [x.rstrip() for x in lcds(g)],
       'EQ, every gain 64: the original back, less the lowest bit (%r)' % lcds(g)[-3:])
 for gains in ((127, 64, 0, 64), (0, 127, 20, 100), (90, 30, 127, 40)):
@@ -164,13 +131,13 @@ for gains in ((127, 64, 0, 64), (0, 127, 20, 100), (90, 30, 127, 40)):
         g['c'].wave[w * 2] = v & 0xff; g['c'].wave[w * 2 + 1] = v >> 8
     before = words(g)
     for n, v in zip((113, 114, 115, 116), gains): cc(g, n, v)
-    fzed(g, 19, 20); render(g); after = words(g)
+    fzed(g, 19, 12); render(g); after = words(g)
     exp = eq_model(before, *gains)
     d = [i for i, (a, b) in enumerate(zip(after, exp)) if a != b]
     check(not d, 'EQ bass/mid/treble/out %s: every word matches the model (%d differ%s)' % (gains, len(d),
           (' first at %d: got %04X want %04X' % (d[0], after[d[0]], exp[d[0]])) if d else ''))
 
-# 9. BACKUP (module 3): the edit voice into the first empty voice with its own copy of the sample
+# 9. BACKUP (module 2): the edit voice into the first empty voice with its own copy of the sample
 def winread(c):     # test-model extension (as the live FX harness): DS = 1000h reads the sample window (LVRD)
     o8 = c.rd8
     def rd8(x):
@@ -186,7 +153,7 @@ c.wr16(EV + 0x1c, 0x0123); c.wr16(EV + 0x1e, 0x00a0 | 0x0004)       # an address
 gs = c.rd16(0x80E8) | (c.rd16(0x80EA) << 16); ae = c.rd16(0x80F0) | (c.rd16(0x80F2) << 16)   # GSAVE, AEL, AEH
 srcrec = bytes(c.m[EV:EV + 0xc0]); before = words(g)
 slots = [0x2288 + 0xc0 * i for i in range(64)]; free = [v for v in slots if c.rd16(v + 0x10) == 0 and v != EV][0]
-fzed(g, 19, 24); render(g)
+fzed(g, 19, 16); render(g)
 L = lcds(g)
 d32 = lambda a: c.rd16(a) | (c.rd16(a + 2) << 16)
 new = d32(free + 8) & 0x1fffff
@@ -212,10 +179,10 @@ check(words(g) != before and [g['wv'](new + i) for i in range(cnt)] == cw, 'a re
 g2 = boot(); c2 = g2['c']; winread(c2)
 for v in [0x2288 + 0xc0 * i for i in range(64)]:
     if c2.rd16(v + 0x10) == 0: c2.wr16(v + 0x10, 0x1d7)
-fzed(g2, 19, 24); render(g2)
+fzed(g2, 19, 16); render(g2)
 check([x[2] for x in c2.log if x[0] == 'lcd'][-1].rstrip() == 'BACKUP: NO SLOT', 'no empty voice: BACKUP: NO SLOT')
 
-# 10. WAVETABLE (module 4): frames x length single cycles from a model, the voice set up for the window and Stretch
+# 10. WAVETABLE (module 3): frames x length single cycles from a model, the voice set up for the window and Stretch
 FL = open(os.path.join(BUILD, 'fzedflat.bin'), 'rb').read()
 def flat16(a): o = (a - 0x6000) if a < 0x8000 else (a - 0x8400 + 0x2000); return FL[o] | (FL[o + 1] << 8)
 SQ = [flat16(MAP['SINQ'] + 2 * i) for i in range(65)]
@@ -259,7 +226,7 @@ for ty, fr, ln, sw, label in ((0, 127, 60, 127, 'SYNC 64 x 327'), (1, 70, 30, 90
     c.wr16(EV + 0x10, 0)                    # an empty edit voice: new memory, as a preset wave
     for n, v in zip((113, 114, 115, 116), (ty * 32 + 8, fr, ln, sw)): cc(g, n, v)
     fzed(g, 0, 60)                          # Stretch: 5 segments (becomes 8)
-    fzed(g, 19, 32); render(g)
+    fzed(g, 19, 24); render(g)
     nf = 8 << (fr >> 5); L = (82, 164, 327, 655, 1309)[ln // 26]; key = (69, 57, 45, 33, 21)[ln // 26]
     exp = table(ty, nf, L, sw)
     d32 = lambda a: c.rd16(a) | (c.rd16(a + 2) << 16)
@@ -288,7 +255,7 @@ for ty, fr, ln, sw, label in ((0, 127, 60, 127, 'SYNC 64 x 327'), (1, 70, 30, 90
               'Stretch on: its 8 loops each one whole frame, at the start of each segment (%s)' % loops[:3])
 g = boot(); c = g['c']; winread(c)
 for n, v in zip((113, 114, 115, 116), (8, 127, 127, 127)): cc(g, n, v)
-fzed(g, 19, 32); render(g)
+fzed(g, 19, 24); render(g)
 check([x[2] for x in c.log if x[0] == 'lcd'][-1].rstrip() == 'TOO BIG', 'a voice whose memory is too small for 64 x 1309: TOO BIG')
 
 print('ALL PASS' if ok else 'SOME FAILED')

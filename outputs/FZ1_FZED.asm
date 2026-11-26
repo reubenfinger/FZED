@@ -2708,13 +2708,13 @@ section ov6 follows=ov5 vstart=0xD400
 %include "fx/ov6.asm"
 section ov7 follows=ov6 vstart=0xD400
 %include "fx/ov7.asm"
-section ov8 follows=ov7 vstart=0xD400
-%include "fx/ext1.asm"
+section ov8 follows=ov7 vstart=0xD400          ; RH6: EXT modules 1 EQ, 2 BACKUP, 3 WAVETABLE, 4 WAVETABLE 2, 5 ADDITIVE
+%include "fx/ext2.asm"                          ; (NOISE, module 1 before, is gone)
 section ov9 follows=ov8 vstart=0xD400
-%include "fx/ext2.asm"
-section ov10 follows=ov9 vstart=0xD400
 %include "fx/ext3.asm"
-section ov11 follows=ov10 vstart=0xD400
+section ov10 follows=ov9 vstart=0xD400
 %include "fx/ext4.asm"
+section ov11 follows=ov10 vstart=0xD400
+%include "fx/ext6.asm"
 section ov12 follows=ov11 vstart=0xD400
 %include "fx/ext5.asm"

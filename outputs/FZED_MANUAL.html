@@ -1149,9 +1149,9 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#e5eeea;padding:16px;
 </tbody>
 </table>
 <h3>EXT Disk Modules</h3>
-<p>EXT modules are extra effects and tools kept on the FZED disk rather than in memory, so new ones can be added without taking room from FZED. Five are included: <strong>EXT NOISE</strong> (module 1), <strong>EXT EQ</strong> (2), <strong>EXT BACKUP</strong> (3), <strong>EXT WAVETABLE</strong> (4) and <strong>EXT ADDITIVE</strong> (5). Effects (NOISE, EQ) change the sample; tools (BACKUP, WAVETABLE) do one job and render nothing.</p>
+<p>EXT modules are extra effects and tools kept on the FZED disk rather than in memory, so new ones can be added without taking room from FZED. Five are included (RH6 order): <strong>EXT EQ</strong> (module 1), <strong>EXT BACKUP</strong> (2), <strong>EXT WAVETABLE</strong> (3), <strong>EXT WAVETABLE 2</strong> (4) and <strong>EXT ADDITIVE</strong> (5). EQ is an effect that changes the sample; the others are tools that do one job and render nothing. (EXT NOISE, module 1 before RH6, is gone.)</p>
 <p><strong>Choosing a module.</strong> Send FZED 19: CC10 = 88, CC11 = 19, then CC10 = 89, CC11 = the value. 0-7 is EXT OFF; then each block of 8 picks the next module: 8-15 module 1, 16-23 module 2 and so on up to module 15. Line 3 shows EXT 00 (off) or EXT 01 and so on. Choosing a module reads nothing from the disk.</p>
-<p><strong>Running it.</strong> Render (CC118) runs the chosen module instead of the FX Type effect. FZED loads the module from the disk, shows its name, then renders the edit voice and every chop slice, as an ordinary render does. Set FZED 19 back to 0-7 to render the FX Type effect again. Live FX are not affected: they always use FX Type.</p>
+<p><strong>Running it.</strong> Render (CC118) runs the chosen module instead of the FX Type effect. <strong>FZED 34 RENDER FX</strong> (any value from below 64 to 120 or more, as CC118) renders the FX Type effect whatever module is chosen, and leaves the module chosen: on the Gills (Core 134), Render on the FX page sends it, and only Render on the FX EXT page runs the module. FZED loads the module from the disk, shows its name, then renders the edit voice and every chop slice, as an ordinary render does. Set FZED 19 back to 0-7 to render the FX Type effect again. Live FX are not affected: they always use FX Type.</p>
 <p><strong>The FZED disk must be in the drive</strong> when you render with a module. If the module isn't on the disk, line 3 shows TOOLS NOT LOADED; if it belongs to a different FZED version, BAD MODULE. In both cases the sample is left as it was.</p>
 <table>
 <thead>
@@ -1162,24 +1162,24 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#e5eeea;padding:16px;
 </thead>
 <tbody>
 <tr>
-<td>1 EXT NOISE</td>
-<td>Adds noise to the sample. Tape Input (CC115) is the noise level: 0 adds none, and the level rises with the square of the knob up to full scale. Tape Output (CC116) is the tone: 127 is white noise, lower values darker. The same render gives the same noise every time. Peaks that would go past full scale are held at full scale. The other FX controls are not used, and the editor still shows them with their FX Type names</td>
-</tr>
-<tr>
-<td>2 EXT EQ</td>
+<td>1 EXT EQ</td>
 <td>A three-band EQ: CC113 bass (below about 300 Hz), CC114 mid, CC115 treble (above about 3 kHz), CC116 output level. 0 removes the band, 64 leaves it unchanged, 127 is about +12 dB. The band edges are for a 36 kHz voice: an 18 kHz voice halves them, 9 kHz quarters them. With every control at 64 the sample comes back as it was, less its lowest bit. Peaks that would go past full scale are held at full scale</td>
 </tr>
 <tr>
-<td>3 EXT BACKUP</td>
+<td>2 EXT BACKUP</td>
 <td>A tool: copies the edit voice into the first empty voice <strong>with its own copy of the sample</strong> (Copy Voice shares the sample, so a render would change both). The edit voice stays the edit voice: render on it, and if you don't like the result, pick the backup with Voice Select. The FZ shows BACKUP IN V05 (the backup's number), or BACKUP: NO SLOT (no empty voice) / NO MEMORY. The copied range is the one Render works on (the start to the end as FZED took the voice); the backup's settings are the voice's as they are now. No controls</td>
 </tr>
 <tr>
-<td>4 EXT WAVETABLE</td>
+<td>3 EXT WAVETABLE</td>
 <td>A tool: builds a wavetable in the edit voice: a row of single cycles, each a step further along a sweep, for the loop window or Stretch to play. <strong>CC113 TYPE:</strong> SYNC (a sine hard-synced at 1 to 8 times its pitch), PWM (pulse 50% narrowing to 4%), FOLD (a sine folded harder and harder), MORPH (sine &gt; triangle &gt; saw &gt; square). <strong>CC114 FRAMES:</strong> 8, 16, 32 or 64. <strong>CC115 LENGTH:</strong> 82, 164, 327, 655 or 1309 words a cycle: A 440, 220, 110, 55 or 27.5 Hz at 36 kHz, with the voice's original key set to match (in tune to a few cents). The FZ plays a sampled voice only 3 octaves either side of its original key, so the in-tune range on the keyboard (C2-C7) is: 82 all of it, 164 C2-A6, 327 C2-A5, 655 C2-A4, 1309 C2-A3; above that the top pitch repeats. <strong>CC116 SWEEP:</strong> how far along the sweep the last frame goes (0: every frame the same). An empty edit voice (NEW VOICE first) gets new memory; a voice with a sample uses its memory if it holds the table, else TOO BIG. Afterwards: loop 1 is the first frame, Window Snap is FRAMES GLIDE (so Window Position, the matrix's LOOP WINDOW or LFO 2 Dest 2 scan the frames), and Stretch is set to match: Segments 2, 4 or 8 stay (others become 8), Grain so each loop is exactly one frame, Snap off, Crossfade 0; Stretch is switched off, as its loops were replaced, and Stretch On builds them on the frames. The FZ shows TABLE READY</td>
 </tr>
 <tr>
+<td>4 EXT WAVETABLE 2</td>
+<td>A tool: EXT WAVETABLE's table with four other types; FRAMES, LENGTH, SWEEP and everything it sets up afterwards are the same. <strong>CC113 TYPE:</strong> <strong>FEEDBACK FM</strong> (a sine modulating itself: a plain sine at the start of the sweep, then rasp, then chaos), <strong>CZ RESONANCE</strong> (Casio CZ phase distortion: a sine at 1 to 16 times the pitch, restarted every cycle and faded across it: the resonant-filter sweep without a filter), <strong>BYTEBEAT</strong> (binary logic on the sample count, ((t x a) xor (t x b / 4)), with the numbers changing along the sweep: glitchy 8-bit buzzes), <strong>CHAOS</strong> (the logistic map, r from 3.5 to 4 along the sweep: repeating waveforms, then frozen noise with a pitch). FEEDBACK FM and CHAOS start again at every frame. The FZ shows TABLE 2 READY</td>
+</tr>
+<tr>
 <td>5 EXT ADDITIVE</td>
-<td>A tool: builds a wavetable from up to <strong>96 harmonics</strong>: 8, 16, 32 or 64 single cycles of 327 words (A2, 110 Hz at 36 kHz; in tune C2-A5, as WAVETABLE's 327). EXT WAVETABLE makes the table first (memory, loops, keys, FRAMES GLIDE, Stretch: TABLE READY shows), then ADDITIVE writes every frame again from its harmonics and shows ADDITIVE OK; the disk is read twice. <strong>CC113 SHAPE:</strong> SINE, SAW, SQUARE or <strong>PANEL</strong> (the 48 harmonic levels last set on the FZ's own SIN SYNTHESIS page, as harmonics 1-48; a triangle is SQUARE at Brightness 32). <strong>CC114 BRIGHTNESS:</strong> 64 as the shape; down to 12 dB / octave darker, up to 12 dB / octave brighter. <strong>CC115 ODD / EVEN:</strong> 64 both; lower takes the even harmonics down (0 removes them), higher the odd ones from the 3rd up (127 removes them). <strong>CC116 FORMANT:</strong> 0 off; otherwise a +24 dB peak from harmonic 1 to 96. <strong>FZED 30 WIDTH:</strong> the peak's width, 1/16 to 2 octaves either side. <strong>FZED 31 COMB:</strong> off, or keep only every Nth harmonic from the 1st or the 2nd (N = 2 to 9). <strong>FZED 32 FRAMES:</strong> 8, 16, 32, 64. <strong>FZED 33 SWEEP:</strong> 64 none; across the frames the formant moves (by up to 64 places) and brightness (by up to 32), down below 64, up above. Every frame is scaled to the same peak. <strong>A render is slow: about 0.6 s a frame (8 frames about 7 s, 64 about 40 s); the FZ shows ADDITIVE 01, 02 ... as it goes and does nothing else meanwhile, so wait for ADDITIVE OK before sending anything else.</strong> PANEL with no levels set on the SIN SYNTHESIS page gives a silent table. On the Gills (Core 132) choosing module 5 turns the FX EXT page into ADDITIVE's: P6-P9 become Width, Comb, Frames and Sweep until another module is chosen</td>
+<td>A tool: builds a wavetable from up to <strong>96 harmonics</strong>: 8, 16, 32 or 64 single cycles of 327 words (A2, 110 Hz at 36 kHz; in tune C2-A5, as WAVETABLE's 327). EXT WAVETABLE (module 3) makes the table first (memory, loops, keys, FRAMES GLIDE, Stretch: TABLE READY shows), then ADDITIVE writes every frame again from its harmonics and shows ADDITIVE OK; the disk is read twice. <strong>CC113 SHAPE:</strong> SINE, SAW, SQUARE or <strong>PANEL</strong> (the 48 harmonic levels last set on the FZ's own SIN SYNTHESIS page, as harmonics 1-48; a triangle is SQUARE at Brightness 32). <strong>CC114 BRIGHTNESS:</strong> 64 as the shape; down to 12 dB / octave darker, up to 12 dB / octave brighter. <strong>CC115 ODD / EVEN:</strong> 64 both; lower takes the even harmonics down (0 removes them), higher the odd ones from the 3rd up (127 removes them). <strong>CC116 FORMANT:</strong> 0 off; otherwise a +24 dB peak from harmonic 1 to 96. <strong>FZED 30 WIDTH:</strong> the peak's width, 1/16 to 2 octaves either side. <strong>FZED 31 COMB:</strong> off, or keep only every Nth harmonic from the 1st or the 2nd (N = 2 to 9). <strong>FZED 32 FRAMES:</strong> 8, 16, 32, 64. <strong>FZED 33 SWEEP:</strong> 64 none; across the frames the formant moves (by up to 64 places) and brightness (by up to 32), down below 64, up above. Every frame is scaled to the same peak. <strong>A render is slow: about 0.6 s a frame (8 frames about 7 s, 64 about 40 s); the FZ shows ADDITIVE 01, 02 ... as it goes and does nothing else meanwhile, so wait for ADDITIVE OK before sending anything else.</strong> PANEL with no levels set on the SIN SYNTHESIS page gives a silent table. On the Gills (Core 132) choosing module 5 turns the FX EXT page into ADDITIVE's: P6-P9 become Width, Comb, Frames and Sweep until another module is chosen</td>
 </tr>
 </tbody>
 </table>
@@ -2059,6 +2059,11 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#e5eeea;padding:16px;
 <td>Status Out</td>
 <td>FZED 24</td>
 <td>OFF 0-63; ON 64-127 (sends CC3 on channel 16: 0-6 record state IDLE, ARMED, WAIT, REC, DONE, USED, NO MEMORY; 16-19 rate 36K, 18K, 9K, 4.5K; 64 + slice count)</td>
+</tr>
+<tr>
+<td>Render FX</td>
+<td>FZED 34</td>
+<td>below 64 arms, 120-127 renders the FX Type effect, whatever EXT module is chosen (the module stays chosen)</td>
 </tr>
 <tr>
 <td>Exit FZED</td>

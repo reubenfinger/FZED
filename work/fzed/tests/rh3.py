@@ -23,7 +23,7 @@ def chopplay():                     # as CHON: the keys play a chop bank
 EV = c.rd16(0xe04); c.wr16(EV + 0x10, 0)
 chopplay()
 for n, v in zip((113, 114, 115, 116), (3 * 32 + 8, 0, 0, 127)): cc(g, n, v)
-fzed(g, 19, 32); render(g)
+fzed(g, 19, 24); render(g)
 check(c.m[CHPLAY] == 0 and c.rd16(0xdfe) == 0xffff, 'WAVETABLE after a chop: the chop let go, the keys play the table (CHPLAY %d, DFE %04X)' % (c.m[CHPLAY], c.rd16(0xdfe)))
 chopplay(); bk = 0x83C2; c.m[bk] = 1
 render(g)

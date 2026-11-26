@@ -1,6 +1,6 @@
 ; ---------- EXT module 5: ADDITIVE (RH4), disk sector 56, tool. FZED 19 = 40-47 picks it; Render (CC118) runs it.
 ; Builds FRAMES single cycles of 327 words (A2, 110 Hz at 36 kHz) from up to 96 harmonics. The table itself (memory,
-; loops, keys, Window Snap FRAMES GLIDE, Stretch set to the frames) is made by EXT WAVETABLE (module 4: this module
+; loops, keys, Window Snap FRAMES GLIDE, Stretch set to the frames) is made by EXT WAVETABLE (module 3: this module
 ; loads it with SYNC / no sweep / 327 words / the frames, and it loads this one back when it is done), then every frame
 ; is written again here. Each harmonic's level is worked out in log2 units (Q8: 256 = 6 dB), made linear, the levels
 ; scaled to sum to full scale (so the sum never clips) and every frame finally scaled to the same peak (30000).
@@ -58,7 +58,7 @@ ADRUN:              ; si = the edit voice: WAVETABLE makes the table first, then
     push word 0x4038        ; WAVETABLE's return: OVCALL brings this module back at ADPT2
     push word OVCALL
     push word 0xD423
-    push word 0x4037
+    push word 0x4036        ; (RH6: WAVETABLE is module 3, sector 54)
     jmp OVCALL
 
 ADPT2:              ; WAVETABLE done (or refused, with its message)

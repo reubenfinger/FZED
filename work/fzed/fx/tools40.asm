@@ -149,7 +149,15 @@ STRP:               ; PERF40F parameters 88 (STRETCH control 0-9) and 89 (its va
     or byte [SOL+2],-1
     ret
 .dis: jmp DISSET
+.fx: mov ah,[EXTS]           ; RH6: 34 RENDER FX: Render, as CC118, but the CC112 effect whatever EXT module is chosen
+    push ax                 ; (the Gills' FX page; its FX EXT page keeps CC118, which runs the module)
+    mov byte [EXTS],0
+    call FXCC.go
+    pop ax
+    mov [EXTS],ah
+    ret
 .ad: cmp bl,14               ; RH4: 30-33 EXT ADDITIVE P6-P9: DISSET keeps them at ADP (DISH + 10-13)
+    jz .fx
     jae .s10
     cmp bl,10
     jae .dis

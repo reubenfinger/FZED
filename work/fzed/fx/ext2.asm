@@ -1,4 +1,4 @@
-; ---------- EXT module 2: EQ (FZED41C), disk sector 53, render effect. Three-band bass / mid / treble EQ.
+; ---------- EXT module 1: EQ (FZED41C; RH6: was 2), disk sector 52, render effect. Three-band bass / mid / treble EQ.
 ; The sample is split by two one-pole low-passes, at about 300 Hz and 3 kHz for a 36 kHz voice (an 18 kHz voice
 ; halves them, 9 kHz quarters them): low = LP300, mid = LP3k - LP300, high = x - LP3k. With every gain at 64 the
 ; three bands add back to the original exactly (to the last bit, less the halving below).
@@ -6,7 +6,7 @@
 ;   CC116 = output level, the same scale. Peaks that would pass full scale are held at full scale.
 ; Worked at half scale (x/2) so no band can overflow; the filters carry 32-bit state. They start from the first
 ; word rendered and run on through the voice and its slices.
-    dw 0x4035
+    dw 0x4034
     db 1, 1                 ; ABI 1, render effect
     dw LOWEND,HIGHEND,LVEND,XTEND
     db 'EXT EQ',0
@@ -132,5 +132,5 @@ EQSAT:              ; dx:ax signed 32-bit -> ax held to -32768 .. 32767
 %error EXT module 2 reaches the top of its sector
 %endif
     times 0x3BE-($-$$) db 0
-    dw 0x4035
+    dw 0x4034
     times 0x400-($-$$) db 0x5a

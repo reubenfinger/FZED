@@ -1,5 +1,13 @@
 # FZED Menu Revision
 
+## WAVETABLE 2, Module Order, Render FX (next, RH6)
+
+- FZED: **EXT module 4, WAVETABLE 2**: WAVETABLE's table with four new types: FEEDBACK FM, CZ RESONANCE, BYTEBEAT and CHAOS.
+- FZED: **EXT modules renumbered**: 1 EQ, 2 BACKUP, 3 WAVETABLE, 4 WAVETABLE 2, 5 ADDITIVE. EXT NOISE is gone.
+- FZED: **FZED 34 RENDER FX**: renders the FX Type effect whatever EXT module is chosen, leaving it chosen, so a module can no longer re-render the voice by mistake from the FX page.
+- Gills Core 133: ADDITIVE's SHAPE reaches SQUARE and PANEL (the crusher's steps applied on the FX EXT page). Core 134: Render on the FX page sends RENDER FX. Core 135: the new module names and labels, stepped TYPE / FRAMES / LENGTH for both WAVETABLEs.
+- Emulator: `wt2.py` (BYTEBEAT and CHAOS word for word against models; FEEDBACK FM and CZ RESONANCE by their shape), `rh6.py` (RENDER FX); `ext41.py`, `glide41.py`, `rh3.py` renumbered, NOISE's checks removed.
+
 ## Additive Progress (next, RH5)
 
 - FZED: **EXT ADDITIVE shows its progress**: ADDITIVE 01, 02 ... as each frame is written (on the FZ, and on the Gills with STATUS OUT on), then ADDITIVE OK. A render takes about 0.6 s a frame on the FZ (roughly 7 s for 8 frames, 38 s for 64, timed on hardware); the FZ does nothing else meanwhile, so controls sent during it only act once it is done. TABLE READY (WAVETABLE's part) is now only on the FZ's LCD, briefly.

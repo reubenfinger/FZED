@@ -1,4 +1,4 @@
-; ---------- EXT module 4: WAVETABLE (FZED41G), disk sector 55, tool. FZED 19 = 32-39 picks it; Render (CC118) runs it.
+; ---------- EXT module 3: WAVETABLE (FZED41G; RH6: was 4), disk sector 54, tool. FZED 19 = 24-31 picks it; Render (CC118) runs it.
 ; Builds a wavetable in the edit voice: FRAMES single cycles of LENGTH words, each a step further along a sweep, then
 ; sets the voice up to scan it with the loop window (loop 0 = frame 1, Window Snap = WHOLE FRAMES) and sets Stretch to
 ; match: with 2, 4 or 8 segments every segment starts on a frame and each loop is one frame (Grain = 128 x segments /
@@ -14,7 +14,7 @@
 ; table (else TOO BIG: start from NEW VOICE). A voice sharing its memory lets go of it first.
 ; Every frame starts at phase 0 (all start at 0 going up but PWM, which starts high), so the window can move between
 ; frames at the loop's end without a click of its own; 8 guard words after the last frame continue its cycle.
-    dw 0x4037
+    dw 0x4036
     db 1, 2                 ; ABI 1, tool
     dw LOWEND,HIGHEND,LVEND,XTEND
     db 'EXT WAVETABLE',0
@@ -89,7 +89,7 @@ WTRUN:              ; si = the edit voice (raw CC values are 0-127)
     call INIT
     mov byte [WNEW],1
     mov si,[WTV]
-.hv: cmp word [0xD7BE],0x4037  ; the FZ calls' stack must not have reached this module
+.hv: cmp word [0xD7BE],0x4036  ; the FZ calls' stack must not have reached this module
     jnz .big
     mov bx,[si]             ; the stored wave start / end
     mov cx,[si+2]
@@ -373,5 +373,5 @@ WSIN:               ; ax = phase -> ax = sine (Q15), interpolated (as the wave o
 %error EXT module 4 reaches the top of its sector
 %endif
     times 0x3BE-($-$$) db 0
-    dw 0x4037
+    dw 0x4036
     times 0x400-($-$$) db 0x5a

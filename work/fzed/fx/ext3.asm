@@ -1,4 +1,4 @@
-; ---------- EXT module 3: BACKUP (FZED41G), disk sector 54, tool. FZED 19 = 24-31 picks it; Render (CC118) runs it.
+; ---------- EXT module 2: BACKUP (RH6: was 3), disk sector 53, tool. FZED 19 = 16-23 picks it; Render (CC118) runs it.
 ; Copies the edit voice into the first empty voice WITH ITS OWN COPY OF THE SAMPLE (Copy Voice shares the sample, so a
 ; render changes both). The edit voice stays the edit voice: render on it, and if the result is no good, pick the
 ; backup with Voice Select. The FZ shows BACKUP IN V05 (the backup's voice number), or why there is none.
@@ -6,7 +6,7 @@
 ; and its last word. The backup's voice data (start, end, the eight loops, envelopes and the rest) is the edit voice's
 ; as it is now, with every address that lies in that range moved to the copy; any outside it are left as they are.
 ; Uses the FZ's allocate call (117) as live FX do; the copy goes through LVBUF 128 words at a time.
-    dw 0x4036
+    dw 0x4035
     db 1, 2                 ; ABI 1, tool
     dw LOWEND,HIGHEND,LVEND,XTEND
     db 'EXT BACKUP',0
@@ -167,5 +167,5 @@ BKADJ:              ; the address dword at [bx] (21 bits, flags above): if in BK
 %error EXT module 3 reaches the top of its sector
 %endif
     times 0x3BE-($-$$) db 0
-    dw 0x4036
+    dw 0x4035
     times 0x400-($-$$) db 0x5a

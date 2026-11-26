@@ -26,7 +26,7 @@ def winread(c):     # as ext41.py: DS = 1000h reads the sample window (LVRD)
 g = boot(); c = g['c']; winread(c); EV = c.rd16(0xe04)
 c.wr16(EV + 0x10, 0)
 for n, v in zip((113, 114, 115, 116), (3 * 32 + 8, 127, 0, 127)): cc(g, n, v)   # MORPH, 64 frames, 82 words
-fzed(g, 19, 32); render(g)
+fzed(g, 19, 24); render(g)
 L = 82; NF = 64
 d32 = lambda a: c.rd16(a) | (c.rd16(a + 2) << 16)
 st = d32(EV + 8) & 0x1fffff
