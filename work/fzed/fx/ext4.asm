@@ -145,14 +145,13 @@ WTRUN:              ; si = the edit voice (raw CC values are 0-127)
     mov [si+0x36],cx
     mov ax,[WTTOT]
     mov dx,[WTTOT+2]
-    sub ax,8
-    sbb dx,0
-    add ax,[WST]
+    add ax,[WST]            ; RH11: play end = the table's end, its 8 guard words included: a loop ending exactly on
+                            ; the play end stopped the note on the FZ (the last frame at Window Position 127)
     adc dx,[WST+2]
     mov cx,[si+0xe]
     and cx,0xffe0
     or dx,cx
-    mov [si+0xc],ax         ; play end = start + frames x length (Stretch's segments fall on frames)
+    mov [si+0xc],ax         ; play end = start + frames x length + 8 (Stretch's segments within 7 words of a frame)
     mov [si+0xe],dx
     mov word [si+0x64],1022
     mov word [si+0xae],0x155d       ; highest key 93, lowest 21

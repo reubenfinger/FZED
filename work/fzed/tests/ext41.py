@@ -235,11 +235,11 @@ for ty, fr, ln, sw, label in ((0, 127, 60, 127, 'SYNC 64 x 327'), (1, 70, 30, 90
     bad = [i for i in range(len(exp)) if got[i] != exp[i]]
     L2 = [x[2].rstrip() for x in c.log if x[0] == 'lcd']
     check(not bad and L2[-1] == 'TABLE READY', 'WAVETABLE %s: every word matches the model (%d words, %d differ%s; %r)' % (label, len(exp), len(bad), (' first %d: %04X want %04X' % (bad[0], got[bad[0]], exp[bad[0]])) if bad else '', L2[-1:]))
-    voiceok = (d32(EV + 0x14) & 0x1fffff) == st and (d32(EV + 0x34) & 0x1fffff) == st + L and (d32(EV + 0xc) & 0x1fffff) == st + nf * L \
+    voiceok = (d32(EV + 0x14) & 0x1fffff) == st and (d32(EV + 0x34) & 0x1fffff) == st + L and (d32(EV + 0xc) & 0x1fffff) == st + nf * L + 8 \
         and c.rd16(EV + 0x12) == 0 and c.rd16(EV + 0xb0) == key and c.m[0xC350 + c.m[0x83C7]] == 127
     N = 2 + ((c.m[0x83FA] * 14) >> 8)
     check(voiceok and N == 8 and c.m[0x83FC] == 128 * 8 // nf - 1 and c.m[0x83FD] == 0 and c.m[0x83FE] == 0 and not c.m[0x83FF] & 0x80,
-          'the voice: loop 0 = frame 1, play range = the %d frames, key %d, Window Snap whole frames; Stretch 8 segments, Grain %d, Snap and crossfade off' % (nf, key, c.m[0x83FC]))
+          'the voice: loop 0 = frame 1, play range = the %d frames and the 8 guard words, key %d, Window Snap whole frames; Stretch 8 segments, Grain %d, Snap and crossfade off' % (nf, key, c.m[0x83FC]))
     if ty == 3:
         pos = []
         cc(g, 10, 3); cc(g, 11, 96)         # FZED41I: WHOLE FRAMES (jumps; GLIDE, which WAVETABLE sets, is glide41.py's)
@@ -249,10 +249,10 @@ for ty, fr, ln, sw, label in ((0, 127, 60, 127, 'SYNC 64 x 327'), (1, 70, 30, 90
         check(pos[0] == (0, L) and pos[2] == ((nf - 1) * L, L) and pos[1][0] % L == 0 and pos[1][1] == L and abs(pos[1][0] // L - 64 * (nf - 1) / 127) <= 1, 'Window Position 0 / 64 / 127 moves the loop to whole frames %s' % pos)
     if ty == 0:
         fzed(g, 9, 127); g['run'](c, g['u'], 3_000_000)
-        seg = nf * L // 8
+        seg = (nf * L + 8) // 8             # RH11: the play range takes in the 8 guard words
         loops = [((d32(EV + 0x14 + 4 * i) & 0x1fffff) - st, (d32(EV + 0x34 + 4 * i) & 0x1fffff) - (d32(EV + 0x14 + 4 * i) & 0x1fffff)) for i in range(8)]
-        check(all(o % L == 0 and n == L for o, n in loops) and sorted(o for o, _ in loops) == [i * seg for i in range(8)],
-              'Stretch on: its 8 loops each one whole frame, at the start of each segment (%s)' % loops[:3])
+        check(all(o % L <= 7 and n == L for o, n in loops) and sorted(o for o, _ in loops) == [i * seg for i in range(8)] and max(o + n for o, n in loops) < nf * L + 8,
+              'Stretch on: its 8 loops each one frame long, at the start of each segment (within 7 words of a frame), none ending on the play end (%s)' % loops[:3])
 g = boot(); c = g['c']; winread(c)
 for n, v in zip((113, 114, 115, 116), (8, 127, 127, 127)): cc(g, n, v)
 fzed(g, 19, 24); render(g)

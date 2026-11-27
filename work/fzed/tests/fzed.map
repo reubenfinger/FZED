@@ -2341,30 +2341,30 @@ Real              Virtual           Name
             F935              D535  WTRUN.ok
             F93A              D53A  WTRUN.fr
             F95E              D55E  WTRUN.gd
-            F9EF              D5EF  WTRUN.od
-            F9FA              D5FA  WTRUN.ms
-            FA25              D625  WTRUN.sn
-            FA44              D644  WTKEY
-            FA45              D645  WTL0
-            FA47              D647  WTFRM
-            FA52              D652  WTFRM.k
-            FA5D              D65D  WTFRM.ch
-            FA70              D670  WTFRM.c
-            FA74              D674  WTFRM.w
-            FAC0              D6C0  WTFRM.r
-            FAC1              D6C1  WTVAL
-            FAE1              D6E1  WTVAL.t1
-            FAFD              D6FD  WTVAL.r
-            FAFE              D6FE  WTVAL.t2
-            FB19              D719  WTVAL.fl
-            FB25              D725  WTVAL.f1
-            FB31              D731  WTVAL.f2
-            FB35              D735  WTVAL.mo
-            FB62              D762  WTSH
-            FB78              D778  WTSH.r
-            FB79              D779  WTSH.tr
-            FB83              D783  WTSH.t1
-            FB89              D789  WSIN
+            F9E9              D5E9  WTRUN.od
+            F9F4              D5F4  WTRUN.ms
+            FA1F              D61F  WTRUN.sn
+            FA3E              D63E  WTKEY
+            FA3F              D63F  WTL0
+            FA41              D641  WTFRM
+            FA4C              D64C  WTFRM.k
+            FA57              D657  WTFRM.ch
+            FA6A              D66A  WTFRM.c
+            FA6E              D66E  WTFRM.w
+            FABA              D6BA  WTFRM.r
+            FABB              D6BB  WTVAL
+            FADB              D6DB  WTVAL.t1
+            FAF7              D6F7  WTVAL.r
+            FAF8              D6F8  WTVAL.t2
+            FB13              D713  WTVAL.fl
+            FB1F              D71F  WTVAL.f1
+            FB2B              D72B  WTVAL.f2
+            FB2F              D72F  WTVAL.mo
+            FB5C              D75C  WTSH
+            FB72              D772  WTSH.r
+            FB73              D773  WTSH.tr
+            FB7D              D77D  WTSH.t1
+            FB83              D783  WSIN
 
 ---- Section ov11 -------------------------------------------------------------
 
@@ -2389,25 +2389,25 @@ Real              Virtual           Name
             FD37              D537  W2RUN.ok
             FD3C              D53C  W2RUN.fr
             FD60              D560  W2RUN.gd
-            FDF1              D5F1  W2RUN.od
-            FDFC              D5FC  W2RUN.ms
-            FE27              D627  W2RUN.sn
-            FE46              D646  W2KEY
-            FE47              D647  W2L0
-            FE49              D649  W2FRM
-            FE54              D654  W2FRM.k
-            FE5F              D65F  W2FRM.ch
-            FE72              D672  W2FRM.c
-            FE76              D676  W2FRM.w
-            FEC2              D6C2  W2FRM.r
-            FEC3              D6C3  W2VAL
-            FED8              D6D8  W2VAL.s
-            FEF6              D6F6  W2VAL.t1
-            FF1D              D71D  W2VAL.t2
-            FF44              D744  W2VAL.ch
-            FF61              D761  W2Y
-            FF63              D763  W2X
-            FF65              D765  W2SIN
+            FDEB              D5EB  W2RUN.od
+            FDF6              D5F6  W2RUN.ms
+            FE21              D621  W2RUN.sn
+            FE40              D640  W2KEY
+            FE41              D641  W2L0
+            FE43              D643  W2FRM
+            FE4E              D64E  W2FRM.k
+            FE59              D659  W2FRM.ch
+            FE6C              D66C  W2FRM.c
+            FE70              D670  W2FRM.w
+            FEBC              D6BC  W2FRM.r
+            FEBD              D6BD  W2VAL
+            FED2              D6D2  W2VAL.s
+            FEF0              D6F0  W2VAL.t1
+            FF17              D717  W2VAL.t2
+            FF3E              D73E  W2VAL.ch
+            FF5B              D75B  W2Y
+            FF5D              D75D  W2X
+            FF5F              D75F  W2SIN
 
 ---- Section ov12 -------------------------------------------------------------
 

@@ -1,5 +1,10 @@
 # FZED Menu Revision
 
+## Last Frame Kept Playing (next, RH11)
+
+- FZED: **a wavetable's last frame no longer stops the note.** With the window on the last frame (Window Position 127, or an LFO sweeping to the top), its loop ended exactly on the voice's play end and the FZ ended the note there (found on hardware: dead at 127, fine at 120). WAVETABLE, WAVETABLE 2 and ADDITIVE now take the table's 8 guard words into the play range, so every frame's loop ends before it. Stretch's segments on such a table now start within 7 words of a frame instead of on it.
+- Emulator: `ext41.py` (play end and Stretch loops), wavetable tests rerun.
+
 ## Faster Window From The Matrix (next, RH10)
 
 - FZED: **the mod matrix moves the loop window every time its value changes** (its pass is about every 1.2 ms), instead of in the 15 ms turns the slow destinations share. Frames glide then follows a fast LFO closely instead of catching up in jumps. The other slow destinations (sample start, loop start / end, LFO 2 rate / depth, FX) keep their pacing. 7 bytes; the high resident area has 10 left.
