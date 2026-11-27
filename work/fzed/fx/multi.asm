@@ -374,6 +374,7 @@ CHSET:              ; FZED41R / RH2 (from CHOPCC in fzed.asm; in the high area a
     ret
 UNN: db 1                   ; RH7 UNISON: layers (1 off, 2, 4, 8)
 UNDT: db 0                  ; FZED 36 DETUNE: fine steps (1/256 semitone) of the outermost layer
+UNBD: db 0                  ; RH9: the UNISON band that is on (0 off; fx/ov13.asm)
 UNCH: db 0                  ; its MIDI channel (its areas in the bank)
 UNSV: dw 0                  ; DUAL: layer 2's own voice (not a copy: not synced), else 0
 UNBK: dw 0                  ; its bank

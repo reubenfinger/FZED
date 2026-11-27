@@ -28,23 +28,22 @@ CHMZ:               ; CC97's 'CHOP EVEN' / 'EVEN+ZERO' / 'TRANSIENT' (ZCM 0-2)
     jmp NMSG
 
 UNBLD:
-    xor ah,ah
-    mov cl,26
-    div cl                  ; band 0-4
-    cmp al,4
-    jb .b4
-    mov al,4
-.b4: mov bx,UNBT
-    xlat                    ; N (DUAL: 82h)
-    mov ah,[UNN]
-    cmp word [UNSV],0
-    jz .sv
-    or ah,0x80
-.sv: cmp al,ah
+    mov ah,15
+    mul ah
+    shl ax,1
+    mov al,ah               ; band 0-14 (value x 15 / 128: the Gills' 15 steps)
+    cmp al,[UNBD]
     jz .r                   ; (a pot moving within one band)
     push ax
     call UNOFF
     pop ax
+    xor ah,ah
+    mov si,ax
+    mov ah,[si+UNIT]
+    mov [UNSM],ah           ; the interval for the upper layers (semitones)
+    mov [UNBW],al
+    mov bx,UNBT
+    xlat                    ; N (DUAL: 82h)
     mov [UNDU],al
     and al,0x7f
     cmp al,2
@@ -131,8 +130,15 @@ UNBLD:
     mov [bx+di+2],al
     mov al,[si+0xaf]
     mov [bx+di+0x42],al
-    mov al,[si+0xb0]
-    mov [bx+di+0x102],al
+    mov al,[si+0xb0]        ; keynote centre: the voice's original key, less the interval on the upper layers (DUAL's
+    mov cl,dl               ; layer 2; layers N/2 .. N-1): the ROM plays note - centre from the voice's own key
+    shl cl,1
+    cmp cl,[UNNW]
+    jb .ce
+    or dl,dl
+    jz .ce
+    sub al,[UNSM]
+.ce: mov [bx+di+0x102],al
     mov byte [bx+di+0x82],0x7f
     mov byte [bx+di+0xc2],0
     mov al,[UNCT]
@@ -157,13 +163,32 @@ UNBLD:
     call BKPLAY
     call UNSYNC
     pop dx
+    mov al,[UNBW]
+    mov [UNBD],al           ; this band is on
+    push ds
+    pop es
+    cld
+    mov di,S_UN+7
+    mov si,S_UDU
+    cmp word [UNSV],0
+    jnz .m1
     mov al,dl
     add al,'0'
-    mov [S_UN+7],al
+    stosb
+    jmp short .m2
+.m1: movsw
+    movsw
+.m2: mov al,' '
+    stosb
+    xor bx,bx
+    mov bl,[UNBW]
+    mov bl,[bx+UNIN]
+    lea si,[bx+S_UIN]
+    movsw
+    movsw
+    xor al,al
+    stosb
     mov bx,S_UN
-    cmp word [UNSV],0
-    jz .m
-    mov bx,S_UDU
 .m: jmp NMSG
 .np: call UNDEL             ; DUAL with no voice picked: the edit voice's area out again (UNN is 1: no voice emptied); nothing made
     mov bx,S_UNP
@@ -212,6 +237,7 @@ UNOFF:              ; the stack (if any) away: its areas out of the bank, its co
     jb .r
     call UNDEL
     mov byte [UNN],1
+    mov byte [UNBD],0
     mov word [UNSV],0
     mov byte [BKON],0
     mov al,[DEASV]
@@ -277,7 +303,13 @@ UNDEL:              ; channel UNCH's areas out of bank UNBK; their voices that a
 .sd: pop di
     jmp .e
 .r: ret
-UNBT: db 1,0x82,2,4,8          ; RH8: band -> layers (82h: DUAL)
+; RH9: 15 bands: OFF, DUAL, DUAL SUB / 5TH / MIN7 / MAJ7 / OCT, 2, 4, 4 SUB / 5TH / MIN7 / MAJ7 / OCT, MONO
+UNBT: db 1,0x82,0x82,0x82,0x82,0x82,0x82,2,4,4,4,4,4,4,8   ; band -> layers (82h: DUAL)
+UNIT: db 0,0,-12,7,10,11,12,0,0,-12,7,10,11,12,0          ; band -> the upper layers' interval, semitones
+UNIN: db 0,0,4,8,12,16,20,0,0,4,8,12,16,20,0              ; band -> its name in S_UIN
+S_UIN: db '    SUB 5TH MIN7MAJ7OCT '
+UNSM: db 0
+UNBW: db 0
 UNDU: db 0
 UNCT: db 0
 UNNW: db 0
@@ -286,7 +318,7 @@ S_ZM: db 'CHOP EVEN      ',0,'CHOP EVEN+ZERO ',0,'CHOP TRANSIENT ',0
 S_UN: db 'UNISON 0       ',0
 S_UOF: db 'UNISON OFF',0
 S_UBK: db 'UNISON: BANK ON',0
-S_UDU: db 'UNISON DUAL',0
+S_UDU: db 'DUAL'
 S_UNP: db 'DUAL: NO PICK',0
 %if ($-$$) > 0x3A0
 %error unison overlay reaches the top of its sector (keep D7A0h-D7BDh clear for the FZ-call stack margin)

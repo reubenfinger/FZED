@@ -1,5 +1,11 @@
 # FZED Menu Revision
 
+## Unison Intervals (next, RH9)
+
+- FZED: **UNISON intervals**: DUAL and 4 each get SUB, 5TH, MIN7, MAJ7 and OCT steps (15 steps in all). The interval moves DUAL's picked voice, or the upper two layers of 4, through the bank area's key centre; the voices themselves are not changed.
+- Gills Core 138: the UNISON pot's 15 steps.
+- Emulator: `unison.py` checks each interval's key centres and messages.
+
 ## Unison Level, Dual Step (next, RH8)
 
 - FZED: **UNISON has five steps**: OFF / DUAL / 2 / 4 / MONO. RH7 played a picked voice as layer 2 whenever one had ever been picked, so UNISON 2 could leave its second layer unfiltered; DUAL is now its own step (DUAL: NO PICK with no voice picked) and 2 is always two copies.

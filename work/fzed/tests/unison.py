@@ -1,4 +1,4 @@
-# RH7 / RH8: FZED 35 UNISON (OFF / DUAL / 2 / 4 / 8 = MONO, 5 bands of 26) and FZED 36 DETUNE (the unison overlay, sector 57), UNSYNC in the main loop.
+# RH7-RH9: FZED 35 UNISON (RH9: 15 bands, value x 15 / 128: OFF, DUAL, DUAL SUB/5TH/MIN7/MAJ7/OCT, 2, 4, 4 SUB/5TH/MIN7/MAJ7/OCT, MONO) and FZED 36 DETUNE (the unison overlay, sector 57), UNSYNC in the main loop.
 #   python3 unison.py BUILD   (a folder holding fzedflat.bin and fzed.map)
 # Checks: the FZED bank gets one area a layer on this channel, generator masks 55h/AAh (2), 11h.. (4), 01h.. (8); the
 # copies are the edit voice but for the pitch (+ their detune) and stay so after an edit (main loop); DETUNE spreads
@@ -49,7 +49,7 @@ check(c.m[UNN] == 8 and [x[1] for x in a] == [1 << i for i in range(8)] and a[0]
 check(dt == [25, -25, 50, -50, 75, -75, 100] and all(r16(p + 0x74) == (r16(E + 0x74) + d) & 0xffff for p, d in zip(cp, dt)), 'DETUNE spread +-25/50/75/100: %s' % dt)
 check(nsound() == n0 + 7, 'the UNISON 2 copy went when 8 replaced it: 7 copies with sound (%d voices, %d before)' % (nsound(), n0))
 
-fzed(g, 35, 90); loop(); B, a = areas()
+fzed(g, 35, 72); loop(); B, a = areas()
 check(all(c.m[B + 0x1c2 + i] == 160 for i, _, _ in a), 'UNISON 4: level cut 160')
 check(c.m[UNN] == 4 and [x[1] for x in a] == [0x11, 0x22, 0x44, 0x88], 'UNISON 4: masks 11h 22h 44h 88h (%s)' % [hex(x[1]) for x in a])
 cp = [p for _, _, p in a if p != E]
@@ -63,7 +63,7 @@ check(bytes(c.m[E:E + 0xc0]) == ev, 'OFF: the edit voice as it was')
 check(nsound() == n0, 'OFF: as many voices with sound as before UNISON')
 
 # DUAL with no voice picked: refused, nothing made
-c.m[0x8004] = 0xff; c.log.clear(); fzed(g, 35, 30); loop(); B, a = areas()
+c.m[0x8004] = 0xff; c.log.clear(); fzed(g, 35, 12); loop(); B, a = areas()
 check(a == [] and c.m[UNN] == 1 and any('DUAL: NO PICK' in x for x in lcd()), 'DUAL, no pick: DUAL: NO PICK, no areas (%s)' % lcd()[-2:])
 fzed(g, 35, 0); loop()
 # DUAL: a second voice with sound, picked
@@ -72,14 +72,39 @@ for n in range(63, 0, -1):
     if r16(V(n) + 0x10) == 0: P = V(n); break
 c.m[P:P + 0xc0] = c.m[E:E + 0xc0]; c.m[P + 0x74] ^= 0x40; c.m[P + 0x76] = 0x11; c.m[VPICK] = (P - 0x2288) // 0xc0
 pv = bytes(c.m[P:P + 0xc0])
-c.log.clear(); fzed(g, 35, 30); loop(); B, a = areas()
+c.log.clear(); fzed(g, 35, 12); loop(); B, a = areas()
 check(c.m[UNN] == 2 and [x[2] for x in a] == [E, P] and r16(UNSV) == P, 'DUAL: layer 2 is the picked voice V%02d (%s)' % (c.m[VPICK] + 1, lcd()[-2:]))
-check(any('UNISON DUAL' in x for x in lcd()), 'message UNISON DUAL')
+check(any(x.startswith('UNISON DUAL') for x in lcd()), 'message UNISON DUAL (%s)' % lcd()[-2:])
 fzed(g, 35, 60); loop(); B, a = areas()
 check(c.m[UNN] == 2 and r16(UNSV) == 0 and P not in [x[2] for x in a] and bytes(c.m[P:P + 0xc0]) == pv, 'DUAL -> UNISON 2: two copies of the edit voice, the picked voice left alone')
-fzed(g, 35, 30); loop(); B, a = areas()
+fzed(g, 35, 12); loop(); B, a = areas()
 fzed(g, 36, 30); c.m[E + 0x76] ^= 0x0f; loop()
 check(bytes(c.m[P:P + 0xc0]) == pv, 'DUAL: the picked voice is not synced or detuned')
 fzed(g, 35, 0); loop(); B, a = areas()
 check(a == [] and bytes(c.m[P:P + 0xc0]) == pv and r16(UNSV) == 0, 'DUAL OFF: areas gone, the picked voice kept')
+
+# RH9 intervals: bcent = the voice's original key less the interval on the upper layers
+def cents(): B, a = areas(); return [c.m[B + 0x102 + i] for i, _, _ in a], [p for _, _, p in a]
+K = c.m[E + 0xb0]
+c.log.clear(); fzed(g, 35, 115); loop(); ce, ps = cents()
+check(c.m[UNN] == 4 and ce == [K, K, K - 12, K - 12] and any('UNISON 4 OCT' in x for x in lcd()), '4 OCT: layers 3-4 an octave up (centres %s, key %d; %s)' % (ce, K, lcd()[-2:]))
+fzed(g, 35, 98); loop(); ce, ps = cents()
+check(ce == [K, K, K - 10, K - 10] and any('UNISON 4 MIN7' in x for x in lcd()), '4 MIN7: +10 (%s)' % ce)
+fzed(g, 35, 89); loop(); ce, ps = cents()
+check(ce == [K, K, K - 7, K - 7], '4 5TH: +7 (%s)' % ce)
+fzed(g, 35, 106); loop(); ce, ps = cents()
+check(ce == [K, K, K - 11, K - 11], '4 MAJ7: +11 (%s)' % ce)
+fzed(g, 35, 81); loop(); ce, ps = cents()
+check(ce == [K, K, K + 12, K + 12], '4 SUB: an octave down (%s)' % ce)
+fzed(g, 35, 64); loop(); ce, ps = cents()
+check(c.m[UNN] == 2 and ce == [K, K], '2: no interval (%s)' % ce)
+fzed(g, 35, 123); loop(); ce, ps = cents()
+check(c.m[UNN] == 8 and ce == [K] * 8, 'MONO: no interval')
+c.m[VPICK] = (P - 0x2288) // 0xc0; PK = c.m[P + 0xb0]
+c.log.clear(); fzed(g, 35, 21); loop(); ce, ps = cents()
+check(ps == [E, P] and ce == [K, PK + 12] and any('UNISON DUAL SUB' in x for x in lcd()), 'DUAL SUB: the picked voice an octave down (%s; %s)' % (ce, lcd()[-2:]))
+fzed(g, 35, 29); loop(); ce, ps = cents()
+check(ps == [E, P] and ce == [K, PK - 7], 'DUAL 5TH: the picked voice a fifth up (%s)' % ce)
+fzed(g, 35, 0); loop(); B, a = areas()
+check(a == [] and bytes(c.m[P:P + 0xc0]) == pv, 'OFF after the intervals: areas gone, the picked voice untouched')
 print('ALL PASS' if ok else 'SOME FAIL')

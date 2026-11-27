@@ -192,7 +192,9 @@ The signed controls use raw 64 as neutral; below and above it request opposite d
 
 ### Unison And Dual
 
-**Unison** (FZED 35; on the Gills, Core 137, ENV STEPS P10) stacks the edit voice on several generators, so every note plays it more than once: **OFF** 0-25, **DUAL** 26-51 (below), **2** 52-77 (4 notes at once), **4** 78-103 (2 notes), **MONO** 104-127 (all 8 generators on one note). FZED copies the edit voice into empty voices (the copies share its sample memory, as COPY VOICE does), puts one area for each layer on this MIDI channel in the FZED bank, each on its own generators, and plays that bank. The FZ shows UNISON 2 / 4 / 8.
+**Unison** (FZED 35; on the Gills, Core 138, ENV STEPS P10, 15 steps) stacks the edit voice on several generators, so every note plays it more than once: **OFF**, **DUAL** (below), **DUAL SUB / 5TH / MIN7 / MAJ7 / OCT**, **2** (4 notes at once), **4** (2 notes), **4 SUB / 5TH / MIN7 / MAJ7 / OCT**, **MONO** (all 8 generators on one note). Over MIDI, the step is the value x 15 / 128 (OFF 0-8, DUAL 9-17 ... MONO 120-127).
+
+**Intervals** move the second voice of DUAL, or the upper two layers of 4, by SUB (an octave down), 5TH (+7 semitones), MIN7 (+10), MAJ7 (+11) or OCT (+12), through the bank area's key centre, so neither voice is changed. 4 with an interval is a detuned pair on the note and a detuned pair on the interval. Notes far above a voice's original key are held at 36 semitones above it by the FZ. FZED copies the edit voice into empty voices (the copies share its sample memory, as COPY VOICE does), puts one area for each layer on this MIDI channel in the FZED bank, each on its own generators, and plays that bank. The FZ shows UNISON 2 / 4 / 8.
 
 **Detune** (FZED 36, 0-127; Gills LFO 2 P8) spreads the copies' pitch: the outermost layer is up to about 50 cents from the edit voice (127 = 127/256 of a semitone), the others in between, half up and half down. Detune 0 is a plain stack, louder and fuller but not chorused.
 
@@ -772,7 +774,7 @@ The **Values** column gives the value FZED receives and what it means. Where a r
 | Res Offset | P72 mod wheel, P79 foot, P86 aftertouch | 0-127 (DEPTH 000 to DEPTH 127) |
 | Glide Mode | P6 | GLIDE OFF 0-42; LEGATO 43-85; ALWAYS 86-127 |
 | Bend Range | FZED 25 | 0-127 (the FZ's bend depth; 127 about 16 semitones) |
-| Unison | FZED 35 | OFF 0-25; DUAL 26-51; 2 52-77; 4 78-103; MONO (8) 104-127 |
+| Unison | FZED 35 | step = value x 15 / 128: OFF, DUAL, DUAL SUB, 5TH, MIN7, MAJ7, OCT, 2, 4, 4 SUB, 5TH, MIN7, MAJ7, OCT, MONO (8) |
 | Detune | FZED 36 | 0-127 (outermost layer 0 to about 50 cents) |
 
 ### A.8 Mod matrix
