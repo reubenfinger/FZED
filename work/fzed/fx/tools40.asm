@@ -149,17 +149,20 @@ STRP:               ; PERF40F parameters 88 (STRETCH control 0-9) and 89 (its va
     or byte [SOL+2],-1
     ret
 .dis: jmp DISSET
-.fx: mov ah,[EXTS]           ; RH6: 34 RENDER FX: Render, as CC118, but the CC112 effect whatever EXT module is chosen
-    push ax                 ; (the Gills' FX page; its FX EXT page keeps CC118, which runs the module)
-    mov byte [EXTS],0
-    call FXCC.go
-    pop ax
-    mov [EXTS],ah
+.fx: push word [EXTS]         ; RH6: 34 RENDER FX: Render, as CC118, but the CC112 effect whatever EXT module is chosen
+    mov byte [EXTS],0       ; (the Gills' FX page; its FX EXT page keeps CC118, which runs the module). (The word's
+    call FXCC.go            ; second byte is code, put back as it was.)
+    pop word [EXTS]
     ret
-.ad: cmp bl,14               ; RH4: 30-33 EXT ADDITIVE P6-P9: DISSET keeps them at ADP (DISH + 10-13)
-    jz .fx
+.ad: cmp bl,14               ; RH4: 30-33 EXT ADDITIVE P6-P9: DISSET keeps them at ADP (DISH + 10-13);
+    jz .fx                  ; 34 RENDER FX; RH7: 35 UNISON, 36 DETUNE
+    jb .a1
+    cmp bl,17
     jae .s10
-    cmp bl,10
+    push word UNSET          ; RH7: 35 UNISON, 36 DETUNE (the unison overlay, disk sector 57)
+    push word 0x4039
+    jmp OVCALL
+.a1: cmp bl,10
     jae .dis
 .s10: cmp byte [STSEL],11     ; PERF40H: 11 voice pick, 12 voice select, 13 exit: tools overlay 3
     jb .s

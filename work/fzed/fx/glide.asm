@@ -116,7 +116,7 @@ GLSTEP:             ; main loop: the window still on its way: the next step when
     call WRITEL
     pop ax
     mov [cs:LASTCC],al
-.r: ret
+.r: jmp UNSYNC             ; RH7: then the UNISON layers (fx/multi.asm)
 ; ---------- FZED41O (in the low area for room)
 NEWTK:              ; FZED41O: a finished recording (si = the voice): mode NORMAL, the sustain / end loops off and all 8
     mov word [si+0x10],0x1d7    ; loops on the new take's start .. end, so nothing from the voice's last sample remains:

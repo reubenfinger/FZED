@@ -363,19 +363,53 @@ CHSET:              ; FZED41R / RH2 (from CHOPCC in fzed.asm; in the high area a
     mov ah,3
     call SCL
     mov [ZCM],ah
-    mov al,ah
-    mov ah,16
-    mul ah
-    add ax,S_ZM
-    mov bx,ax
-    jmp NMSG
+    push word CHMZ          ; RH7: its LCD message from the unison overlay (disk sector 57), for room
+    push word 0x4039
+    jmp OVCALL
 .c99:     shr al,5
     mov cl,al
     mov al,4
     shl al,cl
     mov [CHN],al            ; (RH2: no LCD message for the slice count, for room; the Gills shows it)
     ret
-S_ZM: db 'CHOP EVEN      ',0,'CHOP EVEN+ZERO ',0,'CHOP TRANSIENT ',0
+UNN: db 1                   ; RH7 UNISON: layers (1 off, 2, 4, 8)
+UNDT: db 0                  ; FZED 36 DETUNE: fine steps (1/256 semitone) of the outermost layer
+UNCH: db 0                  ; its MIDI channel (its areas in the bank)
+UNSV: dw 0                  ; DUAL: layer 2's own voice (not a copy: not synced), else 0
+UNBK: dw 0                  ; its bank
+UNE: dw 0                   ; the edit voice the stack was made from (kept here: the overlay is reloaded from disk)
+UNSYNC:             ; RH7, main loop (after GLSTEP): each copy layer = the edit voice again but for its name, whose
+    cmp byte [UNN],2        ; last word holds its detune (fine steps: the unison overlay works them out), added to its
+    jb .r                   ; pitch (semitones x 256 + fine)
+    mov si,[UNE]            ; the voice the stack was made from
+    mov bx,[UNBK]
+    xor di,di
+.e: cmp di,[bx]
+    jae .r
+    mov al,[bx+di+0x142]
+    cmp al,[UNCH]
+    jnz .n
+    push di
+    shl di,1
+    mov ax,[bx+di+0x202]
+    pop di
+    cmp ax,si
+    jz .n
+    cmp ax,[UNSV]
+    jz .n
+    pusha
+    mov di,ax
+    push ds
+    pop es
+    cld
+    mov cx,0xb2
+    rep movsb
+    mov ax,[di+0xbe-0xb2]
+    add [di+0x74-0xb2],ax
+    popa
+.n: inc di
+    jmp .e
+.r: ret
 BKADDO: push word BKADD      ; FZED41N: CC15's bank placement runs from the start-up overlay (disk sector 51; fx/ov7.asm)
     push word 0x4033        ; for room: loaded when needed (live FX are released for it, as for CHOP; refused while capturing)
     jmp OVCALL
@@ -406,10 +440,8 @@ BKKEY:              ; bank mode: CC66 highest, CC67 lowest, CC68 original key of
     jae .h1
     mov ah,al
 .h1: mov cl,al
-    add cl,36
-    jnc .h0
-    mov cl,127
-.h0: cmp cl,127
+    add cl,36               ; (al <= 127: no carry)
+    cmp cl,127
     jbe .h2
     mov cl,127
 .h2: cmp ah,cl

@@ -433,6 +433,12 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#e5eeea;padding:16px;
 </tbody>
 </table>
 <p>The signed controls use raw 64 as neutral; below and above it request opposite directions. The FZED browser editor displays the FZ scaling, twice the offset from 64, rather than an unsigned 0-127 percentage. The raw-0 edge displays -128; that edge remains a known range caveat rather than a newly calibrated musical unit. Large sensitivities can make particular keys or velocities nearly silent. Use moderate values when checking for missed notes.</p>
+<h3>Unison And Dual</h3>
+<p><strong>Unison</strong> (FZED 35; on the Gills, Core 136, ENV STEPS P10) stacks the edit voice on several generators, so every note plays it more than once: <strong>OFF</strong> 0-31, <strong>2</strong> 32-63 (4 notes at once), <strong>4</strong> 64-95 (2 notes), <strong>MONO</strong> 96-127 (all 8 generators on one note). FZED copies the edit voice into empty voices (the copies share its sample memory, as COPY VOICE does), puts one area for each layer on this MIDI channel in the FZED bank, each on its own generators, and plays that bank. The FZ shows UNISON 2 / 4 / 8.</p>
+<p><strong>Detune</strong> (FZED 36, 0-127; Gills LFO 2 P8) spreads the copies' pitch: the outermost layer is up to about 50 cents from the edit voice (127 = 127/256 of a semitone), the others in between, half up and half down. Detune 0 is a plain stack, louder and fuller but not chorused.</p>
+<p>The copies follow the edit voice: FZED copies the edit voice's settings into them in its main loop, so filter, envelope, loop and wavetable-window changes reach every layer and the layers scan a wavetable together. Only their pitch (plus Detune) and name differ. The copies are named as the edit voice; the last two characters of a copy's name hold its detune.</p>
+<p><strong>Dual</strong>: pick a voice with Voice Pick (do not select it), then set Unison to 2. The second layer is the picked voice instead of a copy, so two different voices play on every note (4 notes at once). The picked voice keeps its own settings and is not detuned or synced.</p>
+<p><strong>Off</strong> (Unison 0-31) removes the areas, empties the copies and goes back to voice mode on the edit voice. The edit voice and a dual voice are left as they were. Unison is refused in a bank of your own (UNISON: BANK ON) and while recording; this channel's own area in the FZED bank, if it has one, is replaced. With fewer empty voices than layers, fewer layers are made. Save the copies as voices only if you want them; Unison Off empties them.</p>
 <h2 id="section-12">11. Controllers</h2>
 <p>Select Mod Wheel, Foot or Aftertouch. Each view provides the same seven destinations:</p>
 <table>
@@ -1446,6 +1452,10 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#e5eeea;padding:16px;
 <td>Fixed in RH1: a new recording now resets the voice's loops to the new take. On older builds, use a new voice for each take after Stretch or CHOP</td>
 </tr>
 <tr>
+<td>Unison does nothing</td>
+<td>Unison needs an edit voice with sound, empty voices for its copies, no bank of your own (BANK ON) and no recording; a pot within one band (for example 40 to 50) changes nothing</td>
+</tr>
+<tr>
 <td>Need to recover a valuable sample</td>
 <td>Reload a backup; processing and recording do not provide guaranteed undo</td>
 </tr>
@@ -1846,6 +1856,16 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#e5eeea;padding:16px;
 <td>Bend Range</td>
 <td>FZED 25</td>
 <td>0-127 (the FZ's bend depth; 127 about 16 semitones)</td>
+</tr>
+<tr>
+<td>Unison</td>
+<td>FZED 35</td>
+<td>OFF 0-31; 2 32-63; 4 64-95; MONO (8) 96-127</td>
+</tr>
+<tr>
+<td>Detune</td>
+<td>FZED 36</td>
+<td>0-127 (outermost layer 0 to about 50 cents)</td>
 </tr>
 </tbody>
 </table>

@@ -83,9 +83,9 @@ def plain(sel):
 a, la = plain(False); b, lb = plain(True)
 check(a == b and la == lb, 'FZED 19 = 0 again: the CC112 effect renders the same words as without EXT (%r)' % lb)
 
-# 5. empty slot (module 6 = sector 57, past the program): refused, unchanged
+# 5. empty slot (module 7 = sector 58, past the program; 57 is RH7's unison overlay): refused, unchanged
 g = boot(); before = words(g)
-cc(g, 115, 64); fzed(g, 19, 48); render(g)
+cc(g, 115, 64); fzed(g, 19, 56); render(g)
 check(words(g) == before and lcds(g)[-1].rstrip() == 'TOOLS NOT LOADED', 'empty module slot refused (%r), sample unchanged' % lcds(g)[-1])
 
 # 6. a module from another build: refused, unchanged
@@ -97,7 +97,7 @@ check(words(g) == before and lcds(g)[-1].rstrip() == 'BAD MODULE', 'module from 
 # 7. a tool module (kind 2) in sector 56 (module 5): runs once with si = edit voice, shows its message, renders nothing
 def tool(flat):
     o = (56 - 17) * 1024; m = (52 - 17) * 1024
-    flat.extend(bytes(o + 0x400 - len(flat)))
+    flat.extend(bytes(max(0, o + 0x400 - len(flat))))
     t = bytearray(0x400)
     t[0:2] = (0x4038).to_bytes(2, 'little'); t[2] = 1; t[3] = 2
     t[4:12] = flat[m + 4:m + 12]

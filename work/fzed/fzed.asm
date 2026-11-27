@@ -2718,3 +2718,5 @@ section ov11 follows=ov10 vstart=0xD400
 %include "fx/ext6.asm"
 section ov12 follows=ov11 vstart=0xD400
 %include "fx/ext5.asm"
+section ov13 follows=ov12 vstart=0xD400          ; RH7: the unison overlay, sector 57 (where EXT module 6 would go)
+%include "fx/ov13.asm"

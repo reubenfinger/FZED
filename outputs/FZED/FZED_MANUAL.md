@@ -190,6 +190,18 @@ These controls change how a sound responds across the keyboard and to playing st
 
 The signed controls use raw 64 as neutral; below and above it request opposite directions. The FZED browser editor displays the FZ scaling, twice the offset from 64, rather than an unsigned 0-127 percentage. The raw-0 edge displays -128; that edge remains a known range caveat rather than a newly calibrated musical unit. Large sensitivities can make particular keys or velocities nearly silent. Use moderate values when checking for missed notes.
 
+### Unison And Dual
+
+**Unison** (FZED 35; on the Gills, Core 136, ENV STEPS P10) stacks the edit voice on several generators, so every note plays it more than once: **OFF** 0-31, **2** 32-63 (4 notes at once), **4** 64-95 (2 notes), **MONO** 96-127 (all 8 generators on one note). FZED copies the edit voice into empty voices (the copies share its sample memory, as COPY VOICE does), puts one area for each layer on this MIDI channel in the FZED bank, each on its own generators, and plays that bank. The FZ shows UNISON 2 / 4 / 8.
+
+**Detune** (FZED 36, 0-127; Gills LFO 2 P8) spreads the copies' pitch: the outermost layer is up to about 50 cents from the edit voice (127 = 127/256 of a semitone), the others in between, half up and half down. Detune 0 is a plain stack, louder and fuller but not chorused.
+
+The copies follow the edit voice: FZED copies the edit voice's settings into them in its main loop, so filter, envelope, loop and wavetable-window changes reach every layer and the layers scan a wavetable together. Only their pitch (plus Detune) and name differ. The copies are named as the edit voice; the last two characters of a copy's name hold its detune.
+
+**Dual**: pick a voice with Voice Pick (do not select it), then set Unison to 2. The second layer is the picked voice instead of a copy, so two different voices play on every note (4 notes at once). The picked voice keeps its own settings and is not detuned or synced.
+
+**Off** (Unison 0-31) removes the areas, empties the copies and goes back to voice mode on the edit voice. The edit voice and a dual voice are left as they were. Unison is refused in a bank of your own (UNISON: BANK ON) and while recording; this channel's own area in the FZED bank, if it has one, is replaced. With fewer empty voices than layers, fewer layers are made. Save the copies as voices only if you want them; Unison Off empties them.
+
 ## 11. Controllers
 
 Select Mod Wheel, Foot or Aftertouch. Each view provides the same seven destinations:
@@ -646,6 +658,7 @@ Use the FZ's Enter/ESC workflow to accept and leave the FZED optional software a
 | FX/wave/loop changes refused | Many are intentionally blocked during capture |
 | Live FX ineffective above 9 kHz | Try a shorter sample or a lower rate; short high-rate samples may work. Render is more reliable, but destructive: use a saved copy |
 | A second take plays silent or very quiet | Fixed in RH1: a new recording now resets the voice's loops to the new take. On older builds, use a new voice for each take after Stretch or CHOP |
+| Unison does nothing | Unison needs an edit voice with sound, empty voices for its copies, no bank of your own (BANK ON) and no recording; a pot within one band (for example 40 to 50) changes nothing |
 | Need to recover a valuable sample | Reload a backup; processing and recording do not provide guaranteed undo |
 
 Do not treat successful menu or MIDI tests as proof of an audible hardware result. For a new sound path, use one change at a time, a known-good sounding voice, and a verified clean exit. Keep a known-working FZED optional-software disk and backups of your samples available as a fallback.
@@ -755,6 +768,8 @@ The **Values** column gives the value FZED receives and what it means. Where a r
 | Res Offset | P72 mod wheel, P79 foot, P86 aftertouch | 0-127 (DEPTH 000 to DEPTH 127) |
 | Glide Mode | P6 | GLIDE OFF 0-42; LEGATO 43-85; ALWAYS 86-127 |
 | Bend Range | FZED 25 | 0-127 (the FZ's bend depth; 127 about 16 semitones) |
+| Unison | FZED 35 | OFF 0-31; 2 32-63; 4 64-95; MONO (8) 96-127 |
+| Detune | FZED 36 | 0-127 (outermost layer 0 to about 50 cents) |
 
 ### A.8 Mod matrix
 

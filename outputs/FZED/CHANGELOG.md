@@ -1,5 +1,15 @@
 # FZED Menu Revision
 
+## Unison, Detune, Dual (next, RH7)
+
+- FZED: **FZED 35 UNISON**: OFF / 2 / 4 / MONO (8). The edit voice stacked on 2, 4 or 8 generators through the FZED bank; the copies share its sample memory and follow its every edit from the main loop, so filter and wavetable-window changes reach all the layers and they scan a table together.
+- FZED: **FZED 36 DETUNE**: the copies spread up and down, the outermost by up to about 50 cents.
+- FZED: **Dual**: with a voice picked (Voice Pick, not selected), UNISON 2 plays it as the second layer.
+- FZED: UNISON OFF empties the copies and goes back to voice mode. The unison code is a new overlay on disk sector 57; the program grows to 41 KB. EXT module slots now run 1-5 (sector 57 was the empty slot 6).
+- Gills Core 136: ENV STEPS P10 UNISON (stepped), LFO 2 P8 DETUNE (in cents).
+- Not in this build: frame dithering for GLIDE. The resident areas are full; it needs a main-loop timer of its own and is left for later.
+- Emulator: `unison.py` (areas, generator masks, copies synced and detuned, Dual, Off); `ext41.py`'s empty-slot check moves to module 7.
+
 ## WAVETABLE 2, Module Order, Render FX (next, RH6)
 
 - FZED: **EXT module 4, WAVETABLE 2**: WAVETABLE's table with four new types: FEEDBACK FM, CZ RESONANCE, BYTEBEAT and CHAOS.
