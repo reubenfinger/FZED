@@ -1,5 +1,13 @@
 # FZED Menu Revision
 
+## Unison Level, Dual Step (next, RH8)
+
+- FZED: **UNISON has five steps**: OFF / DUAL / 2 / 4 / MONO. RH7 played a picked voice as layer 2 whenever one had ever been picked, so UNISON 2 could leave its second layer unfiltered; DUAL is now its own step (DUAL: NO PICK with no voice picked) and 2 is always two copies.
+- FZED: **a stack is turned down**: each layer's bank area output level is cut (96 for 2 and DUAL, 160 for 4, 208 for MONO), against the overload heard on 4 and 8 layers when the filter or window moved.
+- Manual: glide in MONO is heard as the layers sliding one after another (the FZ passes the bend to its generators in turn).
+- Gills Core 137: UNISON pot five steps.
+- Emulator: `unison.py` for the five bands, level cut, DUAL / NO PICK.
+
 ## Unison, Detune, Dual (next, RH7)
 
 - FZED: **FZED 35 UNISON**: OFF / 2 / 4 / MONO (8). The edit voice stacked on 2, 4 or 8 generators through the FZED bank; the copies share its sample memory and follow its every edit from the main loop, so filter and wavetable-window changes reach all the layers and they scan a table together.

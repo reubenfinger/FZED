@@ -192,13 +192,17 @@ The signed controls use raw 64 as neutral; below and above it request opposite d
 
 ### Unison And Dual
 
-**Unison** (FZED 35; on the Gills, Core 136, ENV STEPS P10) stacks the edit voice on several generators, so every note plays it more than once: **OFF** 0-31, **2** 32-63 (4 notes at once), **4** 64-95 (2 notes), **MONO** 96-127 (all 8 generators on one note). FZED copies the edit voice into empty voices (the copies share its sample memory, as COPY VOICE does), puts one area for each layer on this MIDI channel in the FZED bank, each on its own generators, and plays that bank. The FZ shows UNISON 2 / 4 / 8.
+**Unison** (FZED 35; on the Gills, Core 137, ENV STEPS P10) stacks the edit voice on several generators, so every note plays it more than once: **OFF** 0-25, **DUAL** 26-51 (below), **2** 52-77 (4 notes at once), **4** 78-103 (2 notes), **MONO** 104-127 (all 8 generators on one note). FZED copies the edit voice into empty voices (the copies share its sample memory, as COPY VOICE does), puts one area for each layer on this MIDI channel in the FZED bank, each on its own generators, and plays that bank. The FZ shows UNISON 2 / 4 / 8.
 
 **Detune** (FZED 36, 0-127; Gills LFO 2 P8) spreads the copies' pitch: the outermost layer is up to about 50 cents from the edit voice (127 = 127/256 of a semitone), the others in between, half up and half down. Detune 0 is a plain stack, louder and fuller but not chorused.
 
 The copies follow the edit voice: FZED copies the edit voice's settings into them in its main loop, so filter, envelope, loop and wavetable-window changes reach every layer and the layers scan a wavetable together. Only their pitch (plus Detune) and name differ. The copies are named as the edit voice; the last two characters of a copy's name hold its detune.
 
-**Dual**: pick a voice with Voice Pick (do not select it), then set Unison to 2. The second layer is the picked voice instead of a copy, so two different voices play on every note (4 notes at once). The picked voice keeps its own settings and is not detuned or synced.
+**Dual**: pick a voice with Voice Pick (do not select it), then set Unison to DUAL. The second layer is the picked voice instead of a copy, so two different voices play on every note (4 notes at once). The picked voice keeps its own settings and is not detuned or synced, so filter moves reach only the edit voice. With no voice picked, the FZ shows DUAL: NO PICK and nothing changes. Unison 2 never uses a picked voice.
+
+**Level.** Every layer is turned down through its bank area's output level, which the FZ takes off the amp envelope's level: 96 for 2 and DUAL, 160 for 4, 208 for MONO, so a stack does not overload the FZ's output when the filter opens or the window moves. If a stack is still too loud, or too quiet on soft notes, Velocity > Amp Level changes it too.
+
+**Glide in MONO.** Glide moves the FZ's pitch bend, which the FZ passes on to its generators one at a time, so with 8 layers on one note you can hear them slide one after another. UNISON 4, a faster glide or some Detune makes it less obvious.
 
 **Off** (Unison 0-31) removes the areas, empties the copies and goes back to voice mode on the edit voice. The edit voice and a dual voice are left as they were. Unison is refused in a bank of your own (UNISON: BANK ON) and while recording; this channel's own area in the FZED bank, if it has one, is replaced. With fewer empty voices than layers, fewer layers are made. Save the copies as voices only if you want them; Unison Off empties them.
 
@@ -768,7 +772,7 @@ The **Values** column gives the value FZED receives and what it means. Where a r
 | Res Offset | P72 mod wheel, P79 foot, P86 aftertouch | 0-127 (DEPTH 000 to DEPTH 127) |
 | Glide Mode | P6 | GLIDE OFF 0-42; LEGATO 43-85; ALWAYS 86-127 |
 | Bend Range | FZED 25 | 0-127 (the FZ's bend depth; 127 about 16 semitones) |
-| Unison | FZED 35 | OFF 0-31; 2 32-63; 4 64-95; MONO (8) 96-127 |
+| Unison | FZED 35 | OFF 0-25; DUAL 26-51; 2 52-77; 4 78-103; MONO (8) 104-127 |
 | Detune | FZED 36 | 0-127 (outermost layer 0 to about 50 cents) |
 
 ### A.8 Mod matrix

@@ -2,12 +2,14 @@
 ; through OVCALL. FZED 35 UNISON / 36 DETUNE, and CC97's CHOP message (from CHSET, fx/multi.asm, for room).
 ; FZ calls run on the stack at DBFEh, which reaches down to about D7ECh: keep the top of the sector empty.
 ;
-; UNISON (FZED 35: 0-31 OFF, 32-63 2, 64-95 4, 96-127 8 = MONO): the edit voice and N - 1 copies of it (empty voices,
+; UNISON (FZED 35, RH8: 5 bands of 26: 0-25 OFF, 26-51 DUAL, 52-77 2, 78-103 4, 104-127 8 = MONO; RH7 had 4 bands and
+; DUAL whenever a voice was picked): the edit voice and N - 1 copies of it (empty voices,
 ; sharing its wave memory as COPY VOICE does) as N areas on this MIDI channel in the FZED bank, area i on generators
 ; i, i + N, ... (8 / N notes at once), and the bank played. UNSYNC (fx/multi.asm, main loop) keeps every copy equal to
 ; the edit voice, detuned by FZED 36 (0-127 fine steps of 1/256 semitone for the outermost layer: up to about 50
-; cents). DUAL: with 2 layers and a voice picked (Voice Pick, not selected), layer 2 is that voice, not a copy (and
-; not synced). OFF: the areas go, the copies are emptied, back to voice mode. Refused in a bank of your own (BANK ON)
+; cents). DUAL: 2 layers, layer 2 the voice picked (Voice Pick, not selected), not a copy (and
+; not synced). RH8: every layer's area output level is cut (the ROM takes it off the amp envelope's level) by UNCT
+; (2 / DUAL 96, 4 160, 8 208) so the stack does not overload the FZ's output. OFF: the areas go, the copies are emptied, back to voice mode. Refused in a bank of your own (BANK ON)
 ; and while recording; this channel's own area in the FZED bank, if any, is replaced.
     dw 0x4039
 UNSET:              ; from STRP (fx/tools40.asm): bl = 15 UNISON, 16 DETUNE; al = the value
@@ -26,18 +28,35 @@ CHMZ:               ; CC97's 'CHOP EVEN' / 'EVEN+ZERO' / 'TRANSIENT' (ZCM 0-2)
     jmp NMSG
 
 UNBLD:
-    shr al,5
-    mov cl,al
-    mov al,1
-    shl al,cl               ; N = 1, 2, 4, 8
-    cmp al,[UNN]
+    xor ah,ah
+    mov cl,26
+    div cl                  ; band 0-4
+    cmp al,4
+    jb .b4
+    mov al,4
+.b4: mov bx,UNBT
+    xlat                    ; N (DUAL: 82h)
+    mov ah,[UNN]
+    cmp word [UNSV],0
+    jz .sv
+    or ah,0x80
+.sv: cmp al,ah
     jz .r                   ; (a pot moving within one band)
     push ax
     call UNOFF
     pop ax
+    mov [UNDU],al
+    and al,0x7f
     cmp al,2
     jb .r
     mov [UNNW],al
+    mov cl,96
+    cmp al,4
+    jb .ct
+    mov cl,160
+    jz .ct
+    mov cl,208
+.ct: mov [UNCT],cl
     cmp byte [BKON],0
     jnz .bk
     cmp byte [RST],0
@@ -73,19 +92,19 @@ UNBLD:
     jz .ad                  ; layer 0: the edit voice
     cmp dl,1
     jnz .cp
-    cmp byte [UNNW],2
+    cmp byte [UNDU],0x82
     jnz .cp
     mov al,[VPICK]          ; DUAL: a voice picked, with sound, not the edit voice
     cmp al,64
-    jae .cp
+    jae .np
     mov ah,0xc0
     mul ah
     add ax,0x2288
     cmp ax,si
-    jz .cp
+    jz .np
     mov di,ax
     cmp word [di+0x10],0
-    jz .cp
+    jz .np
     mov si,di
     mov [UNSV],si
     jmp short .ad
@@ -116,7 +135,8 @@ UNBLD:
     mov [bx+di+0x102],al
     mov byte [bx+di+0x82],0x7f
     mov byte [bx+di+0xc2],0
-    mov byte [bx+di+0x1c2],0
+    mov al,[UNCT]
+    mov [bx+di+0x1c2],al    ; RH8: the stack's level cut
     mov al,[UNPT]
     mov cl,dl
     shl al,cl
@@ -141,6 +161,12 @@ UNBLD:
     add al,'0'
     mov [S_UN+7],al
     mov bx,S_UN
+    cmp word [UNSV],0
+    jz .m
+    mov bx,S_UDU
+.m: jmp NMSG
+.np: call UNDEL             ; DUAL with no voice picked: the edit voice's area out again (UNN is 1: no voice emptied); nothing made
+    mov bx,S_UNP
     jmp NMSG
 .r: ret
 
@@ -251,12 +277,17 @@ UNDEL:              ; channel UNCH's areas out of bank UNBK; their voices that a
 .sd: pop di
     jmp .e
 .r: ret
+UNBT: db 1,0x82,2,4,8          ; RH8: band -> layers (82h: DUAL)
+UNDU: db 0
+UNCT: db 0
 UNNW: db 0
 UNPT: db 0
 S_ZM: db 'CHOP EVEN      ',0,'CHOP EVEN+ZERO ',0,'CHOP TRANSIENT ',0
 S_UN: db 'UNISON 0       ',0
 S_UOF: db 'UNISON OFF',0
 S_UBK: db 'UNISON: BANK ON',0
+S_UDU: db 'UNISON DUAL',0
+S_UNP: db 'DUAL: NO PICK',0
 %if ($-$$) > 0x3A0
 %error unison overlay reaches the top of its sector (keep D7A0h-D7BDh clear for the FZ-call stack margin)
 %endif
