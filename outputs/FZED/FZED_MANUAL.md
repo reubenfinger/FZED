@@ -202,7 +202,7 @@ The copies follow the edit voice: FZED copies the edit voice's settings into the
 
 **Dual**: pick a voice with Voice Pick (do not select it), then set Unison to DUAL. The second layer is the picked voice instead of a copy, so two different voices play on every note (4 notes at once). The picked voice keeps its own settings and is not detuned or synced, so filter moves reach only the edit voice. With no voice picked, the FZ shows DUAL: NO PICK and nothing changes. Unison 2 never uses a picked voice.
 
-**Level.** Every layer is turned down through its bank area's output level, which the FZ takes off the amp envelope's level: 96 for 2 and DUAL, 160 for 4, 208 for MONO, so a stack does not overload the FZ's output when the filter opens or the window moves. If a stack is still too loud, or too quiet on soft notes, Velocity > Amp Level changes it too.
+**Level.** Every layer is turned down through its bank area's output level, which the FZ takes off the amp envelope's level: none for 2 and DUAL, 24 for 4, 40 for MONO (RH12; RH8's 96 / 160 / 208 were far too quiet), so a stack does not overload the FZ's output when the filter opens or the window moves. If a stack is still too loud, or too quiet on soft notes, Velocity > Amp Level changes it too.
 
 **Glide in MONO.** Glide moves the FZ's pitch bend, which the FZ passes on to its generators one at a time, so with 8 layers on one note you can hear them slide one after another. UNISON 4, a faster glide or some Detune makes it less obvious.
 

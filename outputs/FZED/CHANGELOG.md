@@ -1,5 +1,9 @@
 # FZED Menu Revision
 
+## Unison Louder (next, RH12)
+
+- FZED: **the unison level cut is much smaller**: none for 2 and DUAL, 24 for 4, 40 for MONO (RH8 had 96 / 160 / 208, far too quiet on the FZ). Velocity > Amp Level still trims a stack that overloads.
+
 ## Last Frame Kept Playing (next, RH11)
 
 - FZED: **a wavetable's last frame no longer stops the note.** With the window on the last frame (Window Position 127, or an LFO sweeping to the top), its loop ended exactly on the voice's play end and the FZ ended the note there (found on hardware: dead at 127, fine at 120). WAVETABLE, WAVETABLE 2 and ADDITIVE now take the table's 8 guard words into the play range, so every frame's loop ends before it. Stretch's segments on such a table now start within 7 words of a frame instead of on it.

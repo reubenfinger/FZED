@@ -33,7 +33,7 @@ check(c.m[UNN] == 2 and [x[1] for x in a] == [0x55, 0xaa] and a[0][2] == E, 'UNI
 C = a[1][2]
 check(bytes(c.m[C:C + 0x74]) == bytes(c.m[E:E + 0x74]) and bytes(c.m[C + 0x76:C + 0xb2]) == bytes(c.m[E + 0x76:E + 0xb2]) and r16(C + 0x74) == r16(E + 0x74), 'the copy is the edit voice (DETUNE 0: same pitch)')
 check(any('UNISON 2' in x for x in lcd()), 'message UNISON 2 (%s)' % lcd()[-3:])
-check(all(c.m[B + 0x1c2 + i] == 96 for i, _, _ in a) and r16(UNSV) == 0, 'UNISON 2: level cut 96, the stale pick not used')
+check(all(c.m[B + 0x1c2 + i] == 0 for i, _, _ in a) and r16(UNSV) == 0, 'UNISON 2: no level cut, the stale pick not used')
 
 fzed(g, 36, 100); loop()
 check(s16(r16(C + 0xbe)) == 100 and r16(C + 0x74) == (r16(E + 0x74) + 100) & 0xffff, 'DETUNE 100: the copy %d fine steps up (pitch %04X vs %04X)' % (s16(r16(C + 0xbe)), r16(C + 0x74), r16(E + 0x74)))
@@ -42,7 +42,7 @@ check(c.m[C + 0x76] == c.m[E + 0x76] and c.m[C + 0x77] == c.m[E + 0x77] and r16(
 
 fzed(g, 35, 127); loop()
 B, a = areas()
-check(all(c.m[B + 0x1c2 + i] == 208 for i, _, _ in a), 'MONO: every layer\'s level cut 208')
+check(all(c.m[B + 0x1c2 + i] == 40 for i, _, _ in a), 'MONO: every layer\'s level cut 40')
 cp = [p for _, _, p in a if p != E]
 dt = [s16(r16(p + 0xbe)) for p in cp]
 check(c.m[UNN] == 8 and [x[1] for x in a] == [1 << i for i in range(8)] and a[0][2] == E, 'UNISON 8 (MONO): eight areas, one generator each (%s)' % [hex(x[1]) for x in a])
@@ -50,7 +50,7 @@ check(dt == [25, -25, 50, -50, 75, -75, 100] and all(r16(p + 0x74) == (r16(E + 0
 check(nsound() == n0 + 7, 'the UNISON 2 copy went when 8 replaced it: 7 copies with sound (%d voices, %d before)' % (nsound(), n0))
 
 fzed(g, 35, 72); loop(); B, a = areas()
-check(all(c.m[B + 0x1c2 + i] == 160 for i, _, _ in a), 'UNISON 4: level cut 160')
+check(all(c.m[B + 0x1c2 + i] == 24 for i, _, _ in a), 'UNISON 4: level cut 24')
 check(c.m[UNN] == 4 and [x[1] for x in a] == [0x11, 0x22, 0x44, 0x88], 'UNISON 4: masks 11h 22h 44h 88h (%s)' % [hex(x[1]) for x in a])
 cp = [p for _, _, p in a if p != E]
 
