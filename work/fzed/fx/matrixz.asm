@@ -838,6 +838,8 @@ MXREC:              ; bx = record
     mov ax,127
 .p1: cmp al,[bx+MXL-8]
     jz .snx
+    cmp byte [MXD0],9       ; window: every pass it changes, outside the 15 ms slow-destination turns
+    jz .wf
     cmp byte [MXSD],0
     jnz .snx
     mov cx,[0x40a]
@@ -850,7 +852,7 @@ MXREC:              ; bx = record
     jz .snx
     mov [MXST],dx
     mov byte [MXSD],1
-    mov [bx+MXL-8],al
+.wf: mov [bx+MXL-8],al
     mov bx,[MXD0]
     mov bl,[cs:bx+SLOWCC-8]
     call SVMAPCC

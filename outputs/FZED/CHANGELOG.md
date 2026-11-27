@@ -1,5 +1,11 @@
 # FZED Menu Revision
 
+## Faster Window From The Matrix (next, RH10)
+
+- FZED: **the mod matrix moves the loop window every time its value changes** (its pass is about every 1.2 ms), instead of in the 15 ms turns the slow destinations share. Frames glide then follows a fast LFO closely instead of catching up in jumps. The other slow destinations (sample start, loop start / end, LFO 2 rate / depth, FX) keep their pacing. 7 bytes; the high resident area has 10 left.
+- Not in this build: frame dithering (about 80 bytes of main-loop code, more than is free; it would also add a faint sub-octave grain).
+- Emulator: `winfast.py` (LFO 2 on the window: 2.6 times as many moves alone, about twice with sample start also routed; sample start's pacing unchanged).
+
 ## Unison Intervals (next, RH9)
 
 - FZED: **UNISON intervals**: DUAL and 4 each get SUB, 5TH, MIN7, MAJ7 and OCT steps (15 steps in all). The interval moves DUAL's picked voice, or the upper two layers of 4, through the bank area's key centre; the voices themselves are not changed.

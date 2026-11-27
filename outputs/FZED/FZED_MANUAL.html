@@ -645,7 +645,7 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#e5eeea;padding:16px;
 </tr>
 <tr>
 <td>Window Snap</td>
-<td>Free movement, zero-cross snapping, whole frames, or frames glide. Whole frames jumps straight to the frame. Frames glide steps one frame at a time towards where the window is sent, at most one frame each cycle of the frame (at its original key), so a sweep from the knob, LFO 2, the matrix or a pattern plays every frame on the way and never skips one; it carries on until it gets there. EXT WAVETABLE sets frames glide</td>
+<td>Free movement, zero-cross snapping, whole frames, or frames glide. Whole frames jumps straight to the frame. Frames glide steps one frame at a time towards where the window is sent, at most one frame each cycle of the frame (at its original key), so a sweep from the knob, LFO 2, the matrix or a pattern plays every frame on the way and never skips one; it carries on until it gets there. EXT WAVETABLE sets frames glide The mod matrix moves the window as often as its value changes (about every 1.2 ms; RH10), not in the 15 ms turns the other slow destinations share, so glide follows a fast LFO closely; glide itself still moves at most one frame per cycle of the frame, so shorter frames (327 or 164 words) sweep faster and 64 frames make smaller steps.</td>
 </tr>
 <tr>
 <td>Play Mode</td>
