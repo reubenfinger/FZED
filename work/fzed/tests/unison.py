@@ -42,7 +42,7 @@ check(c.m[C + 0x76] == c.m[E + 0x76] and c.m[C + 0x77] == c.m[E + 0x77] and r16(
 
 fzed(g, 35, 127); loop()
 B, a = areas()
-check(all(c.m[B + 0x1c2 + i] == 40 for i, _, _ in a), 'MONO: every layer\'s level cut 40')
+check(all(c.m[B + 0x1c2 + i] == 20 for i, _, _ in a), 'MONO: every layer\'s level cut 20')
 cp = [p for _, _, p in a if p != E]
 dt = [s16(r16(p + 0xbe)) for p in cp]
 check(c.m[UNN] == 8 and [x[1] for x in a] == [1 << i for i in range(8)] and a[0][2] == E, 'UNISON 8 (MONO): eight areas, one generator each (%s)' % [hex(x[1]) for x in a])
@@ -50,7 +50,7 @@ check(dt == [25, -25, 50, -50, 75, -75, 100] and all(r16(p + 0x74) == (r16(E + 0
 check(nsound() == n0 + 7, 'the UNISON 2 copy went when 8 replaced it: 7 copies with sound (%d voices, %d before)' % (nsound(), n0))
 
 fzed(g, 35, 72); loop(); B, a = areas()
-check(all(c.m[B + 0x1c2 + i] == 24 for i, _, _ in a), 'UNISON 4: level cut 24')
+check(all(c.m[B + 0x1c2 + i] == 16 for i, _, _ in a), 'UNISON 4: level cut 16')
 check(c.m[UNN] == 4 and [x[1] for x in a] == [0x11, 0x22, 0x44, 0x88], 'UNISON 4: masks 11h 22h 44h 88h (%s)' % [hex(x[1]) for x in a])
 cp = [p for _, _, p in a if p != E]
 

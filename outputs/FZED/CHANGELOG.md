@@ -1,5 +1,9 @@
 # FZED Menu Revision
 
+## Unison Louder Again (next, RH13)
+
+- FZED: unison level cut 16 for 4 and 20 for MONO (RH12: 24 / 40; MONO lost much of its power, 4 could come up). 2 and DUAL stay uncut.
+
 ## Unison Louder (next, RH12)
 
 - FZED: **the unison level cut is much smaller**: none for 2 and DUAL, 24 for 4, 40 for MONO (RH8 had 96 / 160 / 208, far too quiet on the FZ). Velocity > Amp Level still trims a stack that overloads.

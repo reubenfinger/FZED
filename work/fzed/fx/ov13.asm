@@ -9,7 +9,7 @@
 ; the edit voice, detuned by FZED 36 (0-127 fine steps of 1/256 semitone for the outermost layer: up to about 50
 ; cents). DUAL: 2 layers, layer 2 the voice picked (Voice Pick, not selected), not a copy (and
 ; not synced). RH8: every layer's area output level is cut (the ROM takes it off the amp envelope's level) by UNCT
-; (RH12: 2 / DUAL 0, 4 24, 8 40) so the stack does not overload the FZ's output. OFF: the areas go, the copies are emptied, back to voice mode. Refused in a bank of your own (BANK ON)
+; (RH13: 2 / DUAL 0, 4 16, 8 20) so the stack does not overload the FZ's output. OFF: the areas go, the copies are emptied, back to voice mode. Refused in a bank of your own (BANK ON)
 ; and while recording; this channel's own area in the FZED bank, if any, is replaced.
     dw 0x4039
 UNSET:              ; from STRP (fx/tools40.asm): bl = 15 UNISON, 16 DETUNE; al = the value
@@ -49,12 +49,12 @@ UNBLD:
     cmp al,2
     jb .r
     mov [UNNW],al
-    mov cl,0                ; RH12: 2 / DUAL no cut, 4 24, 8 40 (RH8's 96 / 160 / 208 were far too quiet on the FZ)
-    cmp al,4
+    mov cl,0                ; RH13: 2 / DUAL no cut, 4 16, 8 20 (RH8's 96 / 160 / 208 far too quiet; RH12's 24 / 40
+    cmp al,4                ; still lost MONO's power)
     jb .ct
-    mov cl,24
+    mov cl,16
     jz .ct
-    mov cl,40
+    mov cl,20
 .ct: mov [UNCT],cl
     cmp byte [BKON],0
     jnz .bk
